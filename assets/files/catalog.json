@@ -1,0 +1,52 @@
+{
+    "products": [
+        {
+            "id": 1,
+            "name": "Speakers",
+            "desc": "Apple iPhone 12th generation",
+            "price": 999,
+            "color": "#33505a",
+            "image": "assets/images/speakers.png"
+        },
+        {
+            "id": 2,
+            "name": "Program",
+            "desc": "Google Pixel phone 5th generation",
+            "price": 699,
+            "color": "#00ac51",
+            "image": "assets/images/programs.png"
+        },
+        {
+            "id": 3,
+            "name": "Board",
+            "desc": "Apple Macbook air with apple silicon",
+            "price": 1099,
+            "color": "#e0bfae",
+            "image": "assets/images/meeting.png"
+        },
+        {
+            "id": 4,
+            "name": "Strategic Council",
+            "desc": "Sony Playstation 5th generation",
+            "price": 500,
+            "color": "#544ee4",
+            "image": "assets/images/strategic.png"
+        },
+        {
+            "id": 5,
+            "name": "How to Participate",
+            "desc": "Apple Aipods Pro 1st generation",
+            "price": 200,
+            "color": "#e3e4e9",
+            "image": "assets/images/participation.png"
+        },
+        {
+            "id": 6,
+            "name": "Who We Are",
+            "desc": "Apple iPad Pro 2020 edition",
+            "price": 799,
+            "color": "#f73984",
+            "image": "assets/images/doctors.png"
+        }
+    ]
+}
