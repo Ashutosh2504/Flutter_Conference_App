@@ -13,7 +13,6 @@ class _MyFavouritesState extends State<MyFavourites> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SideMenu(),
       appBar: AppBar(
         title: Text("Favourites"),
       ),

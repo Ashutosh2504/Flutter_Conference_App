@@ -1,8 +1,13 @@
+import 'package:bottom_navigation_and_drawer/screens/agenda/agenda.dart';
 import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
 import 'package:bottom_navigation_and_drawer/screens/bottom_navigation/bottom_navigationbar.dart';
 import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
+import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_info.dart';
+import 'package:bottom_navigation_and_drawer/screens/speaker/speakers_list.dart';
+import 'package:bottom_navigation_and_drawer/screens/sponser/sponser.dart';
 import 'package:flutter/material.dart';
 
+import 'screens/gallery/gallery.dart';
 import 'util/routes.dart';
 
 void main() {
@@ -44,7 +49,12 @@ class MyApp extends StatelessWidget {
         // "/": (context) => MySpashScreen(),
         MyRoutes.loginRoute: (context) => LoginPage(),
         MyRoutes.homeRoute: (context) => MyHome(),
-        //MyRoutes.splashScreen: (context) => MySpashScreen(),
+        // MyRoutes.splashScreen: (context) => MySpashScreen(),
+        MyRoutes.speakersInfo: (context) => MySpeakerInfo(),
+        MyRoutes.speakersList: (context) => MySpeakersList(),
+        MyRoutes.gallery: (context) => MyGallery(),
+        MyRoutes.sponsers: (context) => MySponsers(),
+        MyRoutes.agenda: (context) => MyAgenda(),
       },
     );
   }

@@ -1,9 +1,10 @@
+import 'package:bottom_navigation_and_drawer/screens/downloads/downlads.dart';
 import 'package:bottom_navigation_and_drawer/screens/favourites/favourites.dart';
 import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
 import 'package:bottom_navigation_and_drawer/screens/programs/programs.dart';
 import 'package:bottom_navigation_and_drawer/screens/scientific_programs/scientific_programs.dart';
 import 'package:bottom_navigation_and_drawer/screens/search/search.dart';
-import 'package:bottom_navigation_and_drawer/screens/speaker/speakers.dart';
+import 'package:bottom_navigation_and_drawer/screens/speaker/speakers_list.dart';
 import 'package:flutter/material.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
@@ -35,7 +36,7 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
   final List<Widget> pages = [
     MyHome(),
     MyPrograms(),
-    MySpeakers(),
+    MySpeakersList(),
     MyFavourites(),
   ];
 
@@ -47,7 +48,7 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
         : currentIndex == 1
             ? MyPrograms()
             : currentIndex == 2
-                ? MySpeakers()
+                ? MyDownloads()
                 : MyFavourites();
 
     return Scaffold(
@@ -141,7 +142,7 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
                     minWidth: 50,
                     onPressed: () {
                       setState(() {
-                        currentScreen = MyHome();
+                        currentScreen = MyDownloads();
                         currentIndex = 2;
                       });
                     },
@@ -169,7 +170,7 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
                     minWidth: 50,
                     onPressed: () {
                       setState(() {
-                        currentScreen = MyHome();
+                        currentScreen = MyFavourites();
                         currentIndex = 3;
                       });
                     },
