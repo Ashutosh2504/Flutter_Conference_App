@@ -1,8 +1,6 @@
 import 'package:bottom_navigation_and_drawer/types/gridlist.dart';
 import 'package:flutter/material.dart';
 
-import '../drawers/sidemenu.dart';
-
 class MySpeakersList extends StatefulWidget {
   const MySpeakersList({super.key});
 

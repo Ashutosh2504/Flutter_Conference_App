@@ -13,7 +13,6 @@ class _MySearchState extends State<MySearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SideMenu(),
       appBar: AppBar(
         title: Text("Search"),
       ),

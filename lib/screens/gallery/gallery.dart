@@ -5,8 +5,8 @@ class MyGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    // double width = MediaQuery.of(context).size.width;
+    // double height = MediaQuery.of(context).size.height;
 
     return SafeArea(
       child: Scaffold(
@@ -71,7 +71,7 @@ class MyGallery extends StatelessWidget {
                     //     (MediaQuery.of(context).size.height / 2),
                     crossAxisSpacing: 8.0,
                     mainAxisSpacing: 8.0,
-                    crossAxisCount: 3),
+                    crossAxisCount: 2),
                 itemBuilder: (_, index) {
                   return Container(
                     padding: const EdgeInsets.all(8.0),

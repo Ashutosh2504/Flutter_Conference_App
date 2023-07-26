@@ -1,9 +1,6 @@
 import 'package:bottom_navigation_and_drawer/screens/bottom_navigation/bottom_navigationbar.dart';
 import 'package:bottom_navigation_and_drawer/screens/contactus/contact_us.dart';
-import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
-import 'package:bottom_navigation_and_drawer/screens/programs/programs.dart';
 import 'package:bottom_navigation_and_drawer/screens/scientific_programs/scientific_programs.dart';
-import 'package:bottom_navigation_and_drawer/screens/speaker/speakers_list.dart';
 import 'package:flutter/material.dart';
 
 class SideMenu extends StatefulWidget {

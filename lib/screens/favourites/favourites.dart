@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../drawers/sidemenu.dart';
-
 class MyFavourites extends StatefulWidget {
   const MyFavourites({super.key});
 

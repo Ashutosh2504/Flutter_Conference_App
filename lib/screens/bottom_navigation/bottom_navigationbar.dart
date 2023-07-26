@@ -1,10 +1,13 @@
+import 'package:bottom_navigation_and_drawer/screens/agenda/agenda.dart';
 import 'package:bottom_navigation_and_drawer/screens/downloads/downlads.dart';
 import 'package:bottom_navigation_and_drawer/screens/favourites/favourites.dart';
 import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
+import 'package:bottom_navigation_and_drawer/screens/live/live.dart';
 import 'package:bottom_navigation_and_drawer/screens/programs/programs.dart';
-import 'package:bottom_navigation_and_drawer/screens/scientific_programs/scientific_programs.dart';
+import 'package:bottom_navigation_and_drawer/screens/quiz/quiz.dart';
 import 'package:bottom_navigation_and_drawer/screens/search/search.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speakers_list.dart';
+import 'package:bottom_navigation_and_drawer/util/routes.dart';
 import 'package:flutter/material.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
@@ -43,28 +46,61 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
   final PageStorageBucket bucket = PageStorageBucket();
   @override
   Widget build(BuildContext context) {
+    void _onItemTapped(int index) {
+      setState(() {
+        currentIndex = index;
+      });
+    }
+
     Widget currentScreen = currentIndex == 0
         ? MyHome()
         : currentIndex == 1
-            ? MyPrograms()
+            ? MyAgenda()
             : currentIndex == 2
-                ? MyDownloads()
-                : MyFavourites();
+                ? MyQuiz()
+                : MyLive();
 
     return Scaffold(
       body: PageStorage(child: currentScreen, bucket: bucket),
       floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.search_rounded,
-            color: Colors.white,
-          ),
-          backgroundColor: Color.fromARGB(255, 135, 205, 240),
-          onPressed: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => MySearch()));
-          }),
+        child: Icon(
+          Icons.search_rounded,
+          color: Colors.white,
+        ),
+        backgroundColor: Color.fromARGB(255, 135, 205, 240),
+        onPressed: () => {
+          Navigator.pushNamed(context, MyRoutes.search),
+        },
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      bottomNavigationBar: BottomAppBar(
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+            backgroundColor: Color.fromARGB(255, 38, 156, 179),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.view_agenda),
+            label: 'Agenda',
+            backgroundColor: Color.fromARGB(255, 38, 156, 179),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.live_tv),
+            label: 'Live',
+            backgroundColor: Color.fromARGB(255, 38, 156, 179),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.quiz),
+            label: 'Quiz',
+            backgroundColor: Color.fromARGB(255, 38, 156, 179),
+          ),
+        ],
+        currentIndex: currentIndex,
+        selectedItemColor: Colors.white,
+        onTap: _onItemTapped,
+      ),
+      /*  BottomAppBar(
         color: color,
         shape: CircularNotchedRectangle(),
         shadowColor: Colors.white,
@@ -72,7 +108,7 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
         child: Container(
           height: 40,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,7 +235,7 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
             ],
           ),
         ),
-      ),
+      ), */
     );
   }
 }

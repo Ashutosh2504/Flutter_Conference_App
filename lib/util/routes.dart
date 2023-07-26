@@ -7,5 +7,6 @@ class MyRoutes {
   static String gallery = "/gallery";
   static String sponsers = "/sponsers";
   static String agenda = "/agenda";
+  static String search = "/search";
 
 }
