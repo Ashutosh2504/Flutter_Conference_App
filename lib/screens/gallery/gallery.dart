@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:bottom_navigation_and_drawer/screens/gallery/gallery_model.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
 class MyGallery extends StatelessWidget {
-  const MyGallery({super.key});
+  MyGallery({super.key});
+
+  List<GalleryModel> galleryLit = [];
 
   @override
   Widget build(BuildContext context) {
@@ -61,61 +67,89 @@ class MyGallery extends StatelessWidget {
                   color: Colors.black),
             ),
             Expanded(
-              child: GridView.builder(
-                //physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: false,
-                itemCount: 15,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              child: FutureBuilder(
+                  future: getGallery(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return GridView.builder(
+                        //physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: false,
+                        itemCount: galleryLit.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
 
-                    // childAspectRatio: MediaQuery.of(context).size.width /
-                    //     (MediaQuery.of(context).size.height / 2),
-                    crossAxisSpacing: 8.0,
-                    mainAxisSpacing: 8.0,
-                    crossAxisCount: 2),
-                itemBuilder: (_, index) {
-                  return Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(
-                                12.0,
-                              )),
-                          child: Image.asset(
-                            "assets/images/gallery.png",
-                            width: double.infinity,
-                            height: MediaQuery.of(context).size.height / 11,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              child: Text("Images"),
+                            // childAspectRatio: MediaQuery.of(context).size.width /
+                            //     (MediaQuery.of(context).size.height / 2),
+                            crossAxisSpacing: 8.0,
+                            mainAxisSpacing: 8.0,
+                            crossAxisCount: 2),
+                        itemBuilder: (_, index) {
+                          return Container(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                    12.0,
+                                  )),
+                                  child: Image.network(
+                                    galleryLit[index].link,
+                                    width: double.infinity,
+                                    height:
+                                        MediaQuery.of(context).size.height / 8,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      child: Text("Images"),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.favorite_outline),
+                                    ),
+                                    Text("1"),
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.comment_bank_outlined),
+                                    ),
+                                    Text("0"),
+                                  ],
+                                )
+                              ],
                             ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.favorite_outline),
-                            ),
-                            Text("1"),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.comment_bank_outlined),
-                            ),
-                            Text("0"),
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }),
             ),
           ],
         ),
       ),
     );
+  }
+
+  final dio = Dio();
+  Future getGallery() async {
+    final response = await dio
+        .get('https://globalhealth-forum.com/event_app/api/get_gallery.php');
+
+    var jsonData = jsonDecode(response.data);
+    for (var image in jsonData) {
+      final gallery = GalleryModel(
+          id: image['id'],
+          link: image['link'],
+          status: image['status'],
+          date: image['date']);
+
+      galleryLit.add(gallery);
+    }
+    print(galleryLit.length);
   }
 }
