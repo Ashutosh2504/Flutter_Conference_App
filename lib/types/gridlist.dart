@@ -11,13 +11,10 @@ class MySquareGridList extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(context, MyRoutes.speakersInfo);
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+      child: Expanded(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              children: [],
-            ),
             Container(
               height: 100,
               decoration: BoxDecoration(

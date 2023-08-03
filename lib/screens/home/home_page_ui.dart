@@ -1,3 +1,4 @@
+import 'package:bottom_navigation_and_drawer/screens/home/countdown.dart';
 import 'package:bottom_navigation_and_drawer/types/homegridhorizontallist.dart';
 import 'package:bottom_navigation_and_drawer/util/routes.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,15 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Expanded(
+          flex: 2,
+          child: Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage("assets/images/ghf.png"))),
+              child: MyConutDownTimer()),
+        ),
         // Expanded(
         //   child: ListView.builder(
         //     // physics: NeverScrollableScrollPhysics(),
@@ -33,6 +43,42 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
               padding: const EdgeInsets.all(8.0),
               child: GridView(
                 children: [
+                  InkWell(
+                    onTap: () =>
+                        {Navigator.pushNamed(context, MyRoutes.agenda)},
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            flex: 8,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(
+                                "assets/images/contact.png",
+                                //fit: BoxFit.contain,
+                                height: MediaQuery.of(context).size.height / 8,
+                                width: MediaQuery.of(context).size.width / 3,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15),
+                                  text: "Agenda"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                    ),
+                  ),
                   InkWell(
                     onTap: () =>
                         {Navigator.pushNamed(context, MyRoutes.speakersList)},
@@ -70,8 +116,9 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                     ),
                   ),
                   InkWell(
-                    onTap: () =>
-                        {Navigator.pushNamed(context, MyRoutes.agenda)},
+                    onTap: () => {
+                      Navigator.pushNamed(context, MyRoutes.sponsers),
+                    },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -81,7 +128,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                "assets/images/contact.png",
+                                "assets/images/sponser.png",
                                 //fit: BoxFit.contain,
                                 height: MediaQuery.of(context).size.height / 8,
                                 width: MediaQuery.of(context).size.width / 3,
@@ -95,7 +142,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                               text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
-                                  text: "Agenda"),
+                                  text: "Exhibitors"),
                             ),
                           ),
                         ],
@@ -133,80 +180,6 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
                                   text: "Live"),
-                            ),
-                          ),
-                        ],
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                    ),
-                  ),
-
-                  InkWell(
-                    onTap: () =>
-                        {Navigator.pushNamed(context, MyRoutes.gallery)},
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 8,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                "assets/images/gallery.png",
-                                //fit: BoxFit.contain,
-                                height: MediaQuery.of(context).size.height / 8,
-                                width: MediaQuery.of(context).size.width / 3,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 15),
-                                  text: "Gallery"),
-                            ),
-                          ),
-                        ],
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => {
-                      // Navigator.pushNamed(context, MyRoutes.agenda),
-                    },
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 8,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                "assets/images/exhibitor.png",
-                                //fit: BoxFit.contain,
-                                height: MediaQuery.of(context).size.height / 8,
-                                width: MediaQuery.of(context).size.width / 3,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 15),
-                                  text: "Exhibitor"),
                             ),
                           ),
                         ],
@@ -266,7 +239,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                "assets/images/scientific.png",
+                                "assets/images/download.png",
                                 //fit: BoxFit.contain,
                                 height: MediaQuery.of(context).size.height / 8,
                                 width: MediaQuery.of(context).size.width / 3,
@@ -274,14 +247,12 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                             ),
                           ),
                           Expanded(
-                            flex: 3,
+                            flex: 2,
                             child: RichText(
-                              textAlign: TextAlign.center,
                               text: TextSpan(
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 15),
-                                text: "Scientific Program",
-                              ),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15),
+                                  text: "Downloads"),
                             ),
                           ),
                         ],
@@ -329,42 +300,6 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   ),
                   InkWell(
                     onTap: () => {
-                      //Navigator.pushNamed(context, MyRoutes.agenda),
-                    },
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 8,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                "assets/images/download.png",
-                                //fit: BoxFit.contain,
-                                height: MediaQuery.of(context).size.height / 8,
-                                width: MediaQuery.of(context).size.width / 3,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 15),
-                                  text: "Downloads"),
-                            ),
-                          ),
-                        ],
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => {
                       // Navigator.pushNamed(context, MyRoutes.agenda),
                     },
                     child: Container(
@@ -376,7 +311,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                "assets/images/documents2.png",
+                                "assets/images/faq.png",
                                 //fit: BoxFit.contain,
                                 height: MediaQuery.of(context).size.height / 8,
                                 width: MediaQuery.of(context).size.width / 3,
@@ -390,7 +325,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                               text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
-                                  text: "Documents"),
+                                  text: "FAQ"),
                             ),
                           ),
                         ],
@@ -400,9 +335,10 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                           color: Colors.white),
                     ),
                   ),
+                  //Live polling
                   InkWell(
                     onTap: () => {
-                      // Navigator.pushNamed(context, MyRoutes.agenda),
+                      // Navigator.pushNamed(context, MyRoutes.gallery),
                     },
                     child: Container(
                       child: Column(
@@ -413,7 +349,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                "assets/images/attendees.png",
+                                "assets/images/live.png",
                                 //fit: BoxFit.contain,
                                 height: MediaQuery.of(context).size.height / 8,
                                 width: MediaQuery.of(context).size.width / 3,
@@ -427,7 +363,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                               text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
-                                  text: "Attendees"),
+                                  text: "Live Polling"),
                             ),
                           ),
                         ],
@@ -437,7 +373,6 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                           color: Colors.white),
                     ),
                   ),
-
                   InkWell(
                     onTap: () => {
                       // Navigator.pushNamed(context, MyRoutes.agenda),
@@ -475,11 +410,9 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                           color: Colors.white),
                     ),
                   ),
-
                   InkWell(
-                    onTap: () => {
-                      // Navigator.pushNamed(context, MyRoutes.agenda),
-                    },
+                    onTap: () =>
+                        {Navigator.pushNamed(context, MyRoutes.gallery)},
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -489,7 +422,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                "assets/images/faq.png",
+                                "assets/images/gallery.png",
                                 //fit: BoxFit.contain,
                                 height: MediaQuery.of(context).size.height / 8,
                                 width: MediaQuery.of(context).size.width / 3,
@@ -503,7 +436,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                               text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
-                                  text: "FAQ"),
+                                  text: "Gallery"),
                             ),
                           ),
                         ],
@@ -515,7 +448,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   ),
                   InkWell(
                     onTap: () => {
-                      Navigator.pushNamed(context, MyRoutes.sponsers),
+                      //Navigator.pushNamed(context, MyRoutes.gallery),
                     },
                     child: Container(
                       child: Column(
@@ -526,7 +459,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                "assets/images/sponser.png",
+                                "assets/images/location.png",
                                 //fit: BoxFit.contain,
                                 height: MediaQuery.of(context).size.height / 8,
                                 width: MediaQuery.of(context).size.width / 3,
@@ -540,7 +473,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                               text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
-                                  text: "Sponsers"),
+                                  text: "Venue"),
                             ),
                           ),
                         ],

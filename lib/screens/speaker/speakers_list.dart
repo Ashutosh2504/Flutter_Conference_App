@@ -24,10 +24,13 @@ class _MySpeakersListState extends State<MySpeakersList> {
         children: [
           // speakerslist
           Expanded(
-            child: ListView.builder(
+            child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
                 itemCount: _speakersList.length,
                 itemBuilder: (context, index) {
-                  return MySquareGridList(name: _speakersList[index]);
+                  return Card(
+                      child: MySquareGridList(name: _speakersList[index]));
                 }),
           ),
         ],

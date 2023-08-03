@@ -19,7 +19,9 @@ class _MyHomeState extends State<MyHome> {
         title: Text(
           "Health Forum",
           style: TextStyle(
-              color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
+              color: Colors.blueGrey,
+              fontSize: 25,
+              fontWeight: FontWeight.bold),
         ),
         backgroundColor: color,
       ),
