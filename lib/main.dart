@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         MyRoutes.loginRoute: (context) => LoginPage(),
         MyRoutes.homeRoute: (context) => MyHome(),
         // MyRoutes.splashScreen: (context) => MySpashScreen(),
-        MyRoutes.speakersInfo: (context) => MySpeakerInfo(),
+        // MyRoutes.speakersInfo: (context) => MySpeakerInfo(),
         MyRoutes.speakersList: (context) => MySpeakersList(),
         MyRoutes.gallery: (context) => MyGallery(),
         MyRoutes.sponsers: (context) => MySponsers(),

@@ -1,89 +1,94 @@
-import 'package:bottom_navigation_and_drawer/util/routes.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_info.dart';
+import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_model.dart';
 import 'package:flutter/material.dart';
 
+import 'package:bottom_navigation_and_drawer/util/routes.dart';
+
 class MySquareGridList extends StatelessWidget {
-  final String name;
-  MySquareGridList({required this.name});
+  // final int id;
+  // final String name;
+  // final String email;
+  // final String mobile;
+  // final String designation;
+  // final String institute;
+  // final String information;
+  // final String city;
+  // final String country;
+  // final String photo;
+  // final String date;
+  // final String status;
+
+  final List<SpeakerModel> speakerModel;
+  final int index;
+  // MySquareGridList({
+  //   required this.id,
+  //   required this.name,
+  //   required this.email,
+  //   required this.mobile,
+  //   required this.designation,
+  //   required this.institute,
+  //   required this.information,
+  //   required this.city,
+  //   required this.country,
+  //   required this.photo,
+  //   required this.date,
+  //   required this.status,
+  // });
+
+  MySquareGridList({required this.index, required this.speakerModel});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, MyRoutes.speakersInfo);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    MySpeakerInfo(index: index, speakersList: speakerModel)));
       },
-      child: Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: 100,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Expanded(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
-                //color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(3.0),
-              ),
-              child: CircleAvatar(
-                radius: 45,
-                child: ClipOval(
-                  child: Image.asset(
-                    "assets/images/dr2.png",
-                    // // subject['images']['large'],
-                    // height: 150.0,
-                    // width: 100.0,
-                    fit: BoxFit.fill,
-                  ),
-                  // child: CachedNetworkImage(
-                  //   imageUrl:  "https:// your image url path",
-                  //   fit: BoxFit.cover,
-                  //   width: 80,
-                  //   height: 80,
-                  // ),
+                color: Colors.blueGrey,
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: NetworkImage(speakerModel[index].photo),
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
-            SizedBox(
-              height: 10,
+          ),
+          RichText(
+            softWrap: true,
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15),
+              text: speakerModel[index].name,
             ),
-
-            //this is heading
-            Container(
-              child: Text(
-                name,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                    fontSize: 15),
-              ),
+          ),
+          RichText(
+            softWrap: true,
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 13),
+              text: speakerModel[index].designation,
             ),
-            SizedBox(
-              height: 5,
-            ),
-
-            //this is subheading
-            Container(
-              child: Text(
-                name,
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black,
-                    fontSize: 13),
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-
-            //this is sub subheading
-            Container(
-              child: Text(
-                name,
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.grey,
-                    fontSize: 12),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

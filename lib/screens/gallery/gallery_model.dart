@@ -4,6 +4,9 @@ class GalleryModel {
   final String status;
   final date;
 
-  GalleryModel({required this.id,
-    required this.link,required this.status,required this.date});
+  GalleryModel(
+      {required this.id,
+      required this.link,
+      required this.status,
+      required this.date});
 }

@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 class MyGallery extends StatelessWidget {
   MyGallery({super.key});
 
-  List<GalleryModel> galleryLit = [];
+  List<GalleryModel> galleryList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -68,66 +68,67 @@ class MyGallery extends StatelessWidget {
             ),
             Expanded(
               child: FutureBuilder(
-                  future: getGallery(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return GridView.builder(
-                        //physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: false,
-                        itemCount: galleryLit.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                future: getGallery(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return GridView.builder(
+                      //physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: false,
+                      itemCount: galleryList.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
 
-                            // childAspectRatio: MediaQuery.of(context).size.width /
-                            //     (MediaQuery.of(context).size.height / 2),
-                            crossAxisSpacing: 8.0,
-                            mainAxisSpacing: 8.0,
-                            crossAxisCount: 2),
-                        itemBuilder: (_, index) {
-                          return Container(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                    12.0,
-                                  )),
-                                  child: Image.network(
-                                    galleryLit[index].link,
-                                    width: double.infinity,
-                                    height:
-                                        MediaQuery.of(context).size.height / 8,
-                                    fit: BoxFit.fill,
-                                  ),
+                          // childAspectRatio: MediaQuery.of(context).size.width /
+                          //     (MediaQuery.of(context).size.height / 2),
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 8.0,
+                          crossAxisCount: 2),
+                      itemBuilder: (_, index) {
+                        return Container(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                  12.0,
+                                )),
+                                child: Image.network(
+                                  galleryList[index].link,
+                                  width: double.infinity,
+                                  height:
+                                      MediaQuery.of(context).size.height / 8,
+                                  fit: BoxFit.fill,
                                 ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      child: Text("Images"),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.favorite_outline),
-                                    ),
-                                    Text("1"),
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.comment_bank_outlined),
-                                    ),
-                                    Text("0"),
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  }),
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    child: Text("Images"),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.favorite_outline),
+                                  ),
+                                  Text("1"),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.comment_bank_outlined),
+                                  ),
+                                  Text("0"),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
             ),
           ],
         ),
@@ -148,8 +149,8 @@ class MyGallery extends StatelessWidget {
           status: image['status'],
           date: image['date']);
 
-      galleryLit.add(gallery);
+      galleryList.add(gallery);
     }
-    print(galleryLit.length);
+    print(galleryList.length);
   }
 }
