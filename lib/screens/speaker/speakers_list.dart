@@ -14,36 +14,33 @@ class MySpeakersList extends StatefulWidget {
 }
 
 class _MySpeakersListState extends State<MySpeakersList> {
-  // final List _speakersList = [
-  //   'speaker1',
-  //   'speaker2 ',
-  //   'speaker3',
-  //   'speaker4',
-  //   'speaker5'
-  // ];
   List<SpeakerModel> _speakersList = [];
   final dio = Dio();
 
   Future getSpeakers() async {
-    final response = await dio
-        .get('https://globalhealth-forum.com/event_app/api/get_speaker.php');
-    var jsonData = jsonDecode(response.data);
-    for (var items in jsonData) {
-      final speakers = SpeakerModel(
-          id: items['id'],
-          name: items['name'],
-          email: items['email'],
-          mobile: items['mobile'],
-          designation: items['designation'],
-          institute: items['institute'],
-          information: items['information'],
-          city: items['city'],
-          country: items['country'],
-          date: items['date'],
-          photo: items['photo'],
-          status: items['status']);
+    try {
+      final response = await dio
+          .get('https://globalhealth-forum.com/event_app/api/get_speaker.php');
+      var jsonData = response.data;
+      for (var items in jsonData) {
+        final speakers = SpeakerModel(
+            id: items['id'],
+            name: items['name'],
+            email: items['email'],
+            mobile: items['mobile'],
+            designation: items['designation'],
+            institute: items['institute'],
+            information: items['information'],
+            city: items['city'],
+            country: items['country'],
+            date: items['date'],
+            photo: items['photo'],
+            status: items['status']);
 
-      _speakersList.add(speakers);
+        _speakersList.add(speakers);
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -69,7 +66,7 @@ class _MySpeakersListState extends State<MySpeakersList> {
                     itemBuilder: (context, index) {
                       return Card(
                         child: MySquareGridList(
-                            index: index, speakerModel: _speakersList),
+                            speakerModel: _speakersList[index]),
                       );
                     },
                   );

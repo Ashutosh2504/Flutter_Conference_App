@@ -3,6 +3,7 @@ import 'package:bottom_navigation_and_drawer/screens/downloads/downlads.dart';
 import 'package:bottom_navigation_and_drawer/screens/favourites/favourites.dart';
 import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
 import 'package:bottom_navigation_and_drawer/screens/live/live.dart';
+import 'package:bottom_navigation_and_drawer/screens/notifications/notification.dart';
 import 'package:bottom_navigation_and_drawer/screens/programs/programs.dart';
 import 'package:bottom_navigation_and_drawer/screens/quiz/quiz.dart';
 import 'package:bottom_navigation_and_drawer/screens/search/search.dart';
@@ -57,7 +58,7 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
         : currentIndex == 1
             ? MyAgenda()
             : currentIndex == 2
-                ? MyQuiz()
+                ? MyNotifications()
                 : MyLive();
 
     return Scaffold(
@@ -86,13 +87,13 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
             backgroundColor: Color.fromARGB(255, 38, 156, 179),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.live_tv),
-            label: 'Live',
+            icon: Icon(Icons.notifications),
+            label: 'Notifications',
             backgroundColor: Color.fromARGB(255, 38, 156, 179),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.quiz),
-            label: 'Quiz',
+            icon: Icon(Icons.live_tv),
+            label: 'Live',
             backgroundColor: Color.fromARGB(255, 38, 156, 179),
           ),
         ],

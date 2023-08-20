@@ -1,5 +1,12 @@
+import 'dart:convert';
+
+import 'package:bottom_navigation_and_drawer/screens/login/sendtp_model.dart';
 import 'package:bottom_navigation_and_drawer/util/routes.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -7,11 +14,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final Color color = Color.fromARGB(255, 15, 158, 174);
+
   String _name = "";
   bool changeBtn = false;
 
   final _formKey = GlobalKey<FormState>();
-
+  final dio = Dio();
   moveToHome(BuildContext context) async {
     setState(() {
       changeBtn = true;
@@ -23,6 +32,40 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+//ashup953@gmail.com
+  Future getOtp(String name) async {
+    setState(() {
+      changeBtn = true;
+    });
+    var response = await http.get(
+      Uri.parse(
+          "https://globalhealth-forum.com/event_app/api/login.php?email=${name}"),
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var jsonData = (response.body);
+
+      setState(() {
+        changeBtn = false;
+      });
+      Navigator.pushNamed(context, MyRoutes.compareOTP);
+    } else {
+      showAlert();
+      setState(() {
+        changeBtn = false;
+      });
+    }
+  }
+
+  void showAlert() {
+    QuickAlert.show(
+        confirmBtnColor: color,
+        context: context,
+        text: "Please enter correct email !",
+        type: QuickAlertType.warning);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -32,21 +75,20 @@ class _LoginPageState extends State<LoginPage> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                Image.asset(
-                  'assets/images/login.png',
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(
-                  // creates empty box of specified height and we can add child also in it.
-                  height: 20,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    'assets/images/login.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Text(
-                  'Welcome $_name',
+                  'Welcome ',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                 ),
-                SizedBox(
-                  // creates empty box of specified height and we can add child also in it.
-                  height: 20,
+                Text(
+                  '$_name',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -58,8 +100,8 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           TextFormField(
                             decoration: InputDecoration(
-                              hintText: "Enter username",
-                              label: Text("Username"),
+                              hintText: "Enter your mail",
+                              label: Text("Email"),
                             ),
                             onChanged: (value) {
                               _name = value;
@@ -72,29 +114,18 @@ class _LoginPageState extends State<LoginPage> {
                             //   return null;
                             // },
                           ),
-                          TextFormField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              hintText: "Enter password",
-                              label: Text("Password"),
-                            ),
-                            // validator: (value ) {
-                            //   if (value.length<6) {
-                            //     return "Username cannot be empty";
-                            //   }
-                            //   return null;
-                            // },
-                          ),
                           SizedBox(
                             // creates empty box of specified height and we can add child also in it.
                             height: 40,
                           ),
                           Material(
-                            color: Colors.blue[900],
+                            color: color,
                             borderRadius:
                                 BorderRadius.circular(changeBtn ? 50 : 8),
                             child: InkWell(
-                              onTap: () => moveToHome(context),
+                              onTap: () {
+                                getOtp(_name);
+                              },
                               child: AnimatedContainer(
                                 duration: Duration(seconds: 1),
                                 alignment: Alignment.center,
@@ -106,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                                         color: Colors.white,
                                       )
                                     : Text(
-                                        "Login",
+                                        "Get OTP",
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,

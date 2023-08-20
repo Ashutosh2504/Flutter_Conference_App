@@ -1,9 +1,17 @@
 import 'dart:convert';
 
+import 'package:bottom_navigation_and_drawer/screens/agenda/agenda_info.dart';
 import 'package:bottom_navigation_and_drawer/screens/agenda/agenda_model.dart';
+import 'package:bottom_navigation_and_drawer/screens/agenda/post_favourite.dart';
+import 'package:bottom_navigation_and_drawer/screens/drawers/sidemenu.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:quickalert/quickalert.dart';
+import 'package:quickalert/utils/images.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../speaker/speaker_info.dart';
 
 class MyAgenda extends StatefulWidget {
   const MyAgenda({super.key});
@@ -13,37 +21,47 @@ class MyAgenda extends StatefulWidget {
 }
 
 class _MyAgendaState extends State<MyAgenda> {
-  List<AgendaModel> agendaList = [];
+  List<List<AgendaModel>> dateWiseAgendaList = [];
+  List<AgendaModel> agendaList29th = [];
+  List<AgendaModel> agendaList30th = [];
   List<SpeakerModel> speakersList = [];
-
-  List<Map<String, dynamic>> _allAgendas = [
-    {"id": 1, "name": "Gregory Mole", "place": "Kolkata"},
-    {"id": 2, "name": "Himanshu Mole", "place": "Kolkata"},
-    {"id": 3, "name": "Ashu Mole", "place": "Kolkata"},
-    {"id": 4, "name": "Messi Mole", "place": "Kolkata"},
-    {"id": 5, "name": "Gregory Mole", "place": "Kolkata"},
-  ];
-
-  // List<Map<String, dynamic>> _foundAgendas = [];
-
+  List<SpeakerModel> agendaSpeakersList = [];
+  final Color color = Color.fromARGB(255, 15, 158, 174);
+  bool clicked = false;
+  String favoutiteBtn = "Add to Favourites";
   List<AgendaModel> _foundAgendas = [];
-
+  bool isLoading = false;
+  var userId;
   @override
   void initState() {
-    _foundAgendas = agendaList;
+    getAgendas();
 
+    setState(() {
+      _foundAgendas = agendaList29th;
+      print("List of agendas: " + _foundAgendas.toString());
+    });
     super.initState();
   }
 
-  void _runFilter(String enteredKeyword) {
-    // List<Map<String, dynamic>> _results = [];
-    List<AgendaModel> _results = [];
+  // void getPreferences() async {
+  //   var prefs = await SharedPreferences.getInstance();
+  //   var user_id = prefs.getString("user_id");
+  //   userId = user_id != null ? user_id : "";
+  // }
 
+  void _runFilter(String enteredKeyword, int date) {
+    List<AgendaModel> _results = [];
+    List<AgendaModel> agendaList = [];
+    if (date == 29) {
+      agendaList = agendaList29th;
+    } else {
+      agendaList = agendaList30th;
+    }
     if (enteredKeyword.isEmpty) {
       _results = agendaList;
     } else {
       _results = agendaList
-          .where((agenda) => agenda.speaker_name
+          .where((agenda) => agenda.speakerName
               .toLowerCase()
               .contains(enteredKeyword.toLowerCase()))
           .toList();
@@ -57,28 +75,39 @@ class _MyAgendaState extends State<MyAgenda> {
   final dio = Dio();
 
   Future getAgendas() async {
-    final response = await dio
-        .get('https://globalhealth-forum.com/event_app/api/get_program.php');
-    var jsonData = jsonDecode(response.data);
-    for (var items in jsonData) {
-      final agenda = AgendaModel(
-          id: items['id'],
-          speaker_name: items['speaker_name'],
-          speaker_id: items['speaker_id'],
-          hall: items['hall'],
-          topic: items['topic'],
-          date: items['date'],
-          time: items['time'],
-          current_date: items['current_date'],
-          status: items['status']);
-      agendaList.add(agenda);
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final response = await http.get(Uri.parse(
+          'https://globalhealth-forum.com/event_app/api/get_datewise_agenda.php'));
+
+      Map<String, List<AgendaModel>> agendaListMap =
+          agendaModelFromJson(response.body);
+      print(agendaListMap);
+      agendaListMap.values.forEach((value) {
+        dateWiseAgendaList.add(value);
+      });
+
+      setState(() {
+        agendaList29th = dateWiseAgendaList.elementAt(0);
+
+        _foundAgendas = agendaList29th;
+        agendaList30th = dateWiseAgendaList.elementAt(1);
+        isLoading = false;
+      });
+    } catch (e) {
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
-  Future getSpeakers() async {
+  Future getSpeakers(int date) async {
     final response = await dio
         .get('https://globalhealth-forum.com/event_app/api/get_speaker.php');
-    var jsonData = jsonDecode(response.data);
+    var jsonData = (response.data);
     for (var items in jsonData) {
       final speakers = SpeakerModel(
           id: items['id'],
@@ -96,194 +125,581 @@ class _MyAgendaState extends State<MyAgenda> {
 
       speakersList.add(speakers);
     }
+
+    getSpeakersInAgenda(date);
+  }
+
+  void getSpeakersInAgenda(int date) {
+    if (date == 29) {
+      for (var i = 0; i < agendaList29th.length; i++) {
+        for (var j = 0; j < speakersList.length; j++) {
+          if (int.parse(agendaList29th[i].speakerId) == speakersList[j].id) {
+            agendaSpeakersList.add(speakersList[j]);
+          }
+        }
+      }
+    } else {
+      for (var i = 0; i < agendaList30th.length; i++) {
+        for (var j = 0; j < speakersList.length; j++) {
+          if (int.parse(agendaList30th[i].speakerId) == speakersList[j].id) {
+            agendaSpeakersList.add(speakersList[j]);
+          }
+        }
+      }
+    }
+  }
+
+  void addToFavourites(AgendaModel agenda) async {
+    var prefs = await SharedPreferences.getInstance();
+    var user_id = prefs.getString("user_id");
+    userId = user_id != null ? user_id : "";
+    final response = await http.post(
+      Uri.parse(
+          'https://globalhealth-forum.com/event_app/api/post_favorite.php'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "agenda_id": agenda.id.toString(),
+        "user_id": userId
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      // return Album.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+
+      showAlert();
+    }
+
+    // final response = await dio
+    //     .post('https://globalhealth-forum.com/event_app/api/post_favorite.php');
+    // var jsonData = (response.data);
+  }
+
+  void showAlert() {
+    QuickAlert.show(
+        confirmBtnColor: color,
+        context: context,
+        text: "Already added to favourites !",
+        type: QuickAlertType.warning);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Agenda",
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            // const SizedBox(
-            //   height: 30,
-            // ),
-            TextField(
-              onChanged: (value) => _runFilter(value),
-              decoration: InputDecoration(
-                labelText: "Select Hall",
-                suffixIcon: Icon(Icons.search),
-              ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          drawer: SideMenu(),
+          appBar: AppBar(
+            title: Text(
+              "Agenda",
             ),
-            // const SizedBox(
-            //   height: 20,
-            // ),
-            Expanded(
-              child: FutureBuilder(
-                future: getAgendas(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return ListView.builder(
-                      itemCount: agendaList.length,
-                      itemBuilder: (context, index) => Card(
-                        key: ValueKey(agendaList[index]),
-                        color: Colors.blueGrey[50],
-                        elevation: 5,
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blueGrey),
-                                        text: agendaList[index].time,
-                                      ),
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blueGrey),
-                                        text:
-                                            "Places:${agendaList[index].time}",
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {},
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  Colors.lightBlue)),
-                                      child: const Text(
-                                        "Book",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.white),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Text(
-                                "Topic: ${agendaList[index].topic} ",
-                                style: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.pinkAccent),
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.place,
-                                    color: Colors.blueAccent,
-                                  ),
-                                  Text(
-                                    agendaList[index].hall,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.blueGrey),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                "Speakers",
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.blueGrey),
-                              ),
-                              FutureBuilder(
-                                  future: getSpeakers(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.done) {
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: ListTile(
-                                          onTap: () {
-                                            print(_foundAgendas.toString());
-                                          },
-                                          leading: CircleAvatar(
-                                            radius: 25,
-                                            child: ClipOval(
-                                              child: Image.network(
-                                                speakersList[index].photo,
-                                                fit: BoxFit.fill,
+          ),
+          body: Column(
+            children: [
+              TabBar(tabs: [
+                Tab(
+                  text: " 29,Sept",
+                ),
+                Tab(
+                  text: "Sept 30",
+                )
+              ]),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          // const SizedBox(
+                          //   height: 30,
+                          // ),
+                          TextField(
+                            onChanged: (value) => _runFilter(value, 29),
+                            decoration: InputDecoration(
+                              labelText: "Select Speaker",
+                              suffixIcon: Icon(Icons.search),
+                            ),
+                          ),
+                          // const SizedBox(
+                          //   height: 20,
+                          // ),
+                          isLoading
+                              ? Expanded(
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                )
+                              : Expanded(
+                                  child: ListView.builder(
+                                    itemCount: _foundAgendas.length,
+                                    itemBuilder: (context, index) => Card(
+                                      key: ValueKey(_foundAgendas[index]),
+                                      color: Colors.blueGrey[50],
+                                      elevation: 5,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors
+                                                                .blueGrey),
+                                                        text: _foundAgendas[
+                                                                    index]
+                                                                .fromTime +
+                                                            " - " +
+                                                            _foundAgendas[index]
+                                                                .toTime,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  // RichText(
+                                                  //   text: TextSpan(
+                                                  //     style: TextStyle(
+                                                  //         fontSize: 18,
+                                                  //         fontWeight:
+                                                  //             FontWeight.bold,
+                                                  //         color:
+                                                  //             Colors.blueGrey),
+                                                  //     text:
+                                                  //         "Places:${_foundAgendas[index].time}",
+                                                  //   ),
+                                                  // ),
+                                                  Expanded(
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        addToFavourites(
+                                                            _foundAgendas[
+                                                                index]);
+                                                        clicked = true;
+                                                        favoutiteBtn = "Added";
+                                                      },
+                                                      style: ButtonStyle(
+                                                          elevation:
+                                                              MaterialStatePropertyAll(
+                                                                  3),
+                                                          backgroundColor:
+                                                              MaterialStatePropertyAll(
+                                                                  (clicked
+                                                                      ? Colors
+                                                                          .grey
+                                                                      : Colors
+                                                                          .blue))),
+                                                      child: Text(
+                                                        favoutiteBtn,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
                                             ),
-                                          ),
-                                          title: Text(
-                                            speakersList[index].name,
-                                            style: TextStyle(
-                                                color: Colors.pinkAccent,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          subtitle: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                speakersList[index].designation,
-                                                // _foundAgendas[index]["place"],
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            MyAgendaInfo(
+                                                                agendaModel:
+                                                                    _foundAgendas[
+                                                                        index])));
+                                              },
+                                              child: Text(
+                                                "Topic: ${_foundAgendas[index].topic} ",
                                                 style: TextStyle(
-                                                    color: Colors.blueGrey),
+                                                    fontSize: 28,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    color: Colors.pinkAccent),
                                               ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                speakersList[index].city,
-                                                style: TextStyle(
-                                                    color: Colors.blueGrey),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.place,
+                                                  color: Colors.blueAccent,
+                                                ),
+                                                Text(
+                                                  _foundAgendas[index].hall,
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.blueGrey),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              "Speakers",
+                                              style: TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.blueGrey),
+                                            ),
+                                            FutureBuilder(
+                                                future: getSpeakers(29),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.done) {
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      child: ListTile(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      MySpeakerInfo(
+                                                                          speakersList:
+                                                                              agendaSpeakersList[index])));
+                                                          print(_foundAgendas
+                                                              .toString());
+                                                        },
+                                                        leading: CircleAvatar(
+                                                          radius: 25,
+                                                          child: ClipOval(
+                                                            child:
+                                                                Image.network(
+                                                              agendaSpeakersList[
+                                                                      index]
+                                                                  .photo,
+                                                              fit: BoxFit.fill,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        title: Text(
+                                                          agendaSpeakersList[
+                                                                  index]
+                                                              .name,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .pinkAccent,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        subtitle: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              agendaSpeakersList[
+                                                                      index]
+                                                                  .designation,
+                                                              // _foundAgendas[index]["place"],
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blueGrey),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              agendaSpeakersList[
+                                                                      index]
+                                                                  .city,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blueGrey),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  }
+                                                }),
+                                          ],
                                         ),
-                                      );
-                                    } else {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                  }),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
+                                      ),
+                                    ),
+                                  ),
 
-              /*  */
-            ),
-          ],
-        ),
-      ),
+                                  /*  */
+                                ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          // const SizedBox(
+                          //   height: 30,
+                          // ),
+                          TextField(
+                            onChanged: (value) => _runFilter(value, 30),
+                            decoration: InputDecoration(
+                              labelText: "Select Speaker",
+                              suffixIcon: Icon(Icons.search),
+                            ),
+                          ),
+                          // const SizedBox(
+                          //   height: 20,
+                          // ),
+                          isLoading
+                              ? Expanded(
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                )
+                              : Expanded(
+                                  child: ListView.builder(
+                                    itemCount: _foundAgendas.length,
+                                    itemBuilder: (context, index) => Card(
+                                      key: ValueKey(_foundAgendas[index]),
+                                      color: Colors.blueGrey[50],
+                                      elevation: 5,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors
+                                                                .blueGrey),
+                                                        text: _foundAgendas[
+                                                                    index]
+                                                                .fromTime +
+                                                            " - " +
+                                                            _foundAgendas[index]
+                                                                .toTime,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  // RichText(
+                                                  //   text: TextSpan(
+                                                  //     style: TextStyle(
+                                                  //         fontSize: 18,
+                                                  //         fontWeight:
+                                                  //             FontWeight.bold,
+                                                  //         color:
+                                                  //             Colors.blueGrey),
+                                                  //     text:
+                                                  //         "Places:${_foundAgendas[index].time}",
+                                                  //   ),
+                                                  // ),
+                                                  Expanded(
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        addToFavourites(
+                                                            _foundAgendas[
+                                                                index]);
+                                                        clicked = true;
+                                                      },
+                                                      style: ButtonStyle(
+                                                          elevation:
+                                                              MaterialStatePropertyAll(
+                                                                  3),
+                                                          backgroundColor:
+                                                              MaterialStatePropertyAll(
+                                                                  (clicked
+                                                                      ? Colors
+                                                                          .blue
+                                                                      : Colors
+                                                                          .grey))),
+                                                      child: const Text(
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        "Add to Favourites",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Text(
+                                              "Topic: ${_foundAgendas[index].topic} ",
+                                              style: TextStyle(
+                                                  fontSize: 28,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.pinkAccent),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.place,
+                                                  color: Colors.blueAccent,
+                                                ),
+                                                Text(
+                                                  _foundAgendas[index].hall,
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.blueGrey),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              "Speakers",
+                                              style: TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.blueGrey),
+                                            ),
+                                            FutureBuilder(
+                                                future: getSpeakers(30),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.done) {
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      child: ListTile(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      MySpeakerInfo(
+                                                                          speakersList:
+                                                                              agendaSpeakersList[index])));
+                                                          print(_foundAgendas
+                                                              .toString());
+                                                        },
+                                                        leading: CircleAvatar(
+                                                          radius: 25,
+                                                          child: ClipOval(
+                                                            child:
+                                                                Image.network(
+                                                              agendaSpeakersList[
+                                                                      index]
+                                                                  .photo,
+                                                              fit: BoxFit.fill,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        title: Text(
+                                                          agendaSpeakersList[
+                                                                  index]
+                                                              .name,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .pinkAccent,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        subtitle: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              agendaSpeakersList[
+                                                                      index]
+                                                                  .designation,
+                                                              // _foundAgendas[index]["place"],
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blueGrey),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              agendaSpeakersList[
+                                                                      index]
+                                                                  .city,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blueGrey),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  }
+                                                }),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
+                                  /*  */
+                                ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          )),
     );
   }
 }

@@ -2,38 +2,56 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'speaker_model.dart';
+import 'package:http/http.dart' as http;
 
-class MySpeakerInfo extends StatelessWidget {
-  MySpeakerInfo({required this.index, required this.speakersList});
+class MySpeakerInfo extends StatefulWidget {
+  MySpeakerInfo({required this.speakersList});
+  final SpeakerModel speakersList;
+
+  @override
+  State<MySpeakerInfo> createState() => _MySpeakerInfoState();
+}
+
+class _MySpeakerInfoState extends State<MySpeakerInfo> {
+  final Color color = Color.fromARGB(255, 15, 158, 174);
+  bool success = false;
+  void showAlert(bool success) {
+    if (success) {
+      QuickAlert.show(
+          confirmBtnColor: color,
+          context: context,
+          text: "Mail sent..",
+          type: QuickAlertType.success);
+    } else {
+      QuickAlert.show(
+          confirmBtnColor: color,
+          context: context,
+          text: "Failed to send mail",
+          type: QuickAlertType.error);
+    }
+  }
+
 //final SpeakerModel speakerInfo;
   final dio = Dio();
-  final int index;
-  final List<SpeakerModel> speakersList;
-
-  // Future getSpeakers() async {
-  //   final response = await dio
-  //       .get('https://globalhealth-forum.com/event_app/api/get_speaker.php');
-  //   var jsonData = jsonDecode(response.data);
-  //   for (var items in jsonData) {
-  //     final speakers = SpeakerModel(
-  //         id: items['id'],
-  //         name: items['name'],
-  //         email: items['email'],
-  //         mobile: items['mobile'],
-  //         designation: items['designation'],
-  //         institute: items['institute'],
-  //         information: items['information'],
-  //         city: items['city'],
-  //         country: items['country'],
-  //         date: items['date'],
-  //         photo: items['photo'],
-  //         status: items['status']);
-
-  //     speakersList.add(speakers);
-  //   }
-  // }
+  pushNotification(String speakerMail) async {
+    var prefs = await SharedPreferences.getInstance();
+    var get_mail = prefs.getString("email");
+    var user_email = get_mail != null ? get_mail : "";
+    var response = await http.get(
+      Uri.parse(
+          "https://globalhealth-forum.com/event_app/api/email_notification.php?speaker_email=${speakerMail}&user_email=${user_email}"),
+    );
+    if (response.statusCode == 200) {
+      showAlert(true);
+    } else {
+      showAlert(false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +87,7 @@ class MySpeakerInfo extends StatelessWidget {
                         radius: 50,
                         child: ClipOval(
                           child: Image.network(
-                            speakersList[index].photo,
+                            widget.speakersList.photo,
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -91,7 +109,7 @@ class MySpeakerInfo extends StatelessWidget {
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.pinkAccent),
-                                  text: speakersList[index].name,
+                                  text: widget.speakersList.name,
                                 ),
                               ),
                             ),
@@ -103,7 +121,7 @@ class MySpeakerInfo extends StatelessWidget {
                                     fontSize: 16,
                                     fontWeight: FontWeight.normal,
                                     color: Colors.black),
-                                text: speakersList[index].designation,
+                                text: widget.speakersList.designation,
                               ),
                             ),
                             RichText(
@@ -114,7 +132,7 @@ class MySpeakerInfo extends StatelessWidget {
                                     fontSize: 18,
                                     fontWeight: FontWeight.normal,
                                     color: Colors.black),
-                                text: speakersList[index].institute,
+                                text: widget.speakersList.institute,
                               ),
                             ),
                           ],
@@ -146,7 +164,7 @@ class MySpeakerInfo extends StatelessWidget {
                               width: 5,
                             ),
                             Text(
-                              "Info",
+                              "Info:",
                               style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.normal,
@@ -155,7 +173,7 @@ class MySpeakerInfo extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          speakersList[index].information,
+                          widget.speakersList.information,
                           textAlign: TextAlign.left,
                           softWrap: true,
                           //overflow: TextOverflow.ellipsis,
@@ -178,40 +196,75 @@ class MySpeakerInfo extends StatelessWidget {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
+                        Icon(
+                          Icons.location_city,
+                          semanticLabel: "City",
+                        ),
                         Text(
-                          "City",
+                          "City:",
                           textAlign: TextAlign.left,
                           softWrap: true,
                           //overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 16,
                               fontWeight: FontWeight.normal,
                               color: Colors.black),
                         ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_city,
-                              semanticLabel: "City",
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              speakersList[index].city,
-                              softWrap: true,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black),
-                            ),
-                          ],
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          widget.speakersList.city,
+                          softWrap: true,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black),
                         ),
                       ],
                     ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                    child: RatingBar.builder(
+                  initialRating: 0,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: false,
+                  itemCount: 5,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (rating) {
+                    print("Rating for speaker ${rating}");
+                  },
+                )),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(elevation: 3),
+                        onPressed: () {
+                          pushNotification(widget.speakersList.email);
+                        },
+                        child: Text(
+                          "Say Hii",
+                          style:
+                              TextStyle(fontSize: 20, color: Colors.redAccent),
+                        )),
                   ),
                 ),
               ),

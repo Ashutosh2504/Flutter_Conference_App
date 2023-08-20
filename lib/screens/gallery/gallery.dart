@@ -138,19 +138,23 @@ class MyGallery extends StatelessWidget {
 
   final dio = Dio();
   Future getGallery() async {
-    final response = await dio
-        .get('https://globalhealth-forum.com/event_app/api/get_gallery.php');
+    try {
+      final response = await dio
+          .get('https://globalhealth-forum.com/event_app/api/get_gallery.php');
 
-    var jsonData = jsonDecode(response.data);
-    for (var image in jsonData) {
-      final gallery = GalleryModel(
-          id: image['id'],
-          link: image['link'],
-          status: image['status'],
-          date: image['date']);
+      var jsonData = (response.data);
+      for (var image in jsonData) {
+        final gallery = GalleryModel(
+            id: image['id'],
+            link: image['link'],
+            status: image['status'],
+            date: image['date']);
 
-      galleryList.add(gallery);
+        galleryList.add(gallery);
+      }
+      print(galleryList.length);
+    } catch (e) {
+      print(e.toString());
     }
-    print(galleryList.length);
   }
 }

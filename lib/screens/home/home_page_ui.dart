@@ -142,7 +142,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                               text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
-                                  text: "Exhibitors"),
+                                  text: "Sponsers"),
                             ),
                           ),
                         ],
@@ -191,7 +191,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   ),
                   InkWell(
                     onTap: () => {
-                      // Navigator.pushNamed(context, MyRoutes.agenda),
+                      Navigator.pushNamed(context, MyRoutes.favourite),
                     },
                     child: Container(
                       child: Column(
@@ -228,7 +228,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   ),
                   InkWell(
                     onTap: () => {
-                      //Navigator.pushNamed(context, MyRoutes.agenda),
+                      Navigator.pushNamed(context, MyRoutes.download),
                     },
                     child: Container(
                       child: Column(
@@ -264,7 +264,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   ),
                   InkWell(
                     onTap: () => {
-                      //Navigator.pushNamed(context, MyRoutes.agenda),
+                      Navigator.pushNamed(context, MyRoutes.participants),
                     },
                     child: Container(
                       child: Column(

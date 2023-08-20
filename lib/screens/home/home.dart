@@ -17,7 +17,7 @@ class _MyHomeState extends State<MyHome> {
       drawer: SideMenu(),
       appBar: AppBar(
         title: Text(
-          "Health Forum",
+          "Global Health Forum",
           style: TextStyle(
               color: Colors.blueGrey,
               fontSize: 25,

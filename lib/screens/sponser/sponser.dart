@@ -1,3 +1,6 @@
+import 'package:bottom_navigation_and_drawer/screens/sponser/patronage_model.dart';
+import 'package:bottom_navigation_and_drawer/screens/sponser/sponser_model.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class MySponsers extends StatefulWidget {
@@ -8,6 +11,97 @@ class MySponsers extends StatefulWidget {
 }
 
 class _MySponsersState extends State<MySponsers> {
+  List<SponserModel> sponserList = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getSponsers();
+  }
+
+  final dio = Dio();
+  Future getSponsers() async {
+    // try {
+    final response = await dio
+        .get('https://globalhealth-forum.com/event_app/api/get_exhibitor.php');
+
+    var jsonData = (response.data);
+
+    
+    final sponserModel = jsonData;
+    print(jsonData);
+    // var high = jsonData['HIGH PATRONAGE'];
+
+    print(sponserModel.toString());
+    print(sponserModel['HIGH PATRONAGE']);
+    List<Patronage> highList = [];
+    List<Patronage> institutionalList = [];
+    List<Patronage> gloabalHealthForumList = [];
+    List<Patronage> forumSaudeList = [];
+
+
+
+    final SponserModel sponsers = SponserModel(
+        highPatronage: jsonData['HIGH PATRONAGE'],
+        institutionalPatronage: sponserModel['INSTITUTIONAL PATRONAGE'],
+        globalHealthForumPartners: sponserModel['GLOBAL HEALTH FORUM PARTNERS'],
+        forumSaudeXxiPartners: sponserModel['FORUM SAUDE XXI PARTNERS']);
+
+    for (var item in sponsers.highPatronage) {
+      final Patronage high = Patronage(
+          id: item['id'],
+          name: item['name'],
+          companyUrl: //item['companyUrl'],
+              "",
+          comInfo: "" //item['comInfo'],
+          ,
+          category: item['category'],
+          logo: item['logo'],
+          status: item['status'],
+          date: item['date']);
+      highList.add(high);
+    }
+    for (var item in sponsers.institutionalPatronage) {
+      final Patronage institutional = Patronage(
+          id: item['id'],
+          name: item['name'],
+          companyUrl: //item['companyUrl'],
+              "",
+          comInfo: "" //item['comInfo'],
+          ,
+          category: item['category'],
+          logo: item['logo'],
+          status: item['status'],
+          date: item['date']);
+      institutionalList.add(institutional);
+    }
+    for (var item in sponsers.globalHealthForumPartners) {
+      final Patronage globalHealthForum = Patronage(
+          id: item.id,
+          name: item.name,
+          companyUrl: item.companyUrl,
+          comInfo: item.comInfo,
+          category: item.category,
+          logo: item.logo,
+          status: item.status,
+          date: item.date);
+      gloabalHealthForumList.add(globalHealthForum);
+    }
+    for (var item in sponsers.forumSaudeXxiPartners) {
+      final Patronage forumSaude = Patronage(
+          id: item.id,
+          name: item.name,
+          companyUrl: item.companyUrl,
+          comInfo: item.comInfo,
+          category: item.category,
+          logo: item.logo,
+          status: item.status,
+          date: item.date);
+      forumSaudeList.add(forumSaude);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

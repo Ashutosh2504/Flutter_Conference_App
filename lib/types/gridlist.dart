@@ -3,7 +3,6 @@ import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_info.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_model.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bottom_navigation_and_drawer/util/routes.dart';
 
 class MySquareGridList extends StatelessWidget {
   // final int id;
@@ -19,8 +18,9 @@ class MySquareGridList extends StatelessWidget {
   // final String date;
   // final String status;
 
-  final List<SpeakerModel> speakerModel;
-  final int index;
+  // final List<SpeakerModel> speakerModel;
+  final SpeakerModel speakerModel;
+  //final int index;
   // MySquareGridList({
   //   required this.id,
   //   required this.name,
@@ -36,7 +36,7 @@ class MySquareGridList extends StatelessWidget {
   //   required this.status,
   // });
 
-  MySquareGridList({required this.index, required this.speakerModel});
+  MySquareGridList({required this.speakerModel});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class MySquareGridList extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    MySpeakerInfo(index: index, speakersList: speakerModel)));
+                    MySpeakerInfo(speakersList: speakerModel)));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,7 +60,7 @@ class MySquareGridList extends StatelessWidget {
                 color: Colors.blueGrey,
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: NetworkImage(speakerModel[index].photo),
+                  image: NetworkImage(speakerModel.photo),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -74,7 +74,7 @@ class MySquareGridList extends StatelessWidget {
                   color: Colors.blue,
                   fontWeight: FontWeight.w600,
                   fontSize: 15),
-              text: speakerModel[index].name,
+              text: speakerModel.name,
             ),
           ),
           RichText(
@@ -85,7 +85,7 @@ class MySquareGridList extends StatelessWidget {
                   color: Colors.black,
                   fontWeight: FontWeight.w300,
                   fontSize: 13),
-              text: speakerModel[index].designation,
+              text: speakerModel.designation,
             ),
           ),
         ],
