@@ -12,6 +12,10 @@ class MySponsers extends StatefulWidget {
 
 class _MySponsersState extends State<MySponsers> {
   List<SponserModel> sponserList = [];
+  List<Patronage> highList = [];
+  List<Patronage> institutionalList = [];
+  List<Patronage> gloabalHealthForumList = [];
+  List<Patronage> forumSaudeList = [];
 
   @override
   void initState() {
@@ -28,19 +32,12 @@ class _MySponsersState extends State<MySponsers> {
 
     var jsonData = (response.data);
 
-    
     final sponserModel = jsonData;
     print(jsonData);
     // var high = jsonData['HIGH PATRONAGE'];
 
     print(sponserModel.toString());
     print(sponserModel['HIGH PATRONAGE']);
-    List<Patronage> highList = [];
-    List<Patronage> institutionalList = [];
-    List<Patronage> gloabalHealthForumList = [];
-    List<Patronage> forumSaudeList = [];
-
-
 
     final SponserModel sponsers = SponserModel(
         highPatronage: jsonData['HIGH PATRONAGE'],
@@ -112,13 +109,29 @@ class _MySponsersState extends State<MySponsers> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InkWell(
-            onTap: () {},
-            child: Image.asset(
-              "assets/images/join_us.jpg",
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: Image.asset(
+                "assets/images/join_us.jpg",
+                height: 150,
+                width: double.infinity,
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "These exceptional partners are the epitome of excellence, bringing their unrivaled expertise and unmatched reputation to the forefront. ",
+              textAlign: TextAlign.left,
+              softWrap: true,
+              //overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black),
             ),
           ),
           Padding(
@@ -133,82 +146,99 @@ class _MySponsersState extends State<MySponsers> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "These exceptional partners are the epitome of excellence, bringing their unrivaled expertise and unmatched reputation to the forefront. ",
-              textAlign: TextAlign.left,
-              softWrap: true,
-              //overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black),
-            ),
-          ),
           Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    child: Image.asset(
-                      "assets/images/pp1.png",
-                      //height: 200,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  child: Container(
-                    child: Image.asset(
-                      "assets/images/pp2.png",
-                      // height: 200,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    child: Image.asset(
-                      "assets/images/gp1.png",
-                      //height: 200,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  child: Container(
-                    child: Image.asset(
-                      "assets/images/gp2.png",
-                      // height: 200,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // RichText(
-          //   text: TextSpan(
-          //     text: 'Hello ',
-          //     style: DefaultTextStyle.of(context).style,
-          //     children: const <TextSpan>[
-          //       TextSpan(
-          //           text: 'bold',
-          //           style: TextStyle(fontWeight: FontWeight.bold)),
-          //       //TextSpan(text: ' world!'),
-          //     ],
-          //   ),
-          // )
+              child: FutureBuilder(
+            future: getSponsers(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      //childAspectRatio: 1.2,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 10),
+                  itemCount: highList.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Container(
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: Image.network(highList[index].logo,
+                                    fit: BoxFit.fill),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.info_outline,
+                                            semanticLabel: "Info",
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "Info:",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        highList[index].comInfo,
+                                        textAlign: TextAlign.left,
+                                        softWrap: true,
+                                        //overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ))
+          // GridView.builder(
+          //     scrollDirection: Axis.vertical,
+          //     shrinkWrap: true,
+          //     gridDelegate:
+          //         SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          //     itemBuilder: (context, index) {
+          //       return Card(
+          //         child: Container(),
+          //       );
+          //     })
         ],
       ),
     );

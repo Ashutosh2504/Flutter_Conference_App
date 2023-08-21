@@ -32,7 +32,7 @@ class _MyDownloadsState extends State<MyDownloads> {
   Future getDownloads() async {
     final response = await dio
         .get('https://globalhealth-forum.com/event_app/api/get_download.php');
-    var jsonData = jsonDecode(response.data);
+    var jsonData = (response.data);
     for (var items in jsonData) {
       final download = DownloadModel(
         id: items['id'],
@@ -73,7 +73,7 @@ class _MyDownloadsState extends State<MyDownloads> {
                                   showDialog(
                                     context: context,
                                     builder: (context) => DownloadingDialog(
-                                        ),
+                                        downloadUrl: downloadList[index].file),
                                   );
                                 },
                                 child: Text("Download File."),

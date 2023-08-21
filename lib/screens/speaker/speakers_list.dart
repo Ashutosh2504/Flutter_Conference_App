@@ -16,7 +16,7 @@ class MySpeakersList extends StatefulWidget {
 class _MySpeakersListState extends State<MySpeakersList> {
   List<SpeakerModel> _speakersList = [];
   final dio = Dio();
-
+  bool listViewEnabled = false;
   Future getSpeakers() async {
     try {
       final response = await dio
@@ -47,7 +47,25 @@ class _MySpeakersListState extends State<MySpeakersList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          listViewEnabled
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      listViewEnabled = false;
+                    });
+                  },
+                  icon: Icon(Icons.grid_3x3))
+              : IconButton(
+                  onPressed: () {
+                    setState(() {
+                      listViewEnabled = true;
+                    });
+                  },
+                  icon: Icon(Icons.list))
+        ],
+      ),
       body: Column(
         children: [
           // speakerslist
@@ -58,7 +76,7 @@ class _MySpeakersListState extends State<MySpeakersList> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
+                        crossAxisCount: listViewEnabled ? 1 : 2,
                         //childAspectRatio: 1.2,
                         crossAxisSpacing: 5,
                         mainAxisSpacing: 10),
