@@ -151,6 +151,35 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                        child: RatingBar.builder(
+                      itemSize: 25,
+                      initialRating: 0,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: false,
+                      itemCount: 5,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (rating) {
+                        print("Rating for speaker ${rating}");
+                      },
+                    )),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -174,7 +203,7 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                         ),
                         Text(
                           widget.speakersList.information,
-                          textAlign: TextAlign.left,
+                          textAlign: TextAlign.start,
                           softWrap: true,
                           //overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -227,25 +256,6 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                    child: RatingBar.builder(
-                  initialRating: 0,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: false,
-                  itemCount: 5,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                  ),
-                  onRatingUpdate: (rating) {
-                    print("Rating for speaker ${rating}");
-                  },
-                )),
               ),
               Center(
                 child: Padding(

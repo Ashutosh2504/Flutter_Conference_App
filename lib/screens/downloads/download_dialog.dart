@@ -19,7 +19,7 @@ class _DownloadingDialogState extends State<DownloadingDialog> {
 
     String path = await _getFilePath(fileName);
 
-    await dio.download(
+     await dio.download(
       widget.downloadUrl,
       path,
       onReceiveProgress: (recivedBytes, totalBytes) {
@@ -28,6 +28,7 @@ class _DownloadingDialogState extends State<DownloadingDialog> {
         });
 
         print(progress);
+        print(path);
       },
       deleteOnError: true,
     ).then((_) {

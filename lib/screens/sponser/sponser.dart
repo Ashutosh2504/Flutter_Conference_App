@@ -1,4 +1,5 @@
 import 'package:bottom_navigation_and_drawer/screens/sponser/patronage_model.dart';
+import 'package:bottom_navigation_and_drawer/screens/sponser/sponser_content.dart';
 import 'package:bottom_navigation_and_drawer/screens/sponser/sponser_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ class _MySponsersState extends State<MySponsers> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getSponsers();
   }
 
   final dio = Dio();
@@ -49,10 +49,9 @@ class _MySponsersState extends State<MySponsers> {
       final Patronage high = Patronage(
           id: item['id'],
           name: item['name'],
-          companyUrl: //item['companyUrl'],
-              "",
-          comInfo: "" //item['comInfo'],
-          ,
+          companyUrl: item['company_url'],
+          comInfo: item['com_info'],
+          tags: item['tags'],
           category: item['category'],
           logo: item['logo'],
           status: item['status'],
@@ -63,10 +62,9 @@ class _MySponsersState extends State<MySponsers> {
       final Patronage institutional = Patronage(
           id: item['id'],
           name: item['name'],
-          companyUrl: //item['companyUrl'],
-              "",
-          comInfo: "" //item['comInfo'],
-          ,
+          companyUrl: item['company_url'],
+          comInfo: item['com_info'],
+          tags: item['tags'],
           category: item['category'],
           logo: item['logo'],
           status: item['status'],
@@ -75,26 +73,28 @@ class _MySponsersState extends State<MySponsers> {
     }
     for (var item in sponsers.globalHealthForumPartners) {
       final Patronage globalHealthForum = Patronage(
-          id: item.id,
-          name: item.name,
-          companyUrl: item.companyUrl,
-          comInfo: item.comInfo,
-          category: item.category,
-          logo: item.logo,
-          status: item.status,
-          date: item.date);
+          id: item['id'],
+          name: item['name'],
+          companyUrl: item['company_url'],
+          comInfo: item['com_info'],
+          tags: item['tags'],
+          category: item['category'],
+          logo: item['logo'],
+          status: item['status'],
+          date: item['date']);
       gloabalHealthForumList.add(globalHealthForum);
     }
     for (var item in sponsers.forumSaudeXxiPartners) {
       final Patronage forumSaude = Patronage(
-          id: item.id,
-          name: item.name,
-          companyUrl: item.companyUrl,
-          comInfo: item.comInfo,
-          category: item.category,
-          logo: item.logo,
-          status: item.status,
-          date: item.date);
+          id: item['id'],
+          name: item['name'],
+          companyUrl: item['company_url'],
+          comInfo: item['com_info'],
+          tags: item['tags'],
+          category: item['category'],
+          logo: item['logo'],
+          status: item['status'],
+          date: item['date']);
       forumSaudeList.add(forumSaude);
     }
   }
@@ -102,144 +102,200 @@ class _MySponsersState extends State<MySponsers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Sponsers"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {},
-              child: Image.asset(
-                "assets/images/join_us.jpg",
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
+        appBar: AppBar(
+          title: Text("Sponsers"),
+        ),
+        body: FutureBuilder(
+          future: getSponsers(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "These exceptional partners are the epitome of excellence, bringing their unrivaled expertise and unmatched reputation to the forefront. ",
+                            textAlign: TextAlign.left,
+                            softWrap: true,
+                            //overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: Text(
+                          "HIGH PATRONAGES",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  createListView(highList),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: Text(
+                          "INSTITUTIONAL PATRONAGES",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  createListView(institutionalList),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: Text(
+                          "GLOBAL HEALTH FORUM PATRONAGES",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  createListView(gloabalHealthForumList),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: Text(
+                          "FORUM SAUDE XXI PATRONAGES",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  createListView(forumSaudeList),
 
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "These exceptional partners are the epitome of excellence, bringing their unrivaled expertise and unmatched reputation to the forefront. ",
-              textAlign: TextAlign.left,
-              softWrap: true,
-              //overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              child: Text(
-                "Platinum Partners",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
+                  // SliverToBoxAdapter(
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(8.0),
+                  //     child: Container(
+                  //       child: Text(
+                  //         "NSTITUTIONAL PATRONAGEs",
+                  //         style: TextStyle(
+                  //           fontWeight: FontWeight.bold,
+                  //           fontSize: 20,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
+                ],
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ));
+  }
+
+  Widget createListView(List<Patronage> patronage) {
+    return SliverGrid.builder(
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      itemCount: patronage.length,
+      itemBuilder: (context, index) {
+        return sponserContent(patronage[index]);
+      },
+    );
+  }
+
+  Widget sponserContent(Patronage sponserModel) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SponserContent(
+                      sponser: sponserModel,
+                    )));
+      },
+      child: Card(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.white,
+                    child: Image.network(sponserModel.logo, fit: BoxFit.fill),
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-              child: FutureBuilder(
-            future: getSponsers(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      //childAspectRatio: 1.2,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 10),
-                  itemCount: highList.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Container(
-                        child: Column(
-                          children: [
-                            Container(
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                child: Image.network(highList[index].logo,
-                                    fit: BoxFit.fill),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.info_outline,
-                                            semanticLabel: "Info",
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            "Info:",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        highList[index].comInfo,
-                                        textAlign: TextAlign.left,
-                                        softWrap: true,
-                                        //overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Row(
+                      //   children: [
+                      //     Icon(
+                      //       Icons.info_outline,
+                      //       semanticLabel: "Info",
+                      //     ),
+                      //     Text(
+                      //       "Info:",
+                      //       style: TextStyle(
+                      //           fontSize: 15,
+                      //           fontWeight: FontWeight.normal,
+                      //           color: Colors.black),
+                      //     ),
+                      //   ],
+                      // ),
+                      Text(
+                        sponserModel.name,
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        //overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.pinkAccent),
                       ),
-                    );
-                  },
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ))
-          // GridView.builder(
-          //     scrollDirection: Axis.vertical,
-          //     shrinkWrap: true,
-          //     gridDelegate:
-          //         SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          //     itemBuilder: (context, index) {
-          //       return Card(
-          //         child: Container(),
-          //       );
-          //     })
-        ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -26,6 +26,7 @@ class AgendaModel {
   final String toTime;
   final String currentDate;
   final String status;
+  String isFavourite;
 
   AgendaModel({
     required this.id,
@@ -39,6 +40,7 @@ class AgendaModel {
     required this.toTime,
     required this.currentDate,
     required this.status,
+    this.isFavourite = 'Add to Favourites',
   });
 
   factory AgendaModel.fromJson(Map<String, dynamic> json) => AgendaModel(

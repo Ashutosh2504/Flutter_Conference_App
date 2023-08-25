@@ -49,7 +49,7 @@ class _AgendaBodyContentState extends State<AgendaBodyContent> {
     super.initState();
   }
 
-  Future<void> addToFavourites(AgendaModel agenda) async {
+  Future<void> addToFavourites(AgendaModel agenda, int index) async {
     var prefs = await SharedPreferences.getInstance();
     var user_id = prefs.getString("user_id");
     String userId = user_id != null ? user_id : "";
@@ -66,7 +66,8 @@ class _AgendaBodyContentState extends State<AgendaBodyContent> {
     );
 
     if (response.statusCode == 200) {
-      await widget.getAgendas();
+      _foundAgendas[index].isFavourite = "Already Added";
+      //await widget.getAgendas();
     } else {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
@@ -86,9 +87,8 @@ class _AgendaBodyContentState extends State<AgendaBodyContent> {
       _results = widget.agendaListFromParentComponent;
     } else {
       _results = widget.agendaListFromParentComponent
-          .where((agenda) => agenda.speakerName
-              .toLowerCase()
-              .contains(enteredKeyword.toLowerCase()))
+          .where((agenda) =>
+              agenda.topic.toLowerCase().contains(enteredKeyword.toLowerCase()))
           .toList();
     }
 
@@ -99,8 +99,7 @@ class _AgendaBodyContentState extends State<AgendaBodyContent> {
 
   @override
   Widget build(BuildContext context) {
-    return (widget.agendaListFromParentComponent.isEmpty ||
-            widget.speakersOnSelectedDate.isEmpty)
+    return (widget.agendaListFromParentComponent.isEmpty)
         ? Center(child: CircularProgressIndicator())
         : Padding(
             padding: const EdgeInsets.all(8.0),
@@ -163,26 +162,31 @@ class _AgendaBodyContentState extends State<AgendaBodyContent> {
                                   //         "Places:${_foundAgendas[index].time}",
                                   //   ),
                                   // ),
-                                  // Expanded(
-                                  //   child: ElevatedButton(
-                                  //     onPressed: () {
-                                  //       addToFavourites(_foundAgendas[index]);
-                                  //       clicked = true;
-                                  //       favoutiteBtn = "Added";
-                                  //     },
-                                  //     style: ButtonStyle(
-                                  //         elevation: MaterialStatePropertyAll(3),
-                                  //         backgroundColor: MaterialStatePropertyAll(
-                                  //             (clicked ? Colors.grey : Colors.blue))),
-                                  //     child: Text(
-                                  //       favoutiteBtn,
-                                  //       textAlign: TextAlign.center,
-                                  //       style: TextStyle(
-                                  //           fontWeight: FontWeight.normal,
-                                  //           color: Colors.white),
-                                  //     ),
-                                  //   ),
-                                  // )
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        addToFavourites(
+                                            _foundAgendas[index], index);
+                                      },
+                                      style: ButtonStyle(
+                                          elevation:
+                                              MaterialStatePropertyAll(3),
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  (_foundAgendas[index]
+                                                          .isFavourite
+                                                          .isNotEmpty
+                                                      ? Colors.grey
+                                                      : Colors.blue))),
+                                      child: Text(
+                                        _foundAgendas[index].isFavourite,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
@@ -192,8 +196,9 @@ class _AgendaBodyContentState extends State<AgendaBodyContent> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => MyAgendaInfo(
-                                            agendaModel:
-                                                _foundAgendas[index])));
+                                              agendaModel: _foundAgendas[index],
+                                              speakerList: _foundSpeakers,
+                                            )));
                               },
                               child: Text(
                                 "Topic: ${_foundAgendas[index].topic} ",
@@ -225,9 +230,6 @@ class _AgendaBodyContentState extends State<AgendaBodyContent> {
                                   fontWeight: FontWeight.normal,
                                   color: Colors.blueGrey),
                             ),
-                            ..._foundSpeakers
-                                .map((e) => getSpeakerDetails(e,_foundAgendas[index]))
-                                .toList()
                           ],
                         ),
                       ),
@@ -239,51 +241,5 @@ class _AgendaBodyContentState extends State<AgendaBodyContent> {
               ],
             ),
           );
-  }
-
-  Widget getSpeakerDetails(SpeakerModel element, AgendaModel foundAgenda) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MySpeakerInfo(speakersList: element)));
-        },
-        leading: CircleAvatar(
-          radius: 25,
-          child: ClipOval(
-            child: Image.network(
-              element.photo,
-              fit: BoxFit.fill,
-            ),
-          ),
-        ),
-        title: Text(
-          element.name,
-          style:
-              TextStyle(color: Colors.pinkAccent, fontWeight: FontWeight.bold),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              element.designation,
-              // _foundAgendas[index]["place"],
-              style: TextStyle(color: Colors.blueGrey),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              element.city,
-              style: TextStyle(color: Colors.blueGrey),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

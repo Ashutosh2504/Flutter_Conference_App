@@ -10,53 +10,61 @@ List<FavouritesModel> favouritesModelFromJson(String str) => List<FavouritesMode
 String favouritesModelToJson(List<FavouritesModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class FavouritesModel {
-    final int id;
-    final String userId;
-    final String speakerName;
-    final String agendaId;
-    final String hall;
-    final String topic;
-    final String information;
-    final String date;
-    final String time;
-    final String status;
+    int id;
+    String userId;
+    String speakerId;
+    String speakerName;
+    String agendaId;
+    String hall;
+    String topic;
+    String information;
+    String date;
+    String fromTime;
+    String toTime;
+    String status;
 
     FavouritesModel({
         required this.id,
         required this.userId,
+        required this.speakerId,
         required this.speakerName,
         required this.agendaId,
         required this.hall,
         required this.topic,
         required this.information,
         required this.date,
-        required this.time,
+        required this.fromTime,
+        required this.toTime,
         required this.status,
     });
 
     factory FavouritesModel.fromJson(Map<String, dynamic> json) => FavouritesModel(
         id: json["id"],
         userId: json["user_id"],
+        speakerId: json["speaker_id"],
         speakerName: json["speaker_name"],
         agendaId: json["agenda_id"],
         hall: json["hall"],
         topic: json["topic"],
         information: json["information"],
         date: json["date"],
-        time: json["time"],
+        fromTime: json["from_time"],
+        toTime: json["to_time"],
         status: json["status"],
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
         "user_id": userId,
+        "speaker_id": speakerId,
         "speaker_name": speakerName,
         "agenda_id": agendaId,
         "hall": hall,
         "topic": topic,
         "information": information,
         "date": date,
-        "time": time,
+        "from_time": fromTime,
+        "to_time": toTime,
         "status": status,
     };
 }

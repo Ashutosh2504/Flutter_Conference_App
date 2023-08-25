@@ -1,12 +1,15 @@
 import 'package:bottom_navigation_and_drawer/screens/agenda/agenda_model.dart';
+import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+import '../speaker/speaker_info.dart';
 
 class MyAgendaInfo extends StatefulWidget {
   // const MyAgendaInfo({super.key});
   final AgendaModel agendaModel;
-  MyAgendaInfo({required this.agendaModel});
-
+  MyAgendaInfo({required this.agendaModel, required this.speakerList});
+  final List<SpeakerModel> speakerList;
   @override
   State<MyAgendaInfo> createState() => _MyAgendaInfoState();
 }
@@ -122,8 +125,57 @@ class _MyAgendaInfoState extends State<MyAgendaInfo> {
                   )),
                 ),
               ),
+              ...widget.speakerList
+                  .map((e) => getSpeakerDetails(e, widget.agendaModel))
+                  .toList()
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget getSpeakerDetails(SpeakerModel element, AgendaModel foundAgenda) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: ListTile(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MySpeakerInfo(speakersList: element)));
+        },
+        leading: CircleAvatar(
+          radius: 25,
+          child: ClipOval(
+            child: Image.network(
+              element.photo,
+              fit: BoxFit.fill,
+            ),
+          ),
+        ),
+        title: Text(
+          element.name,
+          style:
+              TextStyle(color: Colors.pinkAccent, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              element.designation,
+              // _foundAgendas[index]["place"],
+              style: TextStyle(color: Colors.blueGrey),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              element.city,
+              style: TextStyle(color: Colors.blueGrey),
+            ),
+          ],
         ),
       ),
     );

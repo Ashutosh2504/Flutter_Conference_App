@@ -3,7 +3,6 @@ import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_info.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_model.dart';
 import 'package:flutter/material.dart';
 
-
 class MySquareGridList extends StatelessWidget {
   // final int id;
   // final String name;

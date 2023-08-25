@@ -4,9 +4,14 @@ import 'package:bottom_navigation_and_drawer/screens/gallery/gallery_model.dart'
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
-class MyGallery extends StatelessWidget {
+class MyGallery extends StatefulWidget {
   MyGallery({super.key});
 
+  @override
+  State<MyGallery> createState() => _MyGalleryState();
+}
+
+class _MyGalleryState extends State<MyGallery> {
   List<GalleryModel> galleryList = [];
 
   @override
@@ -30,20 +35,20 @@ class MyGallery extends StatelessWidget {
                   style: TextStyle(fontSize: 20),
                 ),
                 Spacer(),
-                TextButton(
-                  child: Text(
-                    "by Likes",
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  onPressed: () async {
-                    // const String _url = "https://www.geeksforgeeks.org";
-                    // if (await canLaunch(_url)) {
-                    //   launch(_url);
-                    // } else {
-                    //   throw "Could not launch $_url";
-                    // }
-                  },
-                ),
+                // TextButton(
+                //   child: Text(
+                //     "by Likes",
+                //     style: TextStyle(fontSize: 15),
+                //   ),
+                //   onPressed: () async {
+                //     // const String _url = "https://www.geeksforgeeks.org";
+                //     // if (await canLaunch(_url)) {
+                //     //   launch(_url);
+                //     // } else {
+                //     //   throw "Could not launch $_url";
+                //     // }
+                //   },
+                // ),
                 // SizedBox(
                 //   width: 1,
                 // ),
@@ -100,23 +105,23 @@ class MyGallery extends StatelessWidget {
                                   fit: BoxFit.fill,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Container(
-                                    child: Text("Images"),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.favorite_outline),
-                                  ),
-                                  Text("1"),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.comment_bank_outlined),
-                                  ),
-                                  Text("0"),
-                                ],
-                              )
+                              // Row(
+                              //   children: [
+                              //     Container(
+                              //       child: Text("Images"),
+                              //     ),
+                              //     IconButton(
+                              //       onPressed: () {},
+                              //       icon: Icon(Icons.favorite_outline),
+                              //     ),
+                              //     Text("1"),
+                              //     IconButton(
+                              //       onPressed: () {},
+                              //       icon: Icon(Icons.comment_bank_outlined),
+                              //     ),
+                              //     Text("0"),
+                              //   ],
+                              // )
                             ],
                           ),
                         );
@@ -137,6 +142,7 @@ class MyGallery extends StatelessWidget {
   }
 
   final dio = Dio();
+
   Future getGallery() async {
     try {
       final response = await dio

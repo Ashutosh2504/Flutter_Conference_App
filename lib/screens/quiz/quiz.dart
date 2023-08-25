@@ -9,7 +9,7 @@ class MyQuiz extends StatelessWidget {
       appBar: AppBar(
         title: Text("Quiz"),
       ),
-      body: Container(),
+      body: Scaffold(),
     );
   }
 }

@@ -12,4 +12,7 @@ class MyRoutes {
   static String download = "/download";
   static String participants = "/participants";
   static String compareOTP = "/compareOTP";
+  static String faq = "/faq";
+  static String venue = "/venue";
+  static String quiz = "/quiz";
 }

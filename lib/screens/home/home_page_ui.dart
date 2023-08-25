@@ -1,6 +1,7 @@
 import 'package:bottom_navigation_and_drawer/screens/home/countdown.dart';
 import 'package:bottom_navigation_and_drawer/types/homegridhorizontallist.dart';
 import 'package:bottom_navigation_and_drawer/util/routes.dart';
+import 'package:bottom_navigation_and_drawer/util/webview.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePageUi extends StatefulWidget {
@@ -300,7 +301,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   ),
                   InkWell(
                     onTap: () => {
-                      // Navigator.pushNamed(context, MyRoutes.agenda),
+                      Navigator.pushNamed(context, MyRoutes.faq),
                     },
                     child: Container(
                       child: Column(
@@ -374,8 +375,15 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => {
-                      // Navigator.pushNamed(context, MyRoutes.agenda),
+                    onTap: () async => {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctxt) => WebviewComponent(
+                              title: "Quiz",
+                              webviewUrl:
+                                  "https://globalhealth-forum.com/event_app/quiz/login.php"),
+                        ),
+                      ),
                     },
                     child: Container(
                       child: Column(
@@ -447,9 +455,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => {
-                      //Navigator.pushNamed(context, MyRoutes.gallery),
-                    },
+                    onTap: () => {Navigator.pushNamed(context, MyRoutes.venue)},
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
