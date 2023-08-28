@@ -23,6 +23,7 @@ class _MyNotificationsState extends State<MyNotifications> {
           id: image['id'],
           notiTopic: image['noti_topic'],
           msg: image['msg'],
+          date: image['date'],
           status: image['status'],
         );
 
@@ -79,13 +80,61 @@ class _MyNotificationsState extends State<MyNotifications> {
                                       text: notificationsList[index].notiTopic,
                                     ),
                                   ),
-                                  RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.black),
-                                      text: notificationsList[index].msg,
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        // RichText(
+                                        //   textAlign: TextAlign.center,
+                                        //   text: TextSpan(
+                                        //     style: TextStyle(
+                                        //         fontSize: 15,
+                                        //         fontWeight: FontWeight.bold,
+                                        //         color: Colors.black),
+                                        //     text: "Date:",
+                                        //   ),
+                                        // ),
+                                        RichText(
+                                          textAlign: TextAlign.center,
+                                          text: TextSpan(
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.blueGrey),
+                                            text: notificationsList[index].date,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        // RichText(
+                                        //   textAlign: TextAlign.center,
+                                        //   text: TextSpan(
+                                        //     style: TextStyle(
+                                        //         fontSize: 15,
+                                        //         fontWeight: FontWeight.bold,
+                                        //         color: Colors.black),
+                                        //     text: "Msg:",
+                                        //   ),
+                                        // ),
+                                        Expanded(
+                                          child: RichText(
+                                            textAlign: TextAlign.center,
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.blueGrey),
+                                              text:
+                                                  notificationsList[index].msg,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],

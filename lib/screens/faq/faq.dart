@@ -33,7 +33,7 @@ class _MyFaqState extends State<MyFaq> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(answer!),
+                            child: Text(answer!), //make it left aligned
                           ),
                         ],
                       );

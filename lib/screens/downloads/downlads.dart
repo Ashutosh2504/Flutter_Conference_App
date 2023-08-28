@@ -36,9 +36,9 @@ class _MyDownloadsState extends State<MyDownloads> {
     for (var items in jsonData) {
       final download = DownloadModel(
         id: items['id'],
-        file: items['file'],
-        status: items['status'],
-        date: items['date'],
+        url: items['url'],
+        filename: items['filename'],
+        description: items['discription'],
       );
       downloadList.add(download);
     }
@@ -66,14 +66,14 @@ class _MyDownloadsState extends State<MyDownloads> {
                           child: Container(
                               child: Column(
                             children: [
-                              Text("File URL: ${downloadList[index].file}"),
+                              Text(downloadList[index].description),
                               Divider(),
                               ElevatedButton(
                                 onPressed: () {
                                   showDialog(
                                     context: context,
                                     builder: (context) => DownloadingDialog(
-                                        downloadUrl: downloadList[index].file),
+                                        download: downloadList[index]),
                                   );
                                 },
                                 child: Text("Download File."),

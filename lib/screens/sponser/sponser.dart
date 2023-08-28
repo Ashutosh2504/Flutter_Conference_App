@@ -242,11 +242,12 @@ class _MySponsersState extends State<MySponsers> {
         child: Column(
           children: [
             Expanded(
+              flex: 2,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   child: CircleAvatar(
-                    radius: 40,
+                    radius: 60,
                     backgroundColor: Colors.white,
                     child: Image.network(sponserModel.logo, fit: BoxFit.fill),
                   ),
@@ -255,42 +256,20 @@ class _MySponsersState extends State<MySponsers> {
             ),
             Expanded(
               child: Container(
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Row(
-                      //   children: [
-                      //     Icon(
-                      //       Icons.info_outline,
-                      //       semanticLabel: "Info",
-                      //     ),
-                      //     Text(
-                      //       "Info:",
-                      //       style: TextStyle(
-                      //           fontSize: 15,
-                      //           fontWeight: FontWeight.normal,
-                      //           color: Colors.black),
-                      //     ),
-                      //   ],
-                      // ),
-                      Text(
-                        sponserModel.name,
-                        textAlign: TextAlign.center,
-                        softWrap: true,
-                        //overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.pinkAccent),
-                      ),
-                    ],
-                  ),
+                child: Text(
+                  sponserModel.name,
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  //overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pinkAccent),
                 ),
               ),
             ),

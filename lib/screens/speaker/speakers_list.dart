@@ -34,8 +34,10 @@ class _MySpeakersListState extends State<MySpeakersList> {
             information: items['information'],
             city: items['city'],
             country: items['country'],
+            linkedinUrl: items['linkedin_url'],
             date: items['date'],
             photo: items['photo'],
+            rating: items['rating'],
             status: items['status']);
 
         _speakersList.add(speakers);
@@ -49,6 +51,7 @@ class _MySpeakersListState extends State<MySpeakersList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Speakers"),
         actions: [
           listViewEnabled
               ? IconButton(
@@ -57,7 +60,7 @@ class _MySpeakersListState extends State<MySpeakersList> {
                       listViewEnabled = false;
                     });
                   },
-                  icon: Icon(Icons.grid_3x3))
+                  icon: Icon(Icons.grid_on))
               : IconButton(
                   onPressed: () {
                     setState(() {
@@ -69,6 +72,9 @@ class _MySpeakersListState extends State<MySpeakersList> {
       ),
       body: Column(
         children: [
+          Divider(
+            height: 5,
+          ),
           // speakerslist
           Expanded(
             child: FutureBuilder(
@@ -90,12 +96,12 @@ class _MySpeakersListState extends State<MySpeakersList> {
                               },
                               child: Card(
                                 color: Colors.white,
-                                elevation: 4,
+                                elevation: 2,
                                 child: Container(
                                   height:
-                                      MediaQuery.of(context).size.height / 6,
+                                      MediaQuery.of(context).size.height / 8,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Colors.blueGrey[100],
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Row(
@@ -104,20 +110,26 @@ class _MySpeakersListState extends State<MySpeakersList> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CircleAvatar(
-                                          radius: 50,
-                                          child: ClipOval(
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                left: 8, right: 8),
+                                            decoration: BoxDecoration(
+                                                color: Colors.blueGrey),
                                             child: Image.network(
+                                              height: 80,
                                               _speakersList[index].photo,
-                                              fit: BoxFit.contain,
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                       Expanded(
                                         child: Container(
+                                          margin: EdgeInsets.only(top: 0),
                                           height: MediaQuery.of(context)
                                               .size
                                               .height,
@@ -127,34 +139,37 @@ class _MySpeakersListState extends State<MySpeakersList> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Expanded(
-                                                child: RichText(
-                                                  textAlign: TextAlign.left,
-                                                  softWrap: true,
-                                                  text: TextSpan(
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Colors.pinkAccent),
-                                                    text: _speakersList[index]
-                                                        .name,
-                                                  ),
+                                              RichText(
+                                                textAlign: TextAlign.left,
+                                                softWrap: true,
+                                                text: TextSpan(
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.pinkAccent),
+                                                  text:
+                                                      _speakersList[index].name,
                                                 ),
+                                              ),
+                                              SizedBox(
+                                                height: 4,
                                               ),
                                               RichText(
                                                 textAlign: TextAlign.left,
                                                 softWrap: true,
                                                 text: TextSpan(
                                                   style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.normal,
                                                       color: Colors.black),
                                                   text: _speakersList[index]
                                                       .designation,
                                                 ),
+                                              ),
+                                              SizedBox(
+                                                height: 4,
                                               ),
                                               RichText(
                                                 textAlign: TextAlign.left,

@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:ffi';
 
+import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
+import 'package:bottom_navigation_and_drawer/util/alerts.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -18,6 +21,18 @@ class MySpeakerInfo extends StatefulWidget {
 }
 
 class _MySpeakerInfoState extends State<MySpeakerInfo> {
+  @override
+  void initState() {
+    getPreferences();
+    super.initState();
+  }
+
+  var prefs;
+  var get_mail;
+  var user_email;
+  var get_logged_in;
+  var logged_in;
+  bool loggedIn = false;
   final Color color = Color.fromARGB(255, 15, 158, 174);
   bool success = false;
   void showAlert(bool success) {
@@ -154,7 +169,10 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                     child: Center(
                         child: RatingBar.builder(
                       itemSize: 25,
-                      initialRating: 0,
+                      initialRating: double.parse(
+                          widget.speakersList.rating.isNotEmpty
+                              ? widget.speakersList.rating
+                              : "0.0"),
                       minRating: 1,
                       direction: Axis.horizontal,
                       allowHalfRating: false,
@@ -164,9 +182,19 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                         Icons.star,
                         color: Colors.amber,
                       ),
-                      onRatingUpdate: (rating) {
-                        print("Rating for speaker ${rating}");
-                      },
+                      onRatingUpdate: loggedIn
+                          ? (rating) async {
+                              await sendRating(rating, widget.speakersList.id);
+                              print("Rating for speaker ${rating}");
+                            }
+                          : (rating) async {
+                              await Alerts.showAlert(loggedIn, context,
+                                  "Not Logged In. Please Login");
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
+                            },
                     )),
                   ),
                 ),
@@ -271,7 +299,7 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                           pushNotification(widget.speakersList.email);
                         },
                         child: Text(
-                          "Say Hii",
+                          "Request Meeting",
                           style:
                               TextStyle(fontSize: 20, color: Colors.redAccent),
                         )),
@@ -284,4 +312,71 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
       ),
     );
   }
+
+  void getPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    get_mail = prefs.getString("email");
+    get_logged_in = prefs.getString("logged_in");
+    user_email = get_mail != null ? get_mail : "";
+    logged_in = get_logged_in != null ? get_logged_in : "false";
+    if (logged_in != null) {
+      if (logged_in == "false") {
+        loggedIn = false;
+      } else {
+        loggedIn = true;
+      }
+    }
+    setState(() {});
+  }
+
+  Future<void> sendRating(double rating, int id) async {
+    var prefs = await SharedPreferences.getInstance();
+    var user_id = prefs.getString("user_id");
+    String userId = user_id != null ? user_id : "";
+
+    final response = await http.post(
+      Uri.parse(
+          'https://globalhealth-forum.com/event_app/api/post_speaker_rating.php'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "speaker_id": id.toString(),
+        "user_id": userId,
+        "rating": rating.toString()
+      }),
+    );
+    if (response.statusCode == 200) {
+      Alerts.showAlert(true, context, "Ratings added");
+    } else {
+      Alerts.showAlert(false, context, "Please rate again after sometime");
+    }
+    setState(() {});
+  }
+
+  //  Future<void> addToFavourites(AgendaModel agenda, int index) async {
+  //   var prefs = await SharedPreferences.getInstance();
+  //   var user_id = prefs.getString("user_id");
+  //   String userId = user_id != null ? user_id : "";
+  //   final response = await http.post(
+  //     Uri.parse(
+  //         'https://globalhealth-forum.com/event_app/api/post_favorite.php'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode(<String, String>{
+  //       "agenda_id": agenda.id.toString(),
+  //       "user_id": userId
+  //     }),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     _foundAgendas[index].isFavourite = "Already Added";
+  //     //await widget.getAgendas();
+  //   } else {
+  //     // If the server did not return a 201 CREATED response,
+  //     // then throw an exception.
+
+  //     showAlert();
+  //   }
 }

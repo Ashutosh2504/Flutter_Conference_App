@@ -31,7 +31,7 @@ class _SponserContentState extends State<SponserContent> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CircleAvatar(
-              backgroundColor: Colors.grey,
+              backgroundColor: Colors.white10,
               radius: 50,
               child: ClipRRect(
                 child: Image.network(
@@ -56,7 +56,45 @@ class _SponserContentState extends State<SponserContent> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("URL: "),
+                  // Icon(
+                  //   //Icons.,
+                  //   semanticLabel: "Info",
+                  // ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    child: InkWell(
+                      onTap: () => {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctxt) => WebviewComponent(
+                                title: widget.sponser.name,
+                                webviewUrl: widget.sponser.companyUrl),
+                          ),
+                        ),
+                      },
+                      child: Text(
+                        widget.sponser.companyUrl,
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.link,
+                    semanticLabel: "Info",
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
                   Container(
                     child: InkWell(
                       onTap: () => {

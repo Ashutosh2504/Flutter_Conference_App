@@ -4,12 +4,14 @@ class NotoficationsModel {
   final int id;
   final String notiTopic;
   final String msg;
+  final String date;
   final String status;
 
   NotoficationsModel({
     required this.id,
     required this.notiTopic,
     required this.msg,
+    required this.date,
     required this.status,
   });
 
@@ -20,11 +22,11 @@ class NotoficationsModel {
 
   factory NotoficationsModel.fromJson(Map<String, dynamic> json) =>
       NotoficationsModel(
-        id: json["id"],
-        notiTopic: json["noti_topic"],
-        msg: json["msg"],
-        status: json["status"],
-      );
+          id: json["id"],
+          notiTopic: json["noti_topic"],
+          msg: json["msg"],
+          date: json["date"],
+          status: json["status"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,

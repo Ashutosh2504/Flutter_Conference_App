@@ -19,7 +19,7 @@ class MyVenue extends StatelessWidget {
             children: [
               Container(
                 height: 200,
-                color: Colors.blue,
+                child: Image.asset("assets/images/estoril.jpg"),
               ),
               Container(
                 child: Text(
@@ -52,13 +52,25 @@ class MyVenue extends StatelessWidget {
                   decoration: BoxDecoration(),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                    child: ElevatedButton(
-                  onPressed: ()  => getMaps() ,
-                  child: Text("Get Directions"),
-                )),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                        child: ElevatedButton(
+                      onPressed: () => getMaps(),
+                      child: Text("Maps"),
+                    )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                        child: ElevatedButton(
+                      onPressed: () => getMaps(),
+                      child: Text("Get Directions"),
+                    )),
+                  ),
+                ],
               ),
             ],
           ),
@@ -68,10 +80,7 @@ class MyVenue extends StatelessWidget {
   }
 
   Future getMaps() {
-    
     return MapsLauncher.launchCoordinates(
-                      38.706944,
-                      -9.396111,
-                      'Avenida Amaral. 2765-192 Estoril is here');
+        38.706944, -9.396111, 'Avenida Amaral. 2765-192 Estoril is here');
   }
 }

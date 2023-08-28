@@ -1,8 +1,11 @@
 import 'package:bottom_navigation_and_drawer/screens/home/countdown.dart';
+import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
 import 'package:bottom_navigation_and_drawer/types/homegridhorizontallist.dart';
+import 'package:bottom_navigation_and_drawer/util/alerts.dart';
 import 'package:bottom_navigation_and_drawer/util/routes.dart';
 import 'package:bottom_navigation_and_drawer/util/webview.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePageUi extends StatefulWidget {
   const MyHomePageUi({super.key});
@@ -12,7 +15,44 @@ class MyHomePageUi extends StatefulWidget {
 }
 
 class _MyHomePageUiState extends State<MyHomePageUi> {
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    getPreferences();
+
+    super.initState();
+  }
+
+  // void checkLoginStatus() async {
+  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  //   await preferences.clear();
+  // }
+
   final Color color = Color.fromARGB(255, 170, 232, 238);
+  var prefs;
+  var get_mail;
+  var user_email;
+  var get_logged_in;
+  var logged_in;
+  bool loggedIn = false;
+
+  void getPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    get_mail = prefs.getString("email");
+    get_logged_in = prefs.getString("logged_in");
+    user_email = get_mail != null ? get_mail : "";
+    logged_in = get_logged_in != null ? get_logged_in : "false";
+    if (logged_in != null) {
+      if (logged_in == "false") {
+        loggedIn = false;
+      } else {
+        loggedIn = true;
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,7 +86,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                 children: [
                   InkWell(
                     onTap: () =>
-                        {Navigator.pushNamed(context, MyRoutes.agenda)},
+                        {Navigator.pushNamed(context, MyRoutes.new_agenda)},
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -191,9 +231,18 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => {
-                      Navigator.pushNamed(context, MyRoutes.favourite),
-                    },
+                    onTap: loggedIn
+                        ? () {
+                            Navigator.pushNamed(context, MyRoutes.favourite);
+                          }
+                        : () async {
+                            await Alerts.showAlert(loggedIn, context,
+                                "Not Logged In. Please Login");
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -228,9 +277,18 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => {
-                      Navigator.pushNamed(context, MyRoutes.download),
-                    },
+                    onTap: loggedIn
+                        ? () {
+                            Navigator.pushNamed(context, MyRoutes.download);
+                          }
+                        : () async {
+                            await Alerts.showAlert(loggedIn, context,
+                                "Not Logged In. Please Login");
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -375,16 +433,36 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                     ),
                   ),
                   InkWell(
-                    onTap: () async => {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (ctxt) => WebviewComponent(
-                              title: "Quiz",
-                              webviewUrl:
-                                  "https://globalhealth-forum.com/event_app/quiz/login.php"),
-                        ),
-                      ),
-                    },
+                    onTap: loggedIn
+                        ? () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (ctxt) => WebviewComponent(
+                                    title: "Quiz",
+                                    webviewUrl:
+                                        "https://globalhealth-forum.com/event_app/quiz/login.php"),
+                              ),
+                            );
+                          }
+                        : () async {
+                            await Alerts.showAlert(loggedIn, context,
+                                "Not Logged In. Please Login");
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          },
+
+                    // onTap: () async => {
+                    //   await Navigator.of(context).push(
+                    //     MaterialPageRoute(
+                    //       builder: (ctxt) => WebviewComponent(
+                    //           title: "Quiz",
+                    //           webviewUrl:
+                    //               "https://globalhealth-forum.com/event_app/quiz/login.php"),
+                    //     ),
+                    //   ),
+                    // },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

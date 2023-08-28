@@ -1,4 +1,5 @@
 import 'package:bottom_navigation_and_drawer/screens/agenda/agenda.dart';
+import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agenda.dart';
 import 'package:bottom_navigation_and_drawer/screens/downloads/downlads.dart';
 import 'package:bottom_navigation_and_drawer/screens/faq/faq.dart';
 import 'package:bottom_navigation_and_drawer/screens/favourites/favourites.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         MyRoutes.faq: (context) => MyFaq(),
         MyRoutes.venue: (context) => MyVenue(),
          MyRoutes.quiz: (context) => MyQuiz(),
+         MyRoutes.new_agenda: (context) => MyNewAgenda(),
       },
     );
   }

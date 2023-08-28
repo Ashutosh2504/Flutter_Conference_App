@@ -1,20 +1,20 @@
 import 'package:bottom_navigation_and_drawer/screens/agenda/agenda_model.dart';
+import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agenda_model.dart';
+import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_info.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import '../speaker/speaker_info.dart';
-
-class MyAgendaInfo extends StatefulWidget {
-  // const MyAgendaInfo({super.key});
-  final AgendaModel agendaModel;
-  MyAgendaInfo({required this.agendaModel, required this.speakerList});
+class NewAgendaInfo extends StatefulWidget {
+  // const NewAgendaInfo({super.key});
+  final NewAgendaModel agendaModel;
+  NewAgendaInfo({required this.agendaModel, required this.speakerList});
   final List<SpeakerModel> speakerList;
   @override
-  State<MyAgendaInfo> createState() => _MyAgendaInfoState();
+  State<NewAgendaInfo> createState() => _NewAgendaInfoState();
 }
 
-class _MyAgendaInfoState extends State<MyAgendaInfo> {
+class _NewAgendaInfoState extends State<NewAgendaInfo> {
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
@@ -50,13 +50,14 @@ class _MyAgendaInfoState extends State<MyAgendaInfo> {
                           softWrap: true,
                           text: TextSpan(
                             style: TextStyle(
-                                fontSize: 30,
+                                fontSize: 25,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.pinkAccent),
-                            text: widget.agendaModel.topic,
+                            text: widget.agendaModel.Topic,
                           ),
                         ),
                       ),
+                      Text(widget.agendaModel.hall),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -81,7 +82,7 @@ class _MyAgendaInfoState extends State<MyAgendaInfo> {
                               ],
                             ),
                             Text(
-                              widget.agendaModel.information,
+                              widget.agendaModel.agenda_info,
                               textAlign: TextAlign.left,
                               softWrap: true,
                               //overflow: TextOverflow.ellipsis,
@@ -126,9 +127,10 @@ class _MyAgendaInfoState extends State<MyAgendaInfo> {
                   )),
                 ),
               ),
-              ...widget.speakerList
-                  .map((e) => getSpeakerDetails(e, widget.agendaModel))
+              ...widget.agendaModel.speakers
+                  .map((e) => getSpeakerDetails(e))
                   .toList()
+              //getSpeakerDetails( widget.agendaModel.speakers)
             ],
           ),
         ),
@@ -136,7 +138,7 @@ class _MyAgendaInfoState extends State<MyAgendaInfo> {
     );
   }
 
-  Widget getSpeakerDetails(SpeakerModel element, AgendaModel foundAgenda) {
+  Widget getSpeakerDetails(SpeakerModel element) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(10)),

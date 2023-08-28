@@ -40,7 +40,7 @@ class _MyCompareOTPState extends State<MyCompareOTP> {
         prefs.setString("user_id", userDetails.user.id);
         prefs.setString("email", userDetails.user.email);
         prefs.setString("name", userDetails.user.name);
-        prefs.setBool("logged_in", true);
+        prefs.setString("logged_in", "true");
 
         setState(() {
           changeBtn = false;
@@ -115,7 +115,7 @@ class _MyCompareOTPState extends State<MyCompareOTP> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Material(
-                color: Colors.blue[900],
+                color: color,
                 borderRadius: BorderRadius.circular(changeBtn ? 50 : 8),
                 child: InkWell(
                   onTap: () {

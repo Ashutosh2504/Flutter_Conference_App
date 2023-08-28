@@ -115,8 +115,10 @@ class _MyAgendaState extends State<MyAgenda> {
           information: items['information'],
           city: items['city'],
           country: items['country'],
+          linkedinUrl: items['linkedin_url'],
           date: items['date'],
           photo: items['photo'],
+          rating: items['rating'],
           status: items['status']);
 
       setState(() {
