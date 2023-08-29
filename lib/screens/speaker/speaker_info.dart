@@ -100,6 +100,7 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                       padding: const EdgeInsets.all(8.0),
                       child: CircleAvatar(
                         radius: 50,
+                        backgroundColor: Colors.blueGrey,
                         child: ClipOval(
                           child: Image.network(
                             widget.speakersList.photo,
@@ -116,15 +117,18 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              child: RichText(
-                                textAlign: TextAlign.left,
-                                softWrap: true,
-                                text: TextSpan(
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.pinkAccent),
-                                  text: widget.speakersList.name,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RichText(
+                                  textAlign: TextAlign.left,
+                                  softWrap: true,
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.pinkAccent),
+                                    text: widget.speakersList.name,
+                                  ),
                                 ),
                               ),
                             ),

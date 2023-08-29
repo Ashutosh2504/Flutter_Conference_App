@@ -40,6 +40,7 @@ class _MyCompareOTPState extends State<MyCompareOTP> {
         prefs.setString("user_id", userDetails.user.id);
         prefs.setString("email", userDetails.user.email);
         prefs.setString("name", userDetails.user.name);
+        prefs.setString("name", userDetails.user.name);
         prefs.setString("logged_in", "true");
 
         setState(() {

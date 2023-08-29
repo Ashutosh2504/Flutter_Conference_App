@@ -141,8 +141,17 @@ class _MyFavouritesState extends State<MyFavourites> {
                               elevation: 2,
                               child: Container(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
+                                    Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          textAlign: TextAlign.center,
+                                          favouritesList[index].date,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20),
+                                        )),
                                     Padding(
                                       padding: const EdgeInsets.all(4.0),
                                       child: Container(
@@ -151,7 +160,7 @@ class _MyFavouritesState extends State<MyFavourites> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Expanded(
-                                              flex: 2,
+                                              flex: 1,
                                               child: RichText(
                                                 text: TextSpan(
                                                   style: TextStyle(
@@ -169,7 +178,7 @@ class _MyFavouritesState extends State<MyFavourites> {
                                             ),
                                             Padding(
                                                 padding:
-                                                    const EdgeInsets.all(8.0),
+                                                    const EdgeInsets.all(4.0),
                                                 child: IconButton(
                                                   onPressed: () async {
                                                     await unFavourite(

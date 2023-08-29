@@ -33,9 +33,10 @@ class _SideMenuState extends State<SideMenu> {
     var prefs = await SharedPreferences.getInstance();
     var email = prefs.get("email");
     var name = prefs.get("name");
+    var logIn = prefs.get("logged_in");
     user_email = email != null ? email.toString() : " ";
     user_name = name != null ? name.toString() : " ";
-    logged_in = get_logged_in != null ? get_logged_in : "false";
+    logged_in = logIn != null ? logIn : "false";
     if (logged_in != null) {
       if (logged_in == "false") {
         loggedIn = false;

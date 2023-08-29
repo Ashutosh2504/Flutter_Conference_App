@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bottom_navigation_and_drawer/screens/notifications/notifications_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -61,22 +63,23 @@ class _MyNotificationsState extends State<MyNotifications> {
                       itemCount: notificationsList.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: Card(
+                            elevation: 2,
                             child: Padding(
-                              padding: const EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   RichText(
-                                    textAlign: TextAlign.center,
+                                    textAlign: TextAlign.left,
                                     text: TextSpan(
                                       style: TextStyle(
                                           fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blueGrey),
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black),
                                       text: notificationsList[index].notiTopic,
                                     ),
                                   ),
@@ -95,10 +98,10 @@ class _MyNotificationsState extends State<MyNotifications> {
                                         //   ),
                                         // ),
                                         RichText(
-                                          textAlign: TextAlign.center,
+                                          textAlign: TextAlign.left,
                                           text: TextSpan(
                                             style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.blueGrey),
                                             text: notificationsList[index].date,
@@ -123,10 +126,10 @@ class _MyNotificationsState extends State<MyNotifications> {
                                         // ),
                                         Expanded(
                                           child: RichText(
-                                            textAlign: TextAlign.center,
+                                            textAlign: TextAlign.left,
                                             text: TextSpan(
                                               style: TextStyle(
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                   fontWeight: FontWeight.normal,
                                                   color: Colors.blueGrey),
                                               text:

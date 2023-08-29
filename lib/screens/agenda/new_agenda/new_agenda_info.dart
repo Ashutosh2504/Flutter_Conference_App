@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:bottom_navigation_and_drawer/screens/agenda/agenda_model.dart';
 import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agenda_model.dart';
+import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_info.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_model.dart';
+import 'package:bottom_navigation_and_drawer/util/alerts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class NewAgendaInfo extends StatefulWidget {
   // const NewAgendaInfo({super.key});
@@ -15,12 +21,28 @@ class NewAgendaInfo extends StatefulWidget {
 }
 
 class _NewAgendaInfoState extends State<NewAgendaInfo> {
+  bool loggedIn = false;
+  var prefs;
+  var get_mail;
+  var user_email;
+  var get_logged_in;
+  var logged_in;
+
+  @override
+  void initState() {
+    getPreferences();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Agenda"),
+      ),
       body: Container(
         width: queryData.size.width,
         height: queryData.size.height,
@@ -43,6 +65,7 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Center(
                         child: RichText(
@@ -57,7 +80,34 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                           ),
                         ),
                       ),
-                      Text(widget.agendaModel.hall),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              widget.agendaModel.from_time +
+                                  " - " +
+                                  widget.agendaModel.to_time,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              widget.agendaModel.hall,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -73,6 +123,7 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                                   width: 5,
                                 ),
                                 Text(
+                                  textAlign: TextAlign.left,
                                   "Info:",
                                   style: TextStyle(
                                       fontSize: 20,
@@ -111,7 +162,10 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                   child: Center(
                       child: RatingBar.builder(
                     itemSize: 25,
-                    initialRating: 0,
+                    initialRating: double.parse(
+                        widget.agendaModel.agenda_rating.isNotEmpty
+                            ? widget.agendaModel.agenda_rating
+                            : "0.0"),
                     minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: false,
@@ -121,9 +175,20 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                       Icons.star,
                       color: Colors.amber,
                     ),
-                    onRatingUpdate: (rating) {
-                      print("Rating for agenda ${rating}");
-                    },
+                    onRatingUpdate: loggedIn
+                        ? (rating) async {
+                            await sendRating(
+                                rating, widget.agendaModel.agenda_id);
+                            print("Rating for speaker ${rating}");
+                          }
+                        : (rating) async {
+                            await Alerts.showAlert(loggedIn, context,
+                                "Not Logged In. Please Login");
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          },
                   )),
                 ),
               ),
@@ -183,5 +248,45 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
         ),
       ),
     );
+  }
+
+  Future<void> sendRating(double rating, String id) async {
+    var prefs = await SharedPreferences.getInstance();
+    var user_id = prefs.getString("user_id");
+    String userId = user_id != null ? user_id : "";
+
+    final response = await http.post(
+      Uri.parse('https://globalhealth-forum.com/event_app/api/post_rating.php'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "agenda_id": id,
+        "user_id": userId,
+        "rating": rating.toString()
+      }),
+    );
+    if (response.statusCode == 200) {
+      Alerts.showAlert(true, context, "Ratings added");
+    } else {
+      Alerts.showAlert(false, context, "Please rate again after sometime");
+    }
+    setState(() {});
+  }
+
+  void getPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    get_mail = prefs.getString("email");
+    get_logged_in = prefs.getString("logged_in");
+    user_email = get_mail != null ? get_mail : "";
+    logged_in = get_logged_in != null ? get_logged_in : "false";
+    if (logged_in != null) {
+      if (logged_in == "false") {
+        loggedIn = false;
+      } else {
+        loggedIn = true;
+      }
+    }
+    setState(() {});
   }
 }

@@ -55,6 +55,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
     setState(() {
       _foundAgendas = [...widget.agendaListFromParentComponent];
     });
+    
     super.initState();
   }
 
@@ -170,121 +171,128 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                 //   height: 20,
                 // ),
                 Expanded(
-                  child: ListView.builder(
+                  child: ListView.builder (
                     itemCount: _foundAgendas.length,
                     itemBuilder: (context, index) => Card(
                       // key: ValueKey(_foundAgendas[index]),
                       color: Colors.blueGrey[50],
                       elevation: 4,
                       margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                      child: InkWell(
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return NewAgendaInfo(
+                                  agendaModel: _foundAgendas[index],
+                                  speakerList: _foundAgendas[index].speakers,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.normal,
+                                              color: Colors.blueGrey),
+                                          text: _foundAgendas[index].from_time +
+                                              " - " +
+                                              _foundAgendas[index].to_time,
+                                        ),
+                                      ),
+                                    ),
+                                    // RichText(
+                                    //   text: TextSpan(
+                                    //     style: TextStyle(
+                                    //         fontSize: 18,
+                                    //         fontWeight:
+                                    //             FontWeight.bold,
+                                    //         color:
+                                    //             Colors.blueGrey),
+                                    //     text:
+                                    //         "Places:${_foundAgendas[index].time}",
+                                    //   ),
+                                    // ),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () async {
+                                          await checkFavourite(
+                                              _foundAgendas[index].agenda_id,
+                                              userId,
+                                              index);
+                                          loggedIn
+                                              ? addToFavourites(
+                                                  _foundAgendas[index], index)
+                                              : await Alerts.showAlert(
+                                                  loggedIn,
+                                                  context,
+                                                  "Not Logged In. Please Login");
+                                          //                 Navigator.pushReplacement(
+                                          // context,
+                                          // MaterialPageRoute(
+                                          //     builder: (context) => LoginPage()));
+                                        },
+                                        style: ButtonStyle(
+                                            elevation:
+                                                MaterialStatePropertyAll(3),
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    (_foundAgendas[index]
+                                                                .isFavourite ==
+                                                            'Add to Favourites'
+                                                        ? Colors.blue
+                                                        : Colors.grey))),
+                                        child: Text(
+                                          _foundAgendas[index].isFavourite,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Row(
                                 children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.blueGrey),
-                                        text: _foundAgendas[index].from_time +
-                                            " - " +
-                                            _foundAgendas[index].to_time,
-                                      ),
-                                    ),
+                                  Icon(
+                                    Icons.place,
+                                    color: Colors.blueAccent,
                                   ),
-                                  // RichText(
-                                  //   text: TextSpan(
-                                  //     style: TextStyle(
-                                  //         fontSize: 18,
-                                  //         fontWeight:
-                                  //             FontWeight.bold,
-                                  //         color:
-                                  //             Colors.blueGrey),
-                                  //     text:
-                                  //         "Places:${_foundAgendas[index].time}",
-                                  //   ),
-                                  // ),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        loggedIn
-                                            ? addToFavourites(
-                                                _foundAgendas[index], index)
-                                            : await Alerts.showAlert(
-                                                loggedIn,
-                                                context,
-                                                "Not Logged In. Please Login");
-                                        //                 Navigator.pushReplacement(
-                                        // context,
-                                        // MaterialPageRoute(
-                                        //     builder: (context) => LoginPage()));
-                                      },
-                                      style: ButtonStyle(
-                                          elevation:
-                                              MaterialStatePropertyAll(3),
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  (_foundAgendas[index]
-                                                              .isFavourite ==
-                                                          'Add to Favourites'
-                                                      ? Colors.blue
-                                                      : Colors.grey))),
-                                      child: Text(
-                                        _foundAgendas[index].isFavourite,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                  )
+                                  Text(
+                                    _foundAgendas[index].hall,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.blueGrey),
+                                  ),
                                 ],
                               ),
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.place,
-                                  color: Colors.blueAccent,
-                                ),
-                                Text(
-                                  _foundAgendas[index].hall,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.blueGrey),
-                                ),
-                              ],
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NewAgendaInfo(
-                                              agendaModel: _foundAgendas[index],
-                                              speakerList:
-                                                  _foundAgendas[index].speakers,
-                                            )));
-                              },
-                              child: Text(
+                              Text(
                                 "Topic: ${_foundAgendas[index].Topic} ",
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.normal,
                                     color: Colors.pinkAccent),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

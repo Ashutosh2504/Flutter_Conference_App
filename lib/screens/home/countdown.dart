@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class MyConutDownTimer extends StatefulWidget {
-  MyConutDownTimer({super.key});
+class MyCountDownTimer extends StatefulWidget {
+  MyCountDownTimer({super.key});
 
   @override
-  State<MyConutDownTimer> createState() => _MyConutDownTimerState();
+  State<MyCountDownTimer> createState() => _MyCountDownTimerState();
 }
 
-class _MyConutDownTimerState extends State<MyConutDownTimer> {
+class _MyCountDownTimerState extends State<MyCountDownTimer> {
   Duration duration = Duration();
   final Color color = Color.fromARGB(255, 38, 156, 179);
 
@@ -29,7 +29,6 @@ class _MyConutDownTimerState extends State<MyConutDownTimer> {
   @override
   void initState() {
     super.initState();
-    _startTimer();
   }
 
   void _startTimer() {

@@ -1,4 +1,5 @@
 import 'package:bottom_navigation_and_drawer/screens/home/countdown.dart';
+import 'package:bottom_navigation_and_drawer/screens/home/new_counter.dart';
 import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
 import 'package:bottom_navigation_and_drawer/types/homegridhorizontallist.dart';
 import 'package:bottom_navigation_and_drawer/util/alerts.dart';
@@ -33,6 +34,8 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
   var prefs;
   var get_mail;
   var user_email;
+  var get_name;
+  var user_name;
   var get_logged_in;
   var logged_in;
   bool loggedIn = false;
@@ -40,8 +43,10 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
   void getPreferences() async {
     prefs = await SharedPreferences.getInstance();
     get_mail = prefs.getString("email");
+    get_name = prefs.getString("name");
     get_logged_in = prefs.getString("logged_in");
     user_email = get_mail != null ? get_mail : "";
+    user_name = get_name != null ? get_name : "";
     logged_in = get_logged_in != null ? get_logged_in : "false";
     if (logged_in != null) {
       if (logged_in == "false") {
@@ -64,7 +69,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   image: DecorationImage(
                       fit: BoxFit.fill,
                       image: AssetImage("assets/images/ghf.png"))),
-              child: MyConutDownTimer()),
+              child: NewCounter()),
         ),
         // Expanded(
         //   child: ListView.builder(
@@ -440,7 +445,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                                 builder: (ctxt) => WebviewComponent(
                                     title: "Quiz",
                                     webviewUrl:
-                                        "https://globalhealth-forum.com/event_app/quiz/login.php"),
+                                        "https://globalhealth-forum.com/event_app/quiz/index.php?name=${user_name}&email=${user_email}"),
                               ),
                             );
                           }

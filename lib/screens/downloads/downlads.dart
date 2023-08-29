@@ -66,17 +66,27 @@ class _MyDownloadsState extends State<MyDownloads> {
                           child: Container(
                               child: Column(
                             children: [
-                              Text(downloadList[index].description),
+                              Text(downloadList[index].filename),
                               Divider(),
-                              ElevatedButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => DownloadingDialog(
-                                        download: downloadList[index]),
-                                  );
-                                },
-                                child: Text("Download File."),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                      child: Text(
+                                          downloadList[index].description)),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => DownloadingDialog(
+                                            download: downloadList[index]),
+                                      );
+                                    },
+                                    child: Text("Download File."),
+                                  ),
+                                ],
                               )
                             ],
                           )),

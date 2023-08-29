@@ -48,6 +48,8 @@ dependencies:
   timer_count_down: ^2.2.2
   webview_flutter: ^4.2.3
   maps_launcher: ^2.2.0
+  intl: ^0.17.0
+  date_count_down: ^3.0.0
 
 dev_dependencies:
   build_runner: ^2.4.6
