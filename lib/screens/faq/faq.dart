@@ -29,7 +29,11 @@ class _MyFaqState extends State<MyFaq> {
                       final question = faqList[index].que;
                       final answer = faqList[index].ans;
                       return ExpansionTile(
-                        title: Text(question!),
+                        title: Text(
+                          question!,
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),

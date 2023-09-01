@@ -51,23 +51,31 @@ class _MyParticipantsState extends State<MyParticipants> {
                             child: Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(16.0),
                                   child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Image.network(
-                                      _participantsList[index].photo,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                      height: 100,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueGrey,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: _participantsList[index]
+                                              .photo
+                                              .isNotEmpty
+                                          ? Image.network(
+                                              _participantsList[index].photo,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Image.asset(
+                                                  "assets/images/user.png"),
+                                            )),
                                 ),
                                 Expanded(
                                   child: Container(
-                                    margin: EdgeInsets.only(top: 16),
+                                    margin: EdgeInsets.only(top: 8),
                                     // padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       crossAxisAlignment:
@@ -83,25 +91,33 @@ class _MyParticipantsState extends State<MyParticipants> {
                                               fontWeight: FontWeight.normal,
                                               color: Colors.pinkAccent),
                                         ),
-                                        Text(
-                                          _participantsList[index].designation,
-                                          textAlign: TextAlign.left,
-                                          softWrap: true,
-                                          //overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Text(
+                                            _participantsList[index]
+                                                .designation,
+                                            textAlign: TextAlign.left,
+                                            softWrap: true,
+                                            //overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black),
+                                          ),
                                         ),
-                                        Text(
-                                          _participantsList[index].institution,
-                                          textAlign: TextAlign.left,
-                                          softWrap: true,
-                                          //overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text(
+                                            _participantsList[index]
+                                                .institution,
+                                            textAlign: TextAlign.left,
+                                            softWrap: true,
+                                            //overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black),
+                                          ),
                                         ),
                                       ],
                                     ),

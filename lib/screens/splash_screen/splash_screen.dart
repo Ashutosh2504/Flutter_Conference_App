@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:bottom_navigation_and_drawer/screens/bottom_navigation/bottom_navigationbar.dart';
+import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
 import 'package:flutter/material.dart';
 
 import '../login/login_page.dart';
@@ -18,7 +20,12 @@ class _MySplashScreenState extends State<MySplashScreen> {
 
     Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyBottomNavigationBar(
+              selectedIndex: 0,
+            ),
+          ));
     });
   }
 
@@ -27,7 +34,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
     return Scaffold(
       body: Container(
         child: Image.asset(
-          "assets/images/spashscreen.png",
+          "assets/images/splash.jpg",
           fit: BoxFit.fill,
           height: double.infinity,
           width: double.infinity,

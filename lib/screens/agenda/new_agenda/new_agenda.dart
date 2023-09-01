@@ -4,9 +4,13 @@ import 'package:bottom_navigation_and_drawer/screens/agenda/ageda_body_content.d
 import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agenda_body_content.dart';
 import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agenda_model.dart';
 import 'package:bottom_navigation_and_drawer/screens/drawers/sidemenu.dart';
+import 'package:bottom_navigation_and_drawer/screens/favourites/favourite_model.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_model.dart';
+import 'package:bottom_navigation_and_drawer/util/alerts.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyNewAgenda extends StatefulWidget {
   const MyNewAgenda({super.key});
@@ -16,6 +20,8 @@ class MyNewAgenda extends StatefulWidget {
 }
 
 class _MyNewAgendaState extends State<MyNewAgenda> {
+  List<FavouritesModel> favouritesList = [];
+  Dio dio = Dio();
   List<List<NewAgendaModel>> dateWiseAgendaList = [];
   List<NewAgendaModel> agendaList29th = [];
   List<NewAgendaModel> agendaList30th = [];
@@ -30,6 +36,7 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
   void initState() {
     super.initState();
     getAgendas();
+    getFavourites();
   }
 
   Future<dynamic> getAgendas() async {
@@ -87,16 +94,65 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
                       child: TabBarView(
                         children: [
                           NewAgendaBodyContent(
-                              agendaListFromParentComponent: agendaList29th,
-                              getAgendas: getAgendas),
+                            agendaListFromParentComponent:
+                                checkFavouriteFromList(agendaList29th),
+                          ),
                           NewAgendaBodyContent(
-                              agendaListFromParentComponent: agendaList30th,
-                              getAgendas: getAgendas)
+                            agendaListFromParentComponent:
+                                checkFavouriteFromList(agendaList30th),
+                          )
                         ],
                       ),
                     )
                   ],
                 )),
     );
+  }
+
+  List<NewAgendaModel> checkFavouriteFromList(List<NewAgendaModel> aList) {
+    List<NewAgendaModel> newAgendaList = [];
+    if (favouritesList.isNotEmpty) {
+      for (NewAgendaModel agenda in aList) {
+        for (FavouritesModel favouriteAgenda in favouritesList) {
+          if (agenda.agenda_id == favouriteAgenda.agendaId) {
+            agenda.isFavourite = "Already added";
+            newAgendaList.add(agenda);
+          } else {
+            agenda.isFavourite = "Add to Favourites";
+            newAgendaList.add(agenda);
+          }
+        }
+      }
+      return newAgendaList;
+    } else {
+      return aList;
+    }
+  }
+
+  Future getFavourites() async {
+    var prefs = await SharedPreferences.getInstance();
+    var user_id = prefs.getString("user_id");
+    userId = user_id != null ? user_id : "";
+    final response = await dio.get(
+        'https://globalhealth-forum.com/event_app/api/get_favorite.php?user_id=${userId}');
+    var jsonData = response.data;
+
+    try {
+      if (response.statusCode == 200 && response.data != null) {
+        for (var items in jsonData) {
+          final favourites = FavouritesModel.fromJson(items);
+          favouritesList.add(favourites);
+          // print(favouritesList.toString());
+          setState(() {});
+        }
+        // setState(() {
+        //   isFavourite = true;
+        // });
+      } else {
+        Alerts.showAlert(false, context, "Please try after some time");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

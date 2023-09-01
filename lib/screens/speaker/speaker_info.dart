@@ -3,6 +3,7 @@ import 'dart:ffi';
 
 import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
 import 'package:bottom_navigation_and_drawer/util/alerts.dart';
+import 'package:bottom_navigation_and_drawer/util/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -257,6 +258,63 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              semanticLabel: "Info",
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "LinkedIn:",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                          ],
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (ctxt) => WebviewComponent(
+                                    title: "LinkedIn",
+                                    webviewUrl:
+                                        widget.speakersList.linkedinUrl),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            widget.speakersList.linkedinUrl,
+                            textAlign: TextAlign.start,
+                            softWrap: true,
+                            //overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.blue),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
                         Icon(
@@ -264,7 +322,7 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                           semanticLabel: "City",
                         ),
                         Text(
-                          "City:",
+                          "Country:",
                           textAlign: TextAlign.left,
                           softWrap: true,
                           //overflow: TextOverflow.ellipsis,

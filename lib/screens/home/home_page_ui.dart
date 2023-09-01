@@ -401,8 +401,26 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   ),
                   //Live polling
                   InkWell(
-                    onTap: () => {
-                      // Navigator.pushNamed(context, MyRoutes.gallery),
+                    onTap: () {
+                      loggedIn
+                          ? () async {
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (ctxt) => WebviewComponent(
+                                      title: "Quiz",
+                                      webviewUrl:
+                                          "https://globalhealth-forum.com/event_app/quiz/index.php?name=${user_name}&email=${user_email}"),
+                                ),
+                              );
+                            }
+                          : () async {
+                              await Alerts.showAlert(loggedIn, context,
+                                  "Not Logged In. Please Login");
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
+                            };
                     },
                     child: Container(
                       child: Column(
@@ -427,7 +445,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                               text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
-                                  text: "Live Polling"),
+                                  text: "Survey"),
                             ),
                           ),
                         ],

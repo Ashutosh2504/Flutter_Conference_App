@@ -41,11 +41,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: color),
         useMaterial3: true,
       ),
-      home: MyBottomNavigationBar(
-        selectedIndex: 0,
-      ),
+      // home: MyBottomNavigationBar(
+      //   selectedIndex: 0,
+      // ),
       routes: {
-        // "/": (context) => MySplashScreen(),
+        "/": (context) => MySplashScreen(),
         MyRoutes.loginRoute: (context) => LoginPage(),
         MyRoutes.homeRoute: (context) => MyHome(),
         // MyRoutes.splashScreen: (context) => MySpashScreen(),
@@ -61,8 +61,8 @@ class MyApp extends StatelessWidget {
         MyRoutes.compareOTP: (context) => MyCompareOTP(),
         MyRoutes.faq: (context) => MyFaq(),
         MyRoutes.venue: (context) => MyVenue(),
-         MyRoutes.quiz: (context) => MyQuiz(),
-         MyRoutes.new_agenda: (context) => MyNewAgenda(),
+        MyRoutes.quiz: (context) => MyQuiz(),
+        MyRoutes.new_agenda: (context) => MyNewAgenda(),
       },
     );
   }

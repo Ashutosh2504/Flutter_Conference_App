@@ -15,7 +15,7 @@ class MyVenue extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Container(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 height: 200,
@@ -53,6 +53,8 @@ class MyVenue extends StatelessWidget {
                 ),
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),

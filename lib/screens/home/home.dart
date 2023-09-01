@@ -26,7 +26,8 @@ class _MyHomeState extends State<MyHome> {
         backgroundColor: color,
       ),
       body: MyHomePageUi(),
-      // bottomNavigationBar: MyBottomNavigationBar(),
+    
+      
     );
   }
 }

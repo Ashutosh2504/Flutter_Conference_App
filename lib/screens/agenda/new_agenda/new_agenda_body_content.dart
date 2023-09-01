@@ -17,11 +17,11 @@ class NewAgendaBodyContent extends StatefulWidget {
   const NewAgendaBodyContent(
       {super.key,
       required this.agendaListFromParentComponent,
-      required this.getAgendas});
+      });
 
   final List<NewAgendaModel> agendaListFromParentComponent;
 
-  final Future<dynamic> Function() getAgendas;
+  //final Future<dynamic> Function() getAgendas;
 
   @override
   State<NewAgendaBodyContent> createState() => _NewAgendaBodyContentState();
@@ -51,11 +51,12 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
 
   @override
   void initState() {
+    
     getPreferences();
     setState(() {
       _foundAgendas = [...widget.agendaListFromParentComponent];
     });
-    
+
     super.initState();
   }
 
@@ -163,7 +164,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                 TextField(
                   onChanged: (value) => _runFilter(value.trim()),
                   decoration: InputDecoration(
-                    labelText: "Select Agendas",
+                    labelText: "Search Agendas",
                     suffixIcon: Icon(Icons.search),
                   ),
                 ),
@@ -171,7 +172,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                 //   height: 20,
                 // ),
                 Expanded(
-                  child: ListView.builder (
+                  child: ListView.builder(
                     itemCount: _foundAgendas.length,
                     itemBuilder: (context, index) => Card(
                       // key: ValueKey(_foundAgendas[index]),
@@ -231,17 +232,32 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () async {
-                                          await checkFavourite(
-                                              _foundAgendas[index].agenda_id,
-                                              userId,
-                                              index);
-                                          loggedIn
-                                              ? addToFavourites(
-                                                  _foundAgendas[index], index)
-                                              : await Alerts.showAlert(
-                                                  loggedIn,
-                                                  context,
-                                                  "Not Logged In. Please Login");
+                                          if (loggedIn) {
+                                            addToFavourites(
+                                                _foundAgendas[index], index);
+                                          } else {
+                                            await Alerts.showAlert(
+                                                loggedIn,
+                                                context,
+                                                "Not Logged In. Please Login");
+                                          }
+                                          // loggedIn
+                                          //     ? await checkFavourite(
+                                          //         _foundAgendas[index]
+                                          //             .agenda_id,
+                                          //         userId,
+                                          //         index)
+                                          //     : await Alerts.showAlert(
+                                          //         loggedIn,
+                                          //         context,
+                                          //         "Not Logged In. Please Login");
+                                          // loggedIn
+                                          //     ? addToFavourites(
+                                          //         _foundAgendas[index], index)
+                                          //     : await Alerts.showAlert(
+                                          //         loggedIn,
+                                          //         context,
+                                          //         "Not Logged In. Please Login");
                                           //                 Navigator.pushReplacement(
                                           // context,
                                           // MaterialPageRoute(
@@ -254,7 +270,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                                 MaterialStatePropertyAll(
                                                     (_foundAgendas[index]
                                                                 .isFavourite ==
-                                                            'Add to Favourites'
+                                                            "Add to Favourites"
                                                         ? Colors.blue
                                                         : Colors.grey))),
                                         child: Text(

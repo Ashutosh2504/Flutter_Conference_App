@@ -12,10 +12,10 @@ class Alerts {
           type: QuickAlertType.success);
     } else {
       await QuickAlert.show(
-          confirmBtnColor: Colors.red,
+          confirmBtnColor: Colors.redAccent,
           context: context,
           text: msg,
-          type: QuickAlertType.error);
+          type: QuickAlertType.warning);
     }
   }
 }

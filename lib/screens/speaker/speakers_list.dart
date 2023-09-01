@@ -115,16 +115,21 @@ class _MySpeakersListState extends State<MySpeakersList> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Container(
-                                            margin: EdgeInsets.only(
-                                                left: 8, right: 8),
-                                            decoration: BoxDecoration(
-                                                color: Colors.blueGrey),
-                                            child: Image.network(
-                                              height: 80,
-                                              _speakersList[index].photo,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                                              margin: EdgeInsets.only(
+                                                  left: 8, right: 8),
+                                              // decoration: BoxDecoration(
+                                              //     color: Colors.blueGrey),
+                                              child: _speakersList[index]
+                                                      .photo
+                                                      .isNotEmpty
+                                                  ? Image.network(
+                                                      height: 80,
+                                                      _speakersList[index]
+                                                          .photo,
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : Image.asset(
+                                                      "assets/images/user.png")),
                                         ],
                                       ),
                                       Expanded(
