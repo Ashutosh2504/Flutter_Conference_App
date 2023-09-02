@@ -3,6 +3,7 @@ import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agend
 import 'package:bottom_navigation_and_drawer/screens/downloads/downlads.dart';
 import 'package:bottom_navigation_and_drawer/screens/faq/faq.dart';
 import 'package:bottom_navigation_and_drawer/screens/favourites/favourites.dart';
+import 'package:bottom_navigation_and_drawer/screens/live/live.dart';
 import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
 import 'package:bottom_navigation_and_drawer/screens/bottom_navigation/bottom_navigationbar.dart';
 import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
         MyRoutes.venue: (context) => MyVenue(),
         MyRoutes.quiz: (context) => MyQuiz(),
         MyRoutes.new_agenda: (context) => MyNewAgenda(),
+        MyRoutes.live: (context) => MyLive(),
       },
     );
   }

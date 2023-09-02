@@ -35,6 +35,8 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
   var get_mail;
   var user_email;
   var get_name;
+  var user_id;
+  var get_id;
   var user_name;
   var get_logged_in;
   var logged_in;
@@ -44,9 +46,11 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
     prefs = await SharedPreferences.getInstance();
     get_mail = prefs.getString("email");
     get_name = prefs.getString("name");
+    get_id = prefs.getString("user_id");
     get_logged_in = prefs.getString("logged_in");
     user_email = get_mail != null ? get_mail : "";
     user_name = get_name != null ? get_name : "";
+    user_id = get_id != null ? get_id : "";
     logged_in = get_logged_in != null ? get_logged_in : "false";
     if (logged_in != null) {
       if (logged_in == "false") {
@@ -200,8 +204,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   ),
                   //Live
                   InkWell(
-                    onTap: () =>
-                        {Navigator.pushNamed(context, MyRoutes.gallery)},
+                    onTap: () => {Navigator.pushNamed(context, MyRoutes.live)},
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -401,27 +404,25 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                   ),
                   //Live polling
                   InkWell(
-                    onTap: () {
-                      loggedIn
-                          ? () async {
-                              await Navigator.of(context).push(
+                    onTap: loggedIn
+                        ? () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (ctxt) => WebviewComponent(
+                                    title: "Survey",
+                                    webviewUrl:
+                                        "https://globalhealth-forum.com/event_app/survey.php?user_id=${user_id}&email_id=${user_email}"),
+                              ),
+                            );
+                          }
+                        : () async {
+                            await Alerts.showAlert(loggedIn, context,
+                                "Not Logged In. Please Login");
+                            Navigator.pushReplacement(
+                                context,
                                 MaterialPageRoute(
-                                  builder: (ctxt) => WebviewComponent(
-                                      title: "Quiz",
-                                      webviewUrl:
-                                          "https://globalhealth-forum.com/event_app/quiz/index.php?name=${user_name}&email=${user_email}"),
-                                ),
-                              );
-                            }
-                          : () async {
-                              await Alerts.showAlert(loggedIn, context,
-                                  "Not Logged In. Please Login");
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginPage()));
-                            };
-                    },
+                                    builder: (context) => LoginPage()));
+                          },
                     child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -431,7 +432,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                "assets/images/live.png",
+                                "assets/images/survey.png",
                                 //fit: BoxFit.contain,
                                 height: MediaQuery.of(context).size.height / 8,
                                 width: MediaQuery.of(context).size.width / 3,

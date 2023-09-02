@@ -17,11 +17,11 @@ class NewAgendaBodyContent extends StatefulWidget {
   const NewAgendaBodyContent(
       {super.key,
       required this.agendaListFromParentComponent,
-      });
+      required this.getAgendas});
 
   final List<NewAgendaModel> agendaListFromParentComponent;
 
-  //final Future<dynamic> Function() getAgendas;
+  final Future<dynamic> Function() getAgendas;
 
   @override
   State<NewAgendaBodyContent> createState() => _NewAgendaBodyContentState();
@@ -41,8 +41,8 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
 
   List<NewAgendaModel> _foundAgendas = [];
   Dio dio = new Dio();
-  void showAlert() {
-    QuickAlert.show(
+  Future<void> showAlert() async {
+    await QuickAlert.show(
         confirmBtnColor: color,
         context: context,
         text: "Already added to favourites !",
@@ -51,7 +51,6 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
 
   @override
   void initState() {
-    
     getPreferences();
     setState(() {
       _foundAgendas = [...widget.agendaListFromParentComponent];
@@ -120,12 +119,13 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
     if (response.statusCode == 200) {
       _foundAgendas[index].isFavourite = "Already Added";
       setState(() {});
-      //await widget.getAgendas();
+      await widget.getAgendas();
     } else {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
       // Alerts.showAlert(false, context, "You are not logged in");
-      showAlert();
+      await showAlert();
+      await widget.getAgendas();
     }
 
     // final response = await dio
@@ -233,7 +233,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                       child: ElevatedButton(
                                         onPressed: () async {
                                           if (loggedIn) {
-                                            addToFavourites(
+                                            await addToFavourites(
                                                 _foundAgendas[index], index);
                                           } else {
                                             await Alerts.showAlert(

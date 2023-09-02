@@ -20,7 +20,6 @@ class MyNewAgenda extends StatefulWidget {
 }
 
 class _MyNewAgendaState extends State<MyNewAgenda> {
-  List<FavouritesModel> favouritesList = [];
   Dio dio = Dio();
   List<List<NewAgendaModel>> dateWiseAgendaList = [];
   List<NewAgendaModel> agendaList29th = [];
@@ -36,7 +35,7 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
   void initState() {
     super.initState();
     getAgendas();
-    getFavourites();
+    // getFavourites();
   }
 
   Future<dynamic> getAgendas() async {
@@ -44,6 +43,7 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
       setState(() {
         isLoading = true;
       });
+      List<FavouritesModel> favouritesList = await getFavourites();
       final response = await http.get(
           Uri.parse('https://globalhealth-forum.com/event_app/api/agenda.php'));
 
@@ -53,8 +53,10 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
           agendaModelFromJson(jsonDecode(response.body)["30/09/2023"]);
 
       setState(() {
-        agendaList29th = agendaList29thMap["agenda"]!;
-        agendaList30th = agendaList30thMap["agenda"]!;
+        agendaList29th = checkFavouriteFromList(
+            agendaList29thMap["agenda"]!, favouritesList);
+        agendaList30th = checkFavouriteFromList(
+            agendaList30thMap["agenda"]!, favouritesList);
 
         isLoading = false;
       });
@@ -94,12 +96,14 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
                       child: TabBarView(
                         children: [
                           NewAgendaBodyContent(
-                            agendaListFromParentComponent:
-                                checkFavouriteFromList(agendaList29th),
+                            agendaListFromParentComponent: agendaList29th,
+                            // checkFavouriteFromList(agendaList29th),
+                            getAgendas: getAgendas,
                           ),
                           NewAgendaBodyContent(
-                            agendaListFromParentComponent:
-                                checkFavouriteFromList(agendaList30th),
+                            agendaListFromParentComponent: agendaList30th,
+                            // checkFavouriteFromList(agendaList30th),
+                            getAgendas: getAgendas,
                           )
                         ],
                       ),
@@ -109,17 +113,41 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
     );
   }
 
-  List<NewAgendaModel> checkFavouriteFromList(List<NewAgendaModel> aList) {
+  List<NewAgendaModel> checkFavouriteFromList(
+      List<NewAgendaModel> aList, List<FavouritesModel> favouritesList) {
     List<NewAgendaModel> newAgendaList = [];
+    List<NewAgendaModel> newAgendaListWithFavourites = [];
+    List<NewAgendaModel> newAgendaListWithoutFavourites = [];
     if (favouritesList.isNotEmpty) {
       for (NewAgendaModel agenda in aList) {
         for (FavouritesModel favouriteAgenda in favouritesList) {
           if (agenda.agenda_id == favouriteAgenda.agendaId) {
-            agenda.isFavourite = "Already added";
-            newAgendaList.add(agenda);
+            if (!newAgendaList.contains(agenda)) {
+              agenda.isFavourite = "Already added";
+              // aList.remove(agenda);
+              newAgendaList.add(agenda);
+            }
           } else {
-            agenda.isFavourite = "Add to Favourites";
-            newAgendaList.add(agenda);
+            // if (!newAgendaList.contains(agenda)) {
+            //   agenda.isFavourite = "Add to Favourites";
+            //   newAgendaList.add(agenda);
+            // }
+          }
+        }
+      }
+      for (NewAgendaModel agenda in aList) {
+        for (FavouritesModel favouriteAgenda in favouritesList) {
+          if (agenda.agenda_id != favouriteAgenda.agendaId) {
+            if (!newAgendaList.contains(agenda)) {
+              agenda.isFavourite = "Add to Favourites";
+              // aList.remove(agenda);
+              newAgendaList.add(agenda);
+            }
+          } else {
+            // if (!newAgendaList.contains(agenda)) {
+            //   agenda.isFavourite = "Add to Favourites";
+            //   newAgendaList.add(agenda);
+            // }
           }
         }
       }
@@ -129,7 +157,8 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
     }
   }
 
-  Future getFavourites() async {
+  Future<List<FavouritesModel>> getFavourites() async {
+    List<FavouritesModel> favouritesList = [];
     var prefs = await SharedPreferences.getInstance();
     var user_id = prefs.getString("user_id");
     userId = user_id != null ? user_id : "";
@@ -145,6 +174,7 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
           // print(favouritesList.toString());
           setState(() {});
         }
+
         // setState(() {
         //   isFavourite = true;
         // });
@@ -153,6 +183,8 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
       }
     } catch (e) {
       print(e.toString());
+    } finally {
+      return favouritesList;
     }
   }
 }

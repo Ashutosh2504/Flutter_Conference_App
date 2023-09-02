@@ -16,4 +16,5 @@ class MyRoutes {
   static String venue = "/venue";
   static String quiz = "/quiz";
   static String new_agenda = "/new_agenda";
+  static String live = "/live";
 }
