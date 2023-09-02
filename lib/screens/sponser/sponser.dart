@@ -238,19 +238,17 @@ class _MySponsersState extends State<MySponsers> {
                     )));
       },
       child: Card(
-        color: Colors.white,
+        // color: Colors.white,
         child: Column(
           children: [
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  child: CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.white,
-                    child: Image.network(sponserModel.logo, fit: BoxFit.fill),
-                  ),
+                  child: sponserModel.logo.isNotEmpty
+                      ? Image.network(sponserModel.logo, fit: BoxFit.contain)
+                      : Image.asset("assets/images/sponser.png"),
                 ),
               ),
             ),

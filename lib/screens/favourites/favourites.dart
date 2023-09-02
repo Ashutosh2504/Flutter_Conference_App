@@ -30,11 +30,11 @@ class _MyFavouritesState extends State<MyFavourites> {
   bool clicked = false;
 
   List<AgendaModel> _foundAgendas = [];
-  bool isFavourite = true;
   var userId;
   @override
   void initState() {
     super.initState();
+    getFavourites();
   }
 
   // void getPreferences() async {
@@ -64,6 +64,8 @@ class _MyFavouritesState extends State<MyFavourites> {
 
   final dio = Dio();
   Future getFavourites() async {
+    List<FavouritesModel> localFavouritesList = [];
+
     var prefs = await SharedPreferences.getInstance();
     var user_id = prefs.getString("user_id");
     userId = user_id != null ? user_id : "";
@@ -73,13 +75,13 @@ class _MyFavouritesState extends State<MyFavourites> {
 
     if (response.statusCode == 200) {
       for (var items in jsonData) {
-        final favourites = FavouritesModel.fromJson(items);
-        favouritesList.add(favourites);
-        print(favouritesList.toString());
+        FavouritesModel favourite = FavouritesModel.fromJson(items);
+        favourite.favourite = true;
+        localFavouritesList.add(favourite);
       }
-      // setState(() {
-      //   isFavourite = true;
-      // });
+      setState(() {
+        favouritesList = localFavouritesList;
+      });
     } else {
       Alerts.showAlert(false, context, "Please try after some time");
     }
@@ -98,9 +100,9 @@ class _MyFavouritesState extends State<MyFavourites> {
       }),
     );
     if (response.statusCode == 200) {
+      // getFavourites();
       // Alerts.showAlert(true, context, "Removed Favourites");
       setState(() {
-        isFavourite = false;
         favouritesList.removeAt(index);
       });
     } else {
@@ -128,115 +130,99 @@ class _MyFavouritesState extends State<MyFavourites> {
             height: 5,
           ),
           Expanded(
-            child: FutureBuilder(
-                future: getFavourites(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return ListView.builder(
-                        itemCount: favouritesList.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Card(
-                              elevation: 2,
+            child: ListView.builder(
+                itemCount: favouritesList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Card(
+                      elevation: 2,
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  textAlign: TextAlign.center,
+                                  favouritesList[index].date,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                )),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
                               child: Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Text(
-                                          textAlign: TextAlign.center,
-                                          favouritesList[index].date,
+                                    Expanded(
+                                      flex: 1,
+                                      child: RichText(
+                                        text: TextSpan(
                                           style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20),
-                                        )),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Container(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              flex: 1,
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color: Colors.blueGrey),
-                                                  text: favouritesList[index]
-                                                          .fromTime +
-                                                      " - " +
-                                                      favouritesList[index]
-                                                          .toTime,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
-                                                child: IconButton(
-                                                  onPressed: () async {
-                                                    await unFavourite(
-                                                        favouritesList[index]
-                                                            .agendaId,
-                                                        index);
-                                                  },
-                                                  icon: Icon(
-                                                      size: 30,
-                                                      isFavourite
-                                                          ? Icons.favorite
-                                                          : Icons
-                                                              .favorite_border_outlined,
-                                                      color: Colors.redAccent),
-                                                )),
-                                          ],
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.normal,
+                                              color: Colors.blueGrey),
+                                          text: favouritesList[index].fromTime +
+                                              " - " +
+                                              favouritesList[index].toTime,
                                         ),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.place,
-                                            color: Colors.blueAccent,
-                                          ),
-                                          Text(
-                                            favouritesList[index].hall,
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.blueGrey),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Text(
-                                        "Topic: ${favouritesList[index].topic} ",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.pinkAccent),
-                                      ),
-                                    ),
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: IconButton(
+                                          onPressed: () async {
+                                            await unFavourite(
+                                                favouritesList[index].agendaId,
+                                                index);
+                                          },
+                                          icon: Icon(
+                                              size: 30,
+                                              favouritesList[index].favourite
+                                                  ? Icons.favorite
+                                                  : Icons
+                                                      .favorite_border_outlined,
+                                              color: Colors.redAccent),
+                                        )),
                                   ],
                                 ),
                               ),
                             ),
-                          );
-                        });
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.place,
+                                    color: Colors.blueAccent,
+                                  ),
+                                  Text(
+                                    favouritesList[index].hall,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.blueGrey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                "Topic: ${favouritesList[index].topic} ",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.pinkAccent),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
                 }),
           ),
         ],
