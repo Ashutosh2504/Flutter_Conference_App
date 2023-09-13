@@ -66,7 +66,9 @@ class _SideMenuState extends State<SideMenu> {
               accountName: Text(user_name),
               accountEmail: Text(user_email),
               currentAccountPicture: CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/dr2.png")),
+                backgroundImage: AssetImage("assets/images/user.png"),
+                backgroundColor: Colors.white,
+              ),
             ),
           ),
           ListTile(

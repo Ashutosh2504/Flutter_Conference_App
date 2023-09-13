@@ -52,10 +52,10 @@ class _MyGalleryState extends State<MyGallery> {
                 // SizedBox(
                 //   width: 1,
                 // ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.add_a_photo_outlined),
-                )
+                // IconButton(
+                //   onPressed: () {},
+                //   icon: Icon(Icons.add_a_photo_outlined),
+                // )
               ],
             ),
             Divider(

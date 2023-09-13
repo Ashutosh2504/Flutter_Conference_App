@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "61356630282",
+    "project_id": "ghf2023-9af4d",
+    "storage_bucket": "ghf2023-9af4d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61356630282:android:2012571242cd40b5d19af3",
+        "android_client_info": {
+          "package_name": "com.whizsoftwares.ghf"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOTJPX6qw1i5Jmo5YJEUKFXgeAMccN1FE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

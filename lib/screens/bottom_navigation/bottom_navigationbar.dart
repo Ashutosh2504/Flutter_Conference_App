@@ -1,4 +1,5 @@
 import 'package:bottom_navigation_and_drawer/screens/agenda/agenda.dart';
+import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agenda.dart';
 import 'package:bottom_navigation_and_drawer/screens/downloads/downlads.dart';
 import 'package:bottom_navigation_and_drawer/screens/favourites/favourites.dart';
 import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
@@ -56,7 +57,7 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
     Widget currentScreen = currentIndex == 0
         ? MyHome()
         : currentIndex == 1
-            ? MyAgenda()
+            ? MyNewAgenda()
             : currentIndex == 2
                 ? MyNotifications()
                 : MyLive();

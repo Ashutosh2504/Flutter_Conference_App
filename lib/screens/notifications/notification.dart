@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bottom_navigation_and_drawer/screens/notifications/notifications_model.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class MyNotifications extends StatefulWidget {
@@ -38,6 +39,8 @@ class _MyNotificationsState extends State<MyNotifications> {
 
   @override
   Widget build(BuildContext context) {
+    final message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -46,6 +49,9 @@ class _MyNotificationsState extends State<MyNotifications> {
       ),
       body: Column(
         children: [
+          Text(message.notification!.title.toString()),
+          Text(message.notification!.body.toString()),
+          Text(message.data.toString()),
           Container(
             child: Padding(
               padding: const EdgeInsets.all(16.0),

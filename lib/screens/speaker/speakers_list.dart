@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:bottom_navigation_and_drawer/screens/speaker/check_speaker_rating_model.dart';
 import 'package:bottom_navigation_and_drawer/types/gridlist.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'speaker_info.dart';
 import 'speaker_model.dart';
@@ -17,6 +19,8 @@ class MySpeakersList extends StatefulWidget {
 class _MySpeakersListState extends State<MySpeakersList> {
   List<SpeakerModel> _speakersList = [];
   final dio = Dio();
+
+  var userId;
   bool listViewEnabled = false;
   Future getSpeakers() async {
     try {
@@ -44,6 +48,46 @@ class _MySpeakersListState extends State<MySpeakersList> {
       }
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future<CheckSpeakerRatingModel> getSpeakerRating(int speakerId) async {
+    try {
+      CheckSpeakerRatingModel checkSpeakerModelRating;
+      var prefs = await SharedPreferences.getInstance();
+      var user_id = prefs.getString("user_id");
+      userId = user_id != null ? user_id : "";
+      final response = await dio.get(
+          'https://globalhealth-forum.com/event_app/api/get_speaker_rating.php?speaker_id=${speakerId}&user_id=${userId}');
+
+      if (response.statusCode == 200) {
+        var jsonData = response.data;
+
+        checkSpeakerModelRating = CheckSpeakerRatingModel(
+            id: jsonData[0]['id'],
+            userId: jsonData[0]['user_id'],
+            rating: jsonData[0]['rating'],
+            speakerId: jsonData[0]['speaker_id'],
+            name: jsonData[0]['name'],
+            email: jsonData[0]['email'],
+            mobile: jsonData[0]['mobile'],
+            designation: jsonData[0]['designation'],
+            institute: jsonData[0]['institute'],
+            information: jsonData[0]['information'],
+            city: jsonData[0]['city'],
+            country: jsonData[0]['country'],
+            linkedinUrl: jsonData[0]['linkedin_url'],
+            date: jsonData[0]['date'],
+            photo: jsonData[0]['photo'],
+            status: jsonData[0]['status']);
+
+        return checkSpeakerModelRating;
+      } else {
+        throw Error.safeToString("Invalid status call");
+      }
+    } catch (e) {
+      print(e.toString());
+      rethrow;
     }
   }
 
@@ -86,29 +130,34 @@ class _MySpeakersListState extends State<MySpeakersList> {
                           itemCount: _speakersList.length,
                           itemBuilder: (context, index) {
                             return InkWell(
-                              onTap: () {
+                              onTap: () async {
+                                CheckSpeakerRatingModel speaker =
+                                    await getSpeakerRating(
+                                        _speakersList[index].id);
+                                _speakersList[index].rating = speaker.rating;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => MySpeakerInfo(
                                             speakersList:
                                                 _speakersList[index])));
+                                await getSpeakers();
                               },
                               child: Card(
                                 color: Colors.white,
                                 elevation: 2,
                                 child: Container(
                                   height:
-                                      MediaQuery.of(context).size.height / 8,
+                                      MediaQuery.of(context).size.height / 6,
                                   decoration: BoxDecoration(
                                     color: Colors.blueGrey[100],
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                        MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Column(
                                         mainAxisAlignment:

@@ -27,75 +27,80 @@ class _MySponsersState extends State<MySponsers> {
   final dio = Dio();
   Future getSponsers() async {
     // try {
-    final response = await dio
-        .get('https://globalhealth-forum.com/event_app/api/get_exhibitor.php');
 
-    var jsonData = (response.data);
+    try {
+      final response = await dio.get(
+          'https://globalhealth-forum.com/event_app/api/get_exhibitor.php');
+      var jsonData = (response.data);
 
-    final sponserModel = jsonData;
-    print(jsonData);
-    // var high = jsonData['HIGH PATRONAGE'];
+      final sponserModel = jsonData;
+      print(jsonData);
+      // var high = jsonData['HIGH PATRONAGE'];
 
-    print(sponserModel.toString());
-    print(sponserModel['HIGH PATRONAGE']);
+      print(sponserModel.toString());
+      print(sponserModel['HIGH PATRONAGE']);
 
-    final SponserModel sponsers = SponserModel(
-        highPatronage: jsonData['HIGH PATRONAGE'],
-        institutionalPatronage: sponserModel['INSTITUTIONAL PATRONAGE'],
-        globalHealthForumPartners: sponserModel['GLOBAL HEALTH FORUM PARTNERS'],
-        forumSaudeXxiPartners: sponserModel['FORUM SAUDE XXI PARTNERS']);
+      final SponserModel sponsers = SponserModel(
+          highPatronage: jsonData['HIGH PATRONAGE'],
+          institutionalPatronage: sponserModel['INSTITUTIONAL PATRONAGE'],
+          globalHealthForumPartners:
+              sponserModel['GLOBAL HEALTH FORUM PARTNERS'],
+          forumSaudeXxiPartners: sponserModel['FORUM SAUDE XXI PARTNERS']);
 
-    for (var item in sponsers.highPatronage) {
-      final Patronage high = Patronage(
-          id: item['id'],
-          name: item['name'],
-          companyUrl: item['company_url'],
-          comInfo: item['com_info'],
-          tags: item['tags'],
-          category: item['category'],
-          logo: item['logo'],
-          status: item['status'],
-          date: item['date']);
-      highList.add(high);
-    }
-    for (var item in sponsers.institutionalPatronage) {
-      final Patronage institutional = Patronage(
-          id: item['id'],
-          name: item['name'],
-          companyUrl: item['company_url'],
-          comInfo: item['com_info'],
-          tags: item['tags'],
-          category: item['category'],
-          logo: item['logo'],
-          status: item['status'],
-          date: item['date']);
-      institutionalList.add(institutional);
-    }
-    for (var item in sponsers.globalHealthForumPartners) {
-      final Patronage globalHealthForum = Patronage(
-          id: item['id'],
-          name: item['name'],
-          companyUrl: item['company_url'],
-          comInfo: item['com_info'],
-          tags: item['tags'],
-          category: item['category'],
-          logo: item['logo'],
-          status: item['status'],
-          date: item['date']);
-      gloabalHealthForumList.add(globalHealthForum);
-    }
-    for (var item in sponsers.forumSaudeXxiPartners) {
-      final Patronage forumSaude = Patronage(
-          id: item['id'],
-          name: item['name'],
-          companyUrl: item['company_url'],
-          comInfo: item['com_info'],
-          tags: item['tags'],
-          category: item['category'],
-          logo: item['logo'],
-          status: item['status'],
-          date: item['date']);
-      forumSaudeList.add(forumSaude);
+      for (var item in sponsers.highPatronage) {
+        final Patronage high = Patronage(
+            id: item['id'],
+            name: item['name'],
+            companyUrl: item['company_url'],
+            comInfo: item['com_info'],
+            tags: item['tags'],
+            category: item['category'],
+            logo: item['logo'],
+            status: item['status'],
+            date: item['date']);
+        highList.add(high);
+      }
+      for (var item in sponsers.institutionalPatronage) {
+        final Patronage institutional = Patronage(
+            id: item['id'],
+            name: item['name'],
+            companyUrl: item['company_url'],
+            comInfo: item['com_info'],
+            tags: item['tags'],
+            category: item['category'],
+            logo: item['logo'],
+            status: item['status'],
+            date: item['date']);
+        institutionalList.add(institutional);
+      }
+      for (var item in sponsers.globalHealthForumPartners) {
+        final Patronage globalHealthForum = Patronage(
+            id: item['id'],
+            name: item['name'],
+            companyUrl: item['company_url'],
+            comInfo: item['com_info'],
+            tags: item['tags'],
+            category: item['category'],
+            logo: item['logo'],
+            status: item['status'],
+            date: item['date']);
+        gloabalHealthForumList.add(globalHealthForum);
+      }
+      for (var item in sponsers.forumSaudeXxiPartners) {
+        final Patronage forumSaude = Patronage(
+            id: item['id'],
+            name: item['name'],
+            companyUrl: item['company_url'],
+            comInfo: item['com_info'],
+            tags: item['tags'],
+            category: item['category'],
+            logo: item['logo'],
+            status: item['status'],
+            date: item['date']);
+        forumSaudeList.add(forumSaude);
+      }
+    } catch (e) {
+      throw Error.safeToString("Invalid Status Code");
     }
   }
 
