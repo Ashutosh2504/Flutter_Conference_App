@@ -3,7 +3,7 @@ import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_info.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speaker_model.dart';
 import 'package:flutter/material.dart';
 
-class MySquareGridList extends StatelessWidget {
+class MySquareGridList extends StatefulWidget {
   // final int id;
   // final String name;
   // final String email;
@@ -38,6 +38,13 @@ class MySquareGridList extends StatelessWidget {
   MySquareGridList({required this.speakerModel});
 
   @override
+  State<MySquareGridList> createState() => _MySquareGridListState();
+}
+
+class _MySquareGridListState extends State<MySquareGridList> {
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
@@ -45,48 +52,53 @@ class MySquareGridList extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    MySpeakerInfo(speakersList: speakerModel)));
+                    MySpeakerInfo(speakersList: widget.speakerModel)));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height / 8,
               decoration: BoxDecoration(
-                color: Colors.blueGrey,
+                color: Colors.white,
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: NetworkImage(speakerModel.photo),
+                  image: NetworkImage(
+                    widget.speakerModel.photo,
+                  ),
                   fit: BoxFit.contain,
                 ),
               ),
             ),
           ),
-          RichText(
-            softWrap: true,
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15),
-              text: speakerModel.name,
+          Expanded(
+            child: RichText(
+              softWrap: true,
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: TextStyle(
+                    color: titleColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15),
+                text: widget.speakerModel.name,
+              ),
             ),
           ),
-          RichText(
-            softWrap: true,
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w300,
-                  fontSize: 13),
-              text: speakerModel.designation,
-            ),
-          ),
+          // RichText(
+          //   softWrap: true,
+          //   textAlign: TextAlign.center,
+          //   text: TextSpan(
+          //     style: TextStyle(
+          //         color: Colors.black,
+          //         fontWeight: FontWeight.w300,
+          //         fontSize: 13),
+          //     text: widget.speakerModel.designation,
+          //   ),
+          // ),
         ],
       ),
     );

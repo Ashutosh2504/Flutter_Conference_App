@@ -8,6 +8,8 @@ class Patronage {
   final String logo;
   final String status;
   final String date;
+  final String linkedIn;
+  final String email;
 
   Patronage({
     required this.id,
@@ -19,6 +21,8 @@ class Patronage {
     this.logo = "",
     this.status = "",
     this.date = "",
+    this.linkedIn = "",
+    this.email = "",
   });
 
   factory Patronage.fromJson(Map<String, dynamic> json) => Patronage(
@@ -31,6 +35,8 @@ class Patronage {
         logo: json["logo"],
         status: json["status"],
         date: json["date"],
+        linkedIn: json["linkedin_url"],
+        email: json["email"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,5 +49,7 @@ class Patronage {
         "logo": logo,
         "status": status,
         "date": date,
+        "linkedin_url": linkedIn,
+        "email": email
       };
 }

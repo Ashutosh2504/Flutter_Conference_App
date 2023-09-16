@@ -1,3 +1,4 @@
+import 'package:bottom_navigation_and_drawer/screens/drawers/sidemenu.dart';
 import 'package:bottom_navigation_and_drawer/screens/faq/faq_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class _MyFaqState extends State<MyFaq> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SideMenu(),
       appBar: AppBar(
         title: Text("FAQ"),
       ),

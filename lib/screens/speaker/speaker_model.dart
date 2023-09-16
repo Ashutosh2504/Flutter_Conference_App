@@ -45,7 +45,7 @@ class SpeakerModel {
   });
 
   factory SpeakerModel.fromJson(Map<String, dynamic> json) => SpeakerModel(
-        id: int.tryParse(json["id"]) ?? json["id"],
+        id: json["id"],
         name: json["name"],
         email: json["email"],
         mobile: json["mobile"],

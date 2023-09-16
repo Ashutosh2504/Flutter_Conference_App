@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bottom_navigation_and_drawer/screens/gallery/gallery_model.dart';
+import 'package:bottom_navigation_and_drawer/screens/gallery/image_view.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
@@ -84,45 +85,35 @@ class _MyGalleryState extends State<MyGallery> {
 
                           // childAspectRatio: MediaQuery.of(context).size.width /
                           //     (MediaQuery.of(context).size.height / 2),
-                          crossAxisSpacing: 8.0,
-                          mainAxisSpacing: 8.0,
+                          crossAxisSpacing: 2.0,
+                          mainAxisSpacing: 2.0,
                           crossAxisCount: 2),
                       itemBuilder: (_, index) {
-                        return Container(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                  12.0,
-                                )),
-                                child: Image.network(
-                                  galleryList[index].link,
-                                  width: double.infinity,
-                                  height:
-                                      MediaQuery.of(context).size.height / 8,
-                                  fit: BoxFit.fill,
-                                ),
+                        return InkWell(
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return MyImageViewer(
+                                    imageModel: galleryList[index],
+                                    // imageModel: galleryList[index],
+                                  );
+                                },
                               ),
-                              // Row(
-                              //   children: [
-                              //     Container(
-                              //       child: Text("Images"),
-                              //     ),
-                              //     IconButton(
-                              //       onPressed: () {},
-                              //       icon: Icon(Icons.favorite_outline),
-                              //     ),
-                              //     Text("1"),
-                              //     IconButton(
-                              //       onPressed: () {},
-                              //       icon: Icon(Icons.comment_bank_outlined),
-                              //     ),
-                              //     Text("0"),
-                              //   ],
-                              // )
-                            ],
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.all(2.0),
+                            child: Image.network(
+                              galleryList[index].link,
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height / 6,
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         );
                       },

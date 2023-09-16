@@ -27,42 +27,88 @@ class _MyLiveState extends State<MyLive> {
         title: Text("Live"),
       ),
       body: Container(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column(
           children: [
+            Divider(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Container(
-                    child: ElevatedButton(
-                  onPressed: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (ctxt) => WebviewComponent(
-                            title: "Portugese", webviewUrl: liveList[0].url),
-                      ),
-                    );
-                  },
-                  child: Text("Portugese"),
-                )),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    height: 100,
+                    width: 120,
+                    child: Image.asset("assets/images/portugal.png"),
+                  ),
+                  Container(
+                    height: 100,
+                    width: 120,
+                    child: Image.asset("assets/images/united-kingdom.png"),
+                  )
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  child: ElevatedButton(
-                onPressed: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (ctxt) => WebviewComponent(
-                          title: "English", webviewUrl: liveList[1].url),
-                    ),
-                  );
-                },
-                child: Text("English"),
-              )),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Container(
+                        child: ElevatedButton(
+                      onPressed: () async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctxt) => WebviewComponent(
+                                title: "Portugese",
+                                webviewUrl: liveList[0].url),
+                          ),
+                        );
+                      },
+                      child: Text("Portuguese"),
+                    )),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      child: ElevatedButton(
+                    onPressed: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctxt) => WebviewComponent(
+                              title: "English", webviewUrl: liveList[1].url),
+                        ),
+                      );
+                    },
+                    child: Text("English"),
+                  )),
+                ),
+              ],
             ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.info_outline),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      child: Text(
+                        "To view the LIVE event happening at Main Hall, kindly choose the desired language.",
+                        textAlign: TextAlign.left,
+                        softWrap: true,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

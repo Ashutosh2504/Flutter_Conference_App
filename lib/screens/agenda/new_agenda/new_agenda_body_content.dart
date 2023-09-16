@@ -38,6 +38,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
   bool loggedIn = false;
   bool changeBtn = false;
   final Color color = Color.fromARGB(255, 15, 158, 174);
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
 
   List<NewAgendaModel> _foundAgendas = [];
   Dio dio = new Dio();
@@ -88,7 +89,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
         var checkFavouriite = CheckFavouriteModel.fromJson(jsonData);
 
         if (checkFavouriite.msg.toString() == "Yes") {
-          _foundAgendas[index].isFavourite = "Already Added";
+          _foundAgendas[index].isFavourite = "Added";
         }
 
         setState(() {
@@ -117,7 +118,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
     );
 
     if (response.statusCode == 200) {
-      _foundAgendas[index].isFavourite = "Already Added";
+      _foundAgendas[index].isFavourite = "Added";
       setState(() {});
       await widget.getAgendas();
     } else {
@@ -176,7 +177,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                     itemCount: _foundAgendas.length,
                     itemBuilder: (context, index) => Card(
                       // key: ValueKey(_foundAgendas[index]),
-                      color: Colors.blueGrey[50],
+                      color: Colors.white,
                       elevation: 4,
                       margin: EdgeInsets.symmetric(vertical: 10),
                       child: InkWell(
@@ -289,14 +290,14 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                 children: [
                                   Icon(
                                     Icons.place,
-                                    color: Colors.blueAccent,
+                                    color: Colors.blue,
                                   ),
                                   Text(
                                     _foundAgendas[index].hall,
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.normal,
-                                        color: Colors.blueGrey),
+                                        color: titleColor),
                                   ),
                                 ],
                               ),
@@ -304,8 +305,8 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                 "Topic: ${_foundAgendas[index].Topic} ",
                                 style: TextStyle(
                                     fontSize: 18,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.pinkAccent),
+                                    fontWeight: FontWeight.w600,
+                                    color: titleColor),
                               ),
                             ],
                           ),

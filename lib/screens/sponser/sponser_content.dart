@@ -11,6 +11,8 @@ class SponserContent extends StatefulWidget {
 }
 
 class _SponserContentState extends State<SponserContent> {
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
@@ -30,25 +32,25 @@ class _SponserContentState extends State<SponserContent> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CircleAvatar(
-              backgroundColor: Colors.white10,
-              radius: 50,
-              child: ClipRRect(
-                child: Image.network(
-                  widget.sponser.logo,
-                  fit: BoxFit.contain,
-                ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.network(
+                widget.sponser.logo,
+                fit: BoxFit.cover,
               ),
             ),
-            RichText(
-              textAlign: TextAlign.left,
-              softWrap: true,
-              text: TextSpan(
-                style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.pinkAccent),
-                text: widget.sponser.name,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RichText(
+                textAlign: TextAlign.left,
+                softWrap: true,
+                text: TextSpan(
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: titleColor),
+                  text: widget.sponser.name,
+                ),
               ),
             ),
             Padding(
@@ -56,10 +58,11 @@ class _SponserContentState extends State<SponserContent> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Icon(
-                  //   //Icons.,
-                  //   semanticLabel: "Info",
-                  // ),
+                  Image.asset(
+                    "assets/images/linkedin-logo.png",
+                    height: 20,
+                    width: 20,
+                  ),
                   SizedBox(
                     width: 5,
                   ),
@@ -70,12 +73,14 @@ class _SponserContentState extends State<SponserContent> {
                           MaterialPageRoute(
                             builder: (ctxt) => WebviewComponent(
                                 title: widget.sponser.name,
-                                webviewUrl: widget.sponser.companyUrl),
+                                webviewUrl: widget.sponser.linkedIn),
                           ),
                         ),
                       },
                       child: Text(
-                        widget.sponser.companyUrl,
+                        widget.sponser.linkedIn.isNotEmpty
+                            ? widget.sponser.linkedIn
+                            : "",
                         style: TextStyle(color: Colors.blue),
                       ),
                     ),

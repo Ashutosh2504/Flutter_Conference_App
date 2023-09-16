@@ -57,7 +57,9 @@ class _MySponsersState extends State<MySponsers> {
             category: item['category'],
             logo: item['logo'],
             status: item['status'],
-            date: item['date']);
+            date: item['date'],
+            linkedIn: item['linkedin_url'],
+            email: item['email']);
         highList.add(high);
       }
       for (var item in sponsers.institutionalPatronage) {
@@ -70,7 +72,9 @@ class _MySponsersState extends State<MySponsers> {
             category: item['category'],
             logo: item['logo'],
             status: item['status'],
-            date: item['date']);
+            date: item['date'],
+            linkedIn: item['linkedin_url'],
+            email: item['email']);
         institutionalList.add(institutional);
       }
       for (var item in sponsers.globalHealthForumPartners) {
@@ -83,7 +87,9 @@ class _MySponsersState extends State<MySponsers> {
             category: item['category'],
             logo: item['logo'],
             status: item['status'],
-            date: item['date']);
+            date: item['date'],
+            linkedIn: item['linkedin_url'],
+            email: item['email']);
         gloabalHealthForumList.add(globalHealthForum);
       }
       for (var item in sponsers.forumSaudeXxiPartners) {
@@ -96,7 +102,9 @@ class _MySponsersState extends State<MySponsers> {
             category: item['category'],
             logo: item['logo'],
             status: item['status'],
-            date: item['date']);
+            date: item['date'],
+            linkedIn: item['linkedin_url'],
+            email: item['email']);
         forumSaudeList.add(forumSaude);
       }
     } catch (e) {
@@ -140,7 +148,8 @@ class _MySponsersState extends State<MySponsers> {
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
                         child: Text(
-                          "HIGH PATRONAGES",
+                          "HIGH PATRONAGE",
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -149,12 +158,42 @@ class _MySponsersState extends State<MySponsers> {
                       ),
                     ),
                   ),
-                  createListView(highList),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SponserContent(
+                                        sponser: highList[0],
+                                      )));
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Container(
+                              child: highList[0].logo.isNotEmpty
+                                  ? Image.network(highList[0].logo,
+                                      fit: BoxFit.contain)
+                                  : Image.asset("assets/images/sponser.png"),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Container(
+                  //   child: sponserContent(highList[0]),
+                  // ),
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
                         child: Text(
+                          textAlign: TextAlign.center,
                           "INSTITUTIONAL PATRONAGES",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -170,6 +209,7 @@ class _MySponsersState extends State<MySponsers> {
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
                         child: Text(
+                          textAlign: TextAlign.center,
                           "GLOBAL HEALTH FORUM PATRONAGES",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -185,6 +225,7 @@ class _MySponsersState extends State<MySponsers> {
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
                         child: Text(
+                          textAlign: TextAlign.center,
                           "FORUM SAUDE XXI PATRONAGES",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -195,21 +236,6 @@ class _MySponsersState extends State<MySponsers> {
                     ),
                   ),
                   createListView(forumSaudeList),
-
-                  // SliverToBoxAdapter(
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(8.0),
-                  //     child: Container(
-                  //       child: Text(
-                  //         "NSTITUTIONAL PATRONAGEs",
-                  //         style: TextStyle(
-                  //           fontWeight: FontWeight.bold,
-                  //           fontSize: 20,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // )
                 ],
               );
             } else {
@@ -257,25 +283,25 @@ class _MySponsersState extends State<MySponsers> {
                 ),
               ),
             ),
-            Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  sponserModel.name,
-                  textAlign: TextAlign.center,
-                  softWrap: true,
-                  //overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.pinkAccent),
-                ),
-              ),
-            ),
+            // Expanded(
+            //   child: Container(
+            //     width: MediaQuery.of(context).size.width,
+            //     decoration: BoxDecoration(
+            //       color: Colors.white,
+            //       borderRadius: BorderRadius.circular(10),
+            //     ),
+            //     child: Text(
+            //       sponserModel.name,
+            //       textAlign: TextAlign.center,
+            //       softWrap: true,
+            //       //overflow: TextOverflow.ellipsis,
+            //       style: TextStyle(
+            //           fontSize: 15,
+            //           fontWeight: FontWeight.bold,
+            //           color: Colors.pinkAccent),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

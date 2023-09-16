@@ -1,8 +1,11 @@
 import 'package:bottom_navigation_and_drawer/screens/bottom_navigation/bottom_navigationbar.dart';
 import 'package:bottom_navigation_and_drawer/screens/contactus/contact_us.dart';
+import 'package:bottom_navigation_and_drawer/screens/faq/faq.dart';
 import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
 import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
 import 'package:bottom_navigation_and_drawer/screens/scientific_programs/scientific_programs.dart';
+import 'package:bottom_navigation_and_drawer/util/alerts.dart';
+import 'package:bottom_navigation_and_drawer/util/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,6 +19,7 @@ class SideMenu extends StatefulWidget {
 class _SideMenuState extends State<SideMenu> {
   var user_email = "";
   var user_name = "";
+  var user_id = "";
   var logged_in;
   bool loggedIn = false;
   var get_logged_in;
@@ -34,6 +38,8 @@ class _SideMenuState extends State<SideMenu> {
     var email = prefs.get("email");
     var name = prefs.get("name");
     var logIn = prefs.get("logged_in");
+    var userId = prefs.get("user_id");
+    user_id = userId != null ? userId.toString() : " ";
     user_email = email != null ? email.toString() : " ";
     user_name = name != null ? name.toString() : " ";
     logged_in = logIn != null ? logIn : "false";
@@ -86,14 +92,23 @@ class _SideMenuState extends State<SideMenu> {
           ListTile(
             leading: Icon(Icons.poll),
             title: Text("Survey"),
-            onTap: () => {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MyBottomNavigationBar(
-                            selectedIndex: 1,
-                          )))
-            },
+            onTap: loggedIn
+                ? () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctxt) => WebviewComponent(
+                            title: "Survey",
+                            webviewUrl:
+                                "https://globalhealth-forum.com/event_app/survey.php?user_id=${user_id}&email_id=${user_email}"),
+                      ),
+                    );
+                  }
+                : () async {
+                    await Alerts.showAlert(
+                        loggedIn, context, "Not Logged In. Please Login");
+                    // Navigator.pushReplacement(context,
+                    //     MaterialPageRoute(builder: (context) => LoginPage()));
+                  },
           ),
           ListTile(
             leading: Icon(Icons.call),
@@ -107,8 +122,8 @@ class _SideMenuState extends State<SideMenu> {
             leading: Icon(Icons.help),
             title: Text("FAQ"),
             onTap: () => {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => MyContactUs()))
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => MyFaq()))
             },
           ),
           loggedIn

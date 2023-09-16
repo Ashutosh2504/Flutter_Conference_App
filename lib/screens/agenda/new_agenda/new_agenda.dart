@@ -123,7 +123,7 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
         for (FavouritesModel favouriteAgenda in favouritesList) {
           if (agenda.agenda_id == favouriteAgenda.agendaId) {
             if (!newAgendaList.contains(agenda)) {
-              agenda.isFavourite = "Already added";
+              agenda.isFavourite = "Added";
               // aList.remove(agenda);
               newAgendaList.add(agenda);
             }

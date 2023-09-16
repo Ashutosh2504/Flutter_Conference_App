@@ -17,79 +17,83 @@ class MySpeakersList extends StatefulWidget {
 }
 
 class _MySpeakersListState extends State<MySpeakersList> {
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+
   List<SpeakerModel> _speakersList = [];
+  List<SpeakerModel> _foundSpeakers = [];
   final dio = Dio();
 
-  var userId;
   bool listViewEnabled = false;
+
+  bool isLoading = true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getSpeakers();
+      setState(() {
+        _foundSpeakers = _speakersList;
+      });
+    });
+  }
+
+  void _runFilter(String enteredKeyword) {
+    List<SpeakerModel> _results = [];
+
+    if (enteredKeyword.isEmpty) {
+      _results = _speakersList;
+    } else {
+      _results = _speakersList
+          .where((participant) => participant.name
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+
+    setState(() {
+      _foundSpeakers = _results;
+      //_foundSpeakers.sort();
+    });
+  }
+
   Future getSpeakers() async {
     try {
       final response = await dio
           .get('https://globalhealth-forum.com/event_app/api/get_speaker.php');
-      var jsonData = response.data;
-      for (var items in jsonData) {
-        final speakers = SpeakerModel(
-            id: items['id'],
-            name: items['name'],
-            email: items['email'],
-            mobile: items['mobile'],
-            designation: items['designation'],
-            institute: items['institute'],
-            information: items['information'],
-            city: items['city'],
-            country: items['country'],
-            linkedinUrl: items['linkedin_url'],
-            date: items['date'],
-            photo: items['photo'],
-            rating: items['rating'],
-            status: items['status']);
-
-        _speakersList.add(speakers);
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future<CheckSpeakerRatingModel> getSpeakerRating(int speakerId) async {
-    try {
-      CheckSpeakerRatingModel checkSpeakerModelRating;
-      var prefs = await SharedPreferences.getInstance();
-      var user_id = prefs.getString("user_id");
-      userId = user_id != null ? user_id : "";
-      final response = await dio.get(
-          'https://globalhealth-forum.com/event_app/api/get_speaker_rating.php?speaker_id=${speakerId}&user_id=${userId}');
-
       if (response.statusCode == 200) {
         var jsonData = response.data;
+        isLoading = false;
+        setState(() {});
+        for (var items in jsonData) {
+          final speakers = SpeakerModel(
+              id: items['id'],
+              name: items['name'],
+              email: items['email'],
+              mobile: items['mobile'],
+              designation: items['designation'],
+              institute: items['institute'],
+              information: items['information'],
+              city: items['city'],
+              country: items['country'],
+              linkedinUrl: items['linkedin_url'],
+              date: items['date'],
+              photo: items['photo'],
+              rating: items['rating'],
+              status: items['status']);
 
-        checkSpeakerModelRating = CheckSpeakerRatingModel(
-            id: jsonData[0]['id'],
-            userId: jsonData[0]['user_id'],
-            rating: jsonData[0]['rating'],
-            speakerId: jsonData[0]['speaker_id'],
-            name: jsonData[0]['name'],
-            email: jsonData[0]['email'],
-            mobile: jsonData[0]['mobile'],
-            designation: jsonData[0]['designation'],
-            institute: jsonData[0]['institute'],
-            information: jsonData[0]['information'],
-            city: jsonData[0]['city'],
-            country: jsonData[0]['country'],
-            linkedinUrl: jsonData[0]['linkedin_url'],
-            date: jsonData[0]['date'],
-            photo: jsonData[0]['photo'],
-            status: jsonData[0]['status']);
-
-        return checkSpeakerModelRating;
+          _speakersList.add(speakers);
+        }
       } else {
-        throw Error.safeToString("Invalid status call");
+        isLoading = true;
+        setState(() {});
       }
     } catch (e) {
       print(e.toString());
-      rethrow;
     }
   }
+
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -119,28 +123,33 @@ class _MySpeakersListState extends State<MySpeakersList> {
           Divider(
             height: 5,
           ),
+          TextField(
+            onChanged: (value) => _runFilter(value.trim()),
+            decoration: InputDecoration(
+              labelText: "Search Speakers",
+              suffixIcon: Icon(Icons.search),
+            ),
+          ),
           // speakerslist
-          Expanded(
-            child: FutureBuilder(
-              future: getSpeakers(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return listViewEnabled
+          isLoading
+              ? CircularProgressIndicator()
+              : Expanded(
+                  child: listViewEnabled
                       ? ListView.builder(
-                          itemCount: _speakersList.length,
+                          itemCount: _foundSpeakers.length,
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () async {
-                                CheckSpeakerRatingModel speaker =
-                                    await getSpeakerRating(
-                                        _speakersList[index].id);
-                                _speakersList[index].rating = speaker.rating;
+                                // CheckSpeakerRatingModel speaker =
+                                //     await getSpeakerRating(
+                                //         _foundSpeakers[index].id);
+                                // _foundSpeakers[index].rating = speaker.rating;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => MySpeakerInfo(
                                             speakersList:
-                                                _speakersList[index])));
+                                                _foundSpeakers[index])));
                                 await getSpeakers();
                               },
                               child: Card(
@@ -150,7 +159,7 @@ class _MySpeakersListState extends State<MySpeakersList> {
                                   height:
                                       MediaQuery.of(context).size.height / 6,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey[100],
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Row(
@@ -168,14 +177,21 @@ class _MySpeakersListState extends State<MySpeakersList> {
                                                   left: 8, right: 8),
                                               // decoration: BoxDecoration(
                                               //     color: Colors.blueGrey),
-                                              child: _speakersList[index]
+                                              child: _foundSpeakers[index]
                                                       .photo
                                                       .isNotEmpty
                                                   ? Image.network(
                                                       height: 80,
-                                                      _speakersList[index]
+                                                      _foundSpeakers[index]
                                                           .photo,
                                                       fit: BoxFit.cover,
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
+                                                        return Icon(
+                                                          Icons.person,
+                                                          size: 80,
+                                                        );
+                                                      },
                                                     )
                                                   : Image.asset(
                                                       "assets/images/user.png")),
@@ -201,43 +217,43 @@ class _MySpeakersListState extends State<MySpeakersList> {
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      color: Colors.pinkAccent),
-                                                  text:
-                                                      _speakersList[index].name,
+                                                      color: titleColor),
+                                                  text: _foundSpeakers[index]
+                                                      .name,
                                                 ),
                                               ),
                                               SizedBox(
                                                 height: 4,
                                               ),
-                                              RichText(
-                                                textAlign: TextAlign.left,
-                                                softWrap: true,
-                                                text: TextSpan(
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color: Colors.black),
-                                                  text: _speakersList[index]
-                                                      .designation,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 4,
-                                              ),
-                                              RichText(
-                                                textAlign: TextAlign.left,
-                                                softWrap: true,
-                                                text: TextSpan(
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color: Colors.black),
-                                                  text: _speakersList[index]
-                                                      .institute,
-                                                ),
-                                              ),
+                                              // RichText(
+                                              //   textAlign: TextAlign.left,
+                                              //   softWrap: true,
+                                              //   text: TextSpan(
+                                              //     style: TextStyle(
+                                              //         fontSize: 14,
+                                              //         fontWeight:
+                                              //             FontWeight.normal,
+                                              //         color: Colors.black87),
+                                              //     text: _foundSpeakers[index]
+                                              //         .designation,
+                                              //   ),
+                                              // ),
+                                              // SizedBox(
+                                              //   height: 4,
+                                              // ),
+                                              // RichText(
+                                              //   textAlign: TextAlign.left,
+                                              //   softWrap: true,
+                                              //   text: TextSpan(
+                                              //     style: TextStyle(
+                                              //         fontSize: 18,
+                                              //         fontWeight:
+                                              //             FontWeight.normal,
+                                              //         color: Colors.black),
+                                              //     text: _foundSpeakers[index]
+                                              //         .institute,
+                                              //   ),
+                                              //),
                                             ],
                                           ),
                                         ),
@@ -254,32 +270,26 @@ class _MySpeakersListState extends State<MySpeakersList> {
                                   crossAxisCount: 2,
                                   //childAspectRatio: 1.2,
                                   crossAxisSpacing: 5,
-                                  mainAxisSpacing: 10),
-                          itemCount: _speakersList.length,
+                                  mainAxisSpacing: 5),
+                          itemCount: _foundSpeakers.length,
                           itemBuilder: (context, index) {
                             return Card(
+                              color: Colors.white,
                               child: MySquareGridList(
-                                  speakerModel: _speakersList[index]),
+                                  speakerModel: _foundSpeakers[index]),
                             );
                           },
-                        );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
+                        )
 
-            // child: GridView.builder(
-            //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //         crossAxisCount: 2),
-            //     itemCount: _speakersList.length,
-            //     itemBuilder: (context, index) {
-            //       return Card(
-            //           child: MySquareGridList(name: _speakersList[index].name));
-            //     }),
-          ),
+                  // child: GridView.builder(
+                  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  //         crossAxisCount: 2),
+                  //     itemCount: _speakersList.length,
+                  //     itemBuilder: (context, index) {
+                  //       return Card(
+                  //           child: MySquareGridList(name: _speakersList[index].name));
+                  //     }),
+                  ),
         ],
       ),
     );

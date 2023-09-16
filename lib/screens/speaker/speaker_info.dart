@@ -22,10 +22,18 @@ class MySpeakerInfo extends StatefulWidget {
 }
 
 class _MySpeakerInfoState extends State<MySpeakerInfo> {
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+  late SpeakerModel speakerModel;
+
+  //SpeakerModel speakerModel ;
   @override
   void initState() {
-    getPreferences();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getPreferences();
+      getSpeakerRating(widget.speakersList.id);
+      setState(() {});
+    });
   }
 
   var prefs;
@@ -33,6 +41,8 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
   var user_email;
   var get_logged_in;
   var logged_in;
+  var userId;
+  bool loading = true;
   bool loggedIn = false;
   final Color color = Color.fromARGB(255, 15, 158, 174);
   bool success = false;
@@ -69,309 +79,348 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
     }
   }
 
+  getSpeakerRating(int speakerId) async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      var user_id = prefs.getString("user_id");
+      userId = user_id != null ? user_id : "";
+      final response = await dio.get(
+          'https://globalhealth-forum.com/event_app/api/get_speaker_rating_2.php?speaker_id=${speakerId}&user_id=${userId}');
+
+      if (response.statusCode == 200) {
+        var jsonData = response.data;
+
+        speakerModel = SpeakerModel(
+            id: jsonData[0]['id'],
+            rating: jsonData[0]['rating'],
+            name: jsonData[0]['name'],
+            email: jsonData[0]['email'],
+            mobile: jsonData[0]['mobile'],
+            designation: jsonData[0]['designation'],
+            institute: jsonData[0]['institute'],
+            information: jsonData[0]['information'],
+            city: jsonData[0]['city'],
+            country: jsonData[0]['country'],
+            linkedinUrl: jsonData[0]['linkedin_url'],
+            date: jsonData[0]['date'],
+            photo: jsonData[0]['photo'],
+            status: jsonData[0]['status']);
+
+        loading = false;
+        setState(() {});
+      } else {
+        throw Error.safeToString("Invalid status call");
+      }
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(),
-      body: Container(
-        width: queryData.size.width,
-        height: queryData.size.height,
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 229, 226, 226),
-          borderRadius: BorderRadius.circular(3.0),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.all(8.0),
-                height: MediaQuery.of(context).size.height / 6,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: loading
+          ? Center(child: CircularProgressIndicator())
+          : Container(
+              width: queryData.size.width,
+              height: queryData.size.height,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 229, 226, 226),
+                borderRadius: BorderRadius.circular(3.0),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.blueGrey,
-                        child: ClipOval(
-                          child: Image.network(
-                            widget.speakersList.photo,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
+                    Container(
+                      margin: EdgeInsets.all(8.0),
+                      height: MediaQuery.of(context).size.height / 6,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: MediaQuery.of(context).size.height,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: RichText(
-                                  textAlign: TextAlign.left,
-                                  softWrap: true,
-                                  text: TextSpan(
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.pinkAccent),
-                                    text: widget.speakersList.name,
-                                  ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundColor: Colors.blueGrey,
+                              child: ClipOval(
+                                child: Image.network(
+                                  speakerModel.photo,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),
-                            RichText(
-                              textAlign: TextAlign.left,
-                              softWrap: true,
-                              text: TextSpan(
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black),
-                                text: widget.speakersList.designation,
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: RichText(
+                                        textAlign: TextAlign.left,
+                                        softWrap: true,
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: titleColor),
+                                          text: speakerModel.name,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  RichText(
+                                    textAlign: TextAlign.left,
+                                    softWrap: true,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black),
+                                      text: speakerModel.designation,
+                                    ),
+                                  ),
+                                  RichText(
+                                    textAlign: TextAlign.left,
+                                    softWrap: true,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black),
+                                      text: speakerModel.institute,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            RichText(
-                              textAlign: TextAlign.left,
-                              softWrap: true,
-                              text: TextSpan(
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                              child: RatingBar.builder(
+                            itemSize: 25,
+                            initialRating: double.parse(
+                                speakerModel.rating.isNotEmpty
+                                    ? speakerModel.rating
+                                    : "0.0"),
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: false,
+                            itemCount: 5,
+                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: loggedIn
+                                ? (rating) async {
+                                    await sendRating(rating, speakerModel.id);
+                                    print("Rating for speaker ${rating}");
+                                  }
+                                : (rating) async {
+                                    await Alerts.showAlert(loggedIn, context,
+                                        "Not Logged In. Please Login");
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => LoginPage()));
+                                  },
+                          )),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outline,
+                                    semanticLabel: "Info",
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "Info:",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                speakerModel.information,
+                                textAlign: TextAlign.start,
+                                softWrap: true,
+                                //overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.normal,
                                     color: Colors.black),
-                                text: widget.speakersList.institute,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outline,
+                                    semanticLabel: "Info",
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "LinkedIn:",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (ctxt) => WebviewComponent(
+                                          title: "LinkedIn",
+                                          webviewUrl: speakerModel.linkedinUrl),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  speakerModel.linkedinUrl,
+                                  textAlign: TextAlign.start,
+                                  softWrap: true,
+                                  //overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.blue),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.location_city,
+                                semanticLabel: "City",
+                              ),
+                              Text(
+                                "Country:",
+                                textAlign: TextAlign.left,
+                                softWrap: true,
+                                //overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                speakerModel.city,
+                                softWrap: true,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(elevation: 3),
+                              onPressed: () {
+                                pushNotification(speakerModel.email);
+                              },
+                              child: Text(
+                                "Request Meeting",
+                                style:
+                                    TextStyle(fontSize: 20, color: titleColor),
+                              )),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                        child: RatingBar.builder(
-                      itemSize: 25,
-                      initialRating: double.parse(
-                          widget.speakersList.rating.isNotEmpty
-                              ? widget.speakersList.rating
-                              : "0.0"),
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: false,
-                      itemCount: 5,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: loggedIn
-                          ? (rating) async {
-                              await sendRating(rating, widget.speakersList.id);
-                              print("Rating for speaker ${rating}");
-                            }
-                          : (rating) async {
-                              await Alerts.showAlert(loggedIn, context,
-                                  "Not Logged In. Please Login");
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginPage()));
-                            },
-                    )),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              semanticLabel: "Info",
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "Info:",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          widget.speakersList.information,
-                          textAlign: TextAlign.start,
-                          softWrap: true,
-                          //overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              semanticLabel: "Info",
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "LinkedIn:",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (ctxt) => WebviewComponent(
-                                    title: "LinkedIn",
-                                    webviewUrl:
-                                        widget.speakersList.linkedinUrl),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            widget.speakersList.linkedinUrl,
-                            textAlign: TextAlign.start,
-                            softWrap: true,
-                            //overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.blue),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.location_city,
-                          semanticLabel: "City",
-                        ),
-                        Text(
-                          "Country:",
-                          textAlign: TextAlign.left,
-                          softWrap: true,
-                          //overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          widget.speakersList.city,
-                          softWrap: true,
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(elevation: 3),
-                        onPressed: () {
-                          pushNotification(widget.speakersList.email);
-                        },
-                        child: Text(
-                          "Request Meeting",
-                          style:
-                              TextStyle(fontSize: 20, color: Colors.redAccent),
-                        )),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 

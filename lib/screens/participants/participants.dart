@@ -4,6 +4,9 @@ import 'package:bottom_navigation_and_drawer/screens/participants/participants_i
 import 'package:bottom_navigation_and_drawer/screens/participants/participants_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class MyParticipants extends StatefulWidget {
   const MyParticipants({super.key});
@@ -13,6 +16,15 @@ class MyParticipants extends StatefulWidget {
 }
 
 class _MyParticipantsState extends State<MyParticipants> {
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+  var prefs;
+  var get_mail;
+  var user_email;
+  var get_logged_in;
+  var logged_in;
+  bool loggedIn = false;
+  final Color color = Color.fromARGB(255, 15, 158, 174);
+
   List<ParticipantsModel> _participantsList = [];
   List<ParticipantsModel> _foundParticipants = [];
 
@@ -22,6 +34,7 @@ class _MyParticipantsState extends State<MyParticipants> {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      getPreferences();
       getParticipants();
       setState(() {
         _foundParticipants = _participantsList;
@@ -51,95 +64,80 @@ class _MyParticipantsState extends State<MyParticipants> {
                 itemBuilder: ((context, index) {
                   return InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ParticipantsInfo(
-                                  participant: _foundParticipants[index])));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => ParticipantsInfo(
+                      //             participant: _foundParticipants[index])));
                     },
                     child: Card(
                       color: Colors.white,
                       elevation: 2,
                       child: Container(
-                          height: MediaQuery.of(context).size.height / 6,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      color: Colors.blueGrey,
-                                      borderRadius: BorderRadius.circular(10),
+                        height: MediaQuery.of(context).size.height / 8,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _foundParticipants[index].name,
+                                      textAlign: TextAlign.left,
+                                      softWrap: true,
+                                      //overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: titleColor),
                                     ),
-                                    child: _foundParticipants[index]
-                                            .photo
-                                            .isNotEmpty
-                                        ? Image.network(
-                                            _foundParticipants[index].photo,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Image.asset(
-                                                "assets/images/user.png"),
-                                          )),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 8),
-                                  // padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _foundParticipants[index].name,
-                                        textAlign: TextAlign.left,
-                                        softWrap: true,
-                                        //overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.pinkAccent),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          _foundParticipants[index].designation,
-                                          textAlign: TextAlign.left,
-                                          softWrap: true,
-                                          //overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(
-                                          _foundParticipants[index].institution,
-                                          textAlign: TextAlign.left,
-                                          softWrap: true,
-                                          //overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    Text(
+                                      _foundParticipants[index].designation,
+                                      textAlign: TextAlign.left,
+                                      softWrap: true,
+                                      //overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black),
+                                    ),
+                                    Text(
+                                      _foundParticipants[index].institution,
+                                      textAlign: TextAlign.left,
+                                      softWrap: true,
+                                      //overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black),
+                                    ),
+                                  ],
                                 ),
-                              )
-                            ],
-                          )),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                await pushNotification(
+                                    _foundParticipants[index].email);
+                              },
+                              child: Icon(
+                                Icons.outgoing_mail,
+                                color: titleColor,
+                                size: 50,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 }),
@@ -195,6 +193,63 @@ class _MyParticipantsState extends State<MyParticipants> {
 
     setState(() {
       _foundParticipants = _results;
+      _foundParticipants.sort();
     });
+  }
+
+  pushNotification(String participantMail) async {
+    var prefs = await SharedPreferences.getInstance();
+    var get_mail = prefs.getString("email");
+    var user_email = get_mail != null ? get_mail : "";
+
+    if (loggedIn) {
+      var response = await http.get(
+        Uri.parse(
+            "https://globalhealth-forum.com/event_app/api/send_participant_email.php?participant_email=${participantMail}&user_email=${user_email}"),
+      );
+      if (response.statusCode == 200) {
+        showAlert(true);
+      } else {
+        showAlert(false);
+      }
+    } else {
+      QuickAlert.show(
+          confirmBtnColor: color,
+          context: context,
+          text: "Please Login...",
+          type: QuickAlertType.warning);
+    }
+  }
+
+  void showAlert(bool success) {
+    if (success) {
+      QuickAlert.show(
+          confirmBtnColor: color,
+          context: context,
+          text: "Mail sent..",
+          type: QuickAlertType.success);
+    } else {
+      QuickAlert.show(
+          confirmBtnColor: color,
+          context: context,
+          text: "Failed to send mail",
+          type: QuickAlertType.error);
+    }
+  }
+
+  void getPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    get_mail = prefs.getString("email");
+    get_logged_in = prefs.getString("logged_in");
+    user_email = get_mail != null ? get_mail : "";
+    logged_in = get_logged_in != null ? get_logged_in : "false";
+    if (logged_in != null) {
+      if (logged_in == "false") {
+        loggedIn = false;
+      } else {
+        loggedIn = true;
+      }
+    }
+    setState(() {});
   }
 }

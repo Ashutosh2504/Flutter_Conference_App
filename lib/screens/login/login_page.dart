@@ -16,6 +16,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final Color color = Color.fromARGB(255, 15, 158, 174);
+  
 
   String _name = "";
   bool changeBtn = false;

@@ -27,6 +27,8 @@ class _MyFavouritesState extends State<MyFavourites> {
   List<SpeakerModel> agendaSpeakersList = [];
   List<FavouritesModel> favouritesList = [];
   final Color color = Color.fromARGB(255, 15, 158, 174);
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+
   bool clicked = false;
 
   List<AgendaModel> _foundAgendas = [];
@@ -214,8 +216,8 @@ class _MyFavouritesState extends State<MyFavourites> {
                                 "Topic: ${favouritesList[index].topic} ",
                                 style: TextStyle(
                                     fontSize: 20,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.pinkAccent),
+                                    fontWeight: FontWeight.bold,
+                                    color: titleColor),
                               ),
                             ),
                           ],
