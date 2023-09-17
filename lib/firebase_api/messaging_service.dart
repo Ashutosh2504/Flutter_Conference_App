@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bottom_navigation_and_drawer/util/routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class MessagingService {
   static String? fcmToken; // Variable to store the FCM token
@@ -34,6 +36,7 @@ class MessagingService {
     fcmToken = await _fcm.getToken();
     log('fcmToken: $fcmToken');
     print(fcmToken.toString());
+    await sendToken(fcmToken.toString());
 
     // Handling background messages using the specified handler
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -116,4 +119,16 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   debugPrint('Handling a background message: ${message.notification!.title}');
+}
+
+Future<void> sendToken(String token) async {
+  final response = await http.post(
+    Uri.parse('https://globalhealth-forum.com/event_app/api/post_token.php'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      "token_id": token,
+    }),
+  );
 }
