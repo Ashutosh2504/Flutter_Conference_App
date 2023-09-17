@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -43,16 +46,6 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBld5-6cpPmoRzSBZF8shlkadxzx3_N4Hc',
-    appId: '1:61356630282:web:928a2c72e752868bd19af3',
-    messagingSenderId: '61356630282',
-    projectId: 'ghf2023-9af4d',
-    authDomain: 'ghf2023-9af4d.firebaseapp.com',
-    storageBucket: 'ghf2023-9af4d.appspot.com',
-    measurementId: 'G-7GW6V01NH5',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDOTJPX6qw1i5Jmo5YJEUKFXgeAMccN1FE',
     appId: '1:61356630282:android:2012571242cd40b5d19af3',
@@ -63,7 +56,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyABFjGxcasoQd8gORN_ZNLh3YZbIOl5tos',
-    appId: '1:61356630282:ios:226f93b52c354cd7d19af3',
+    appId: '1:61356630282:ios:5a6aae1f1109eeead19af3',
     messagingSenderId: '61356630282',
     projectId: 'ghf2023-9af4d',
     storageBucket: 'ghf2023-9af4d.appspot.com',
@@ -72,7 +65,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyABFjGxcasoQd8gORN_ZNLh3YZbIOl5tos',
-    appId: '1:61356630282:ios:c3b7af3da2a74b56d19af3',
+    appId: '1:61356630282:ios:ab165aa7d2372a2dd19af3',
     messagingSenderId: '61356630282',
     projectId: 'ghf2023-9af4d',
     storageBucket: 'ghf2023-9af4d.appspot.com',

@@ -126,6 +126,18 @@ class _SideMenuState extends State<SideMenu> {
                   context, MaterialPageRoute(builder: (context) => MyFaq()))
             },
           ),
+          ListTile(
+              leading: Icon(Icons.open_in_new_outlined),
+              title: Text("GHF Web"),
+              onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctxt) => WebviewComponent(
+                        title: "",
+                        webviewUrl: "https://globalhealth-forum.com/"),
+                  ),
+                );
+              }),
           loggedIn
               ? ListTile(
                   leading: Icon(Icons.logout),

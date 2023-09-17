@@ -188,7 +188,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                               builder: (context) {
                                 return NewAgendaInfo(
                                   agendaModel: _foundAgendas[index],
-                                  speakerList: _foundAgendas[index].speakers,
+                                  // speakerList: _foundAgendas[index].speakers,
                                 );
                               },
                             ),
@@ -278,6 +278,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                           _foundAgendas[index].isFavourite,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                              fontSize: 10,
                                               fontWeight: FontWeight.normal,
                                               color: Colors.white),
                                         ),
@@ -290,14 +291,14 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                 children: [
                                   Icon(
                                     Icons.place,
-                                    color: Colors.blue,
+                                    color: Colors.black87,
                                   ),
                                   Text(
                                     _foundAgendas[index].hall,
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
-                                        color: titleColor),
+                                        color: Colors.black87),
                                   ),
                                 ],
                               ),

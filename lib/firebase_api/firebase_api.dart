@@ -11,12 +11,9 @@ import 'package:http/http.dart' as http;
 class FirebaseApi {
   //we need instance of FirebaseMessaging
   final _firebaseMessaging = FirebaseMessaging.instance;
-  final _androidChannel = const AndroidNotificationChannel(
-      'high_importance_channel', 'High mportance Notifications',
-      description: 'This channel is used for high importance notifications',
-      importance: Importance.defaultImportance);
+  
+  
 
-  final _localNotifications = FlutterLocalNotificationsPlugin();
   // function to initialize notifications
   Future<void> initNotifications() async {
     //request permission from user prompt
@@ -61,7 +58,7 @@ class FirebaseApi {
       sound: true,
     );
     //handle notification if app was terminated and opened up
-    // FirebaseMessaging.instance.getInitialMessage().then((handleMessage));
+    FirebaseMessaging.instance.getInitialMessage().then((handleMessage));
 
     //attach eventlisteners when notification opens the app
     // FirebaseMessaging.onMessageOpenedApp.listen((handleMessage));

@@ -74,7 +74,7 @@ class _MyParticipantsState extends State<MyParticipants> {
                       color: Colors.white,
                       elevation: 2,
                       child: Container(
-                        height: MediaQuery.of(context).size.height / 8,
+                        height: MediaQuery.of(context).size.height / 6,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
@@ -96,7 +96,7 @@ class _MyParticipantsState extends State<MyParticipants> {
                                       softWrap: true,
                                       //overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: titleColor),
                                     ),
@@ -106,7 +106,7 @@ class _MyParticipantsState extends State<MyParticipants> {
                                       softWrap: true,
                                       //overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.normal,
                                           color: Colors.black),
                                     ),
@@ -116,7 +116,7 @@ class _MyParticipantsState extends State<MyParticipants> {
                                       softWrap: true,
                                       //overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.normal,
                                           color: Colors.black),
                                     ),

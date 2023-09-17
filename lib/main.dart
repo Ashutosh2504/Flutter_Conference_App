@@ -2,6 +2,7 @@ import 'package:bottom_navigation_and_drawer/firebase_api/firebase_api.dart';
 import 'package:bottom_navigation_and_drawer/firebase_options.dart';
 import 'package:bottom_navigation_and_drawer/screens/notifications/notification.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,7 +16,6 @@ import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
 import 'package:bottom_navigation_and_drawer/screens/live/live.dart';
 import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
 import 'package:bottom_navigation_and_drawer/screens/quiz/quiz.dart';
-import 'package:bottom_navigation_and_drawer/screens/search/search.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speakers_list.dart';
 import 'package:bottom_navigation_and_drawer/screens/sponser/sponser.dart';
 import 'package:bottom_navigation_and_drawer/screens/venue/venue.dart';
@@ -31,7 +31,9 @@ final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseApi().initNotifications();
+
+  //await FirebaseApi().initNotifications();
+
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
@@ -65,7 +67,7 @@ class MyApp extends StatelessWidget {
         MyRoutes.gallery: (context) => MyGallery(),
         MyRoutes.sponsers: (context) => MySponsers(),
         MyRoutes.agenda: (context) => MyAgenda(),
-        MyRoutes.search: (context) => MySearch(),
+
         MyRoutes.favourite: (context) => MyFavourites(),
         MyRoutes.download: (context) => MyDownloads(),
         MyRoutes.participants: (context) => MyParticipants(),
@@ -75,7 +77,16 @@ class MyApp extends StatelessWidget {
         MyRoutes.quiz: (context) => MyQuiz(),
         MyRoutes.new_agenda: (context) => MyNewAgenda(),
         MyRoutes.live: (context) => MyLive(),
-        MyRoutes.notification: (context) => MyNotifications(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == MyRoutes.notification) {
+          return MaterialPageRoute(
+              builder: (context) => MyNotifications(
+                    notificationsData: settings.arguments as RemoteNotification,
+                  ));
+        } else {
+          return null;
+        }
       },
     );
   }

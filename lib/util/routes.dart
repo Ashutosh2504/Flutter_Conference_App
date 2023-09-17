@@ -7,7 +7,7 @@ class MyRoutes {
   static String gallery = "/gallery";
   static String sponsers = "/sponsers";
   static String agenda = "/agenda";
-  static String search = "/search";
+
   static String favourite = "/favourite";
   static String download = "/download";
   static String participants = "/participants";

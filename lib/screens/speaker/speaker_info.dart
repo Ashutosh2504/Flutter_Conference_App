@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:bottom_navigation_and_drawer/screens/login/login_page.dart';
 import 'package:bottom_navigation_and_drawer/util/alerts.dart';
@@ -164,23 +163,19 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                             child: Container(
                               height: MediaQuery.of(context).size.height,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: RichText(
-                                        textAlign: TextAlign.left,
-                                        softWrap: true,
-                                        text: TextSpan(
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: titleColor),
-                                          text: speakerModel.name,
-                                        ),
-                                      ),
+                                  RichText(
+                                    textAlign: TextAlign.left,
+                                    softWrap: true,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: titleColor),
+                                      text: speakerModel.name,
                                     ),
                                   ),
                                   RichText(
@@ -188,7 +183,7 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                                     softWrap: true,
                                     text: TextSpan(
                                       style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.normal,
                                           color: Colors.black),
                                       text: speakerModel.designation,

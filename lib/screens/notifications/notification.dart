@@ -6,7 +6,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class MyNotifications extends StatefulWidget {
-  const MyNotifications({super.key});
+  const MyNotifications({super.key, required this.notificationsData});
+  final RemoteNotification? notificationsData;
 
   @override
   State<MyNotifications> createState() => _MyNotificationsState();
@@ -49,11 +50,10 @@ class _MyNotificationsState extends State<MyNotifications> {
       ),
       body: Column(
         children: [
-          // Text(message.notification != ""
-          //     ? message.notification!.title.toString()
-          //     : ""),
-          // Text(message.notification!.body.toString()),
-          // Text(message.data.toString()),
+          Text(widget.notificationsData != null
+              ? widget.notificationsData!.title.toString()
+              : ""),
+          Text(widget.notificationsData?.body.toString() ?? ""),
           Container(
             child: Padding(
               padding: const EdgeInsets.all(16.0),

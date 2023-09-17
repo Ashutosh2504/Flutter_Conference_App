@@ -14,15 +14,23 @@ import 'package:http/http.dart' as http;
 class NewAgendaInfo extends StatefulWidget {
   // const NewAgendaInfo({super.key});
   final NewAgendaModel agendaModel;
-  NewAgendaInfo({required this.agendaModel, required this.speakerList});
-  final List<SpeakerModel> speakerList;
+  NewAgendaInfo({required this.agendaModel});
+  // final List<SpeakerModel> speakerList;
   @override
   State<NewAgendaInfo> createState() => _NewAgendaInfoState();
 }
 
 class _NewAgendaInfoState extends State<NewAgendaInfo> {
   final Color titleColor = Color.fromARGB(255, 1, 144, 159);
-  late NewAgendaModel lateAgendaModel;
+  NewAgendaModel lateAgendaModel = NewAgendaModel(
+      Topic: "",
+      agenda_id: "",
+      hall: "",
+      agenda_info: "",
+      agenda_rating: "",
+      from_time: "",
+      to_time: "",
+      speakers: []);
   final dio = new Dio();
   var userId;
   bool loading = true;
@@ -36,13 +44,16 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
 
   @override
   void initState() {
-    getPreferences();
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getAgendaRating(widget.agendaModel.agenda_id);
+      getPreferences().then((val) {
+        if (loggedIn) {
+          getAgendaRating(widget.agendaModel.agenda_id);
+        }
 
-      setState(() {});
+        setState(() {});
+      });
     });
   }
 
@@ -54,167 +65,163 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
       appBar: AppBar(
         title: Text("Agenda"),
       ),
-      body: loading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Container(
-              width: queryData.size.width,
-              height: queryData.size.height,
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 229, 226, 226),
-                borderRadius: BorderRadius.circular(3.0),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(8.0),
-                      //height: MediaQuery.of(context).size.height / 6,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
+      body: Container(
+        width: queryData.size.width,
+        height: queryData.size.height,
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 229, 226, 226),
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.all(8.0),
+                //height: MediaQuery.of(context).size.height / 6,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: RichText(
+                          textAlign: TextAlign.left,
+                          softWrap: true,
+                          text: TextSpan(
+                            style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: titleColor),
+                            text: widget.agendaModel.Topic,
+                          ),
+                        ),
                       ),
-                      child: Padding(
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              widget.agendaModel.from_time +
+                                  " - " +
+                                  widget.agendaModel.to_time,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              widget.agendaModel.hall,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Center(
-                              child: RichText(
-                                textAlign: TextAlign.left,
-                                softWrap: true,
-                                text: TextSpan(
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                      color: titleColor),
-                                  text: lateAgendaModel.Topic,
-                                ),
-                              ),
-                            ),
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    lateAgendaModel.from_time +
-                                        " - " +
-                                        lateAgendaModel.to_time,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.black),
-                                  ),
+                                Icon(
+                                  Icons.info_outline,
+                                  semanticLabel: "Info",
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    lateAgendaModel.hall,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.black),
-                                  ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  textAlign: TextAlign.left,
+                                  "Info:",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black),
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.info_outline,
-                                        semanticLabel: "Info",
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        textAlign: TextAlign.left,
-                                        "Info:",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    lateAgendaModel.agenda_info,
-                                    textAlign: TextAlign.left,
-                                    softWrap: true,
-                                    //overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.black),
-                                  ),
-                                ],
-                              ),
+                            Text(
+                              widget.agendaModel.agenda_info,
+                              textAlign: TextAlign.left,
+                              softWrap: true,
+                              //overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(8.0),
-                      //height: MediaQuery.of(context).size.height / 6,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                            child: RatingBar.builder(
-                          itemSize: 25,
-                          initialRating: double.parse(
-                              lateAgendaModel.agenda_rating.isNotEmpty
-                                  ? lateAgendaModel.agenda_rating
-                                  : "0.0"),
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: false,
-                          itemCount: 5,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                          itemBuilder: (context, _) => Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          ),
-                          onRatingUpdate: loggedIn
-                              ? (rating) async {
-                                  await sendRating(
-                                      rating, lateAgendaModel.agenda_id);
-                                  print("Rating for speaker ${rating}");
-                                }
-                              : (rating) async {
-                                  await Alerts.showAlert(loggedIn, context,
-                                      "Not Logged In. Please Login");
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginPage()));
-                                },
-                        )),
-                      ),
-                    ),
-                    ...lateAgendaModel.speakers
-                        .map((e) => getSpeakerDetails(e))
-                        .toList()
-                    //getSpeakerDetails( lateAgendaModel.speakers)
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+              Container(
+                margin: EdgeInsets.all(8.0),
+                //height: MediaQuery.of(context).size.height / 6,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                      child: RatingBar.builder(
+                    itemSize: 25,
+                    initialRating: double.parse(
+                        loggedIn && lateAgendaModel.agenda_rating.isNotEmpty
+                            ? lateAgendaModel.agenda_rating
+                            : "0.0"),
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: false,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: loggedIn
+                        ? (rating) async {
+                            await sendRating(
+                                rating, widget.agendaModel.agenda_id);
+                            print("Rating for speaker ${rating}");
+                          }
+                        : (rating) async {
+                            await Alerts.showAlert(loggedIn, context,
+                                "Not Logged In. Please Login");
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          },
+                  )),
+                ),
+              ),
+              ...widget.agendaModel.speakers
+                  .map((e) => getSpeakerDetails(e))
+                  .toList()
+              //getSpeakerDetails( lateAgendaModel.speakers)
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -321,7 +328,7 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
     }
   }
 
-  void getPreferences() async {
+  Future<dynamic> getPreferences() async {
     prefs = await SharedPreferences.getInstance();
     get_mail = prefs.getString("email");
     get_logged_in = prefs.getString("logged_in");

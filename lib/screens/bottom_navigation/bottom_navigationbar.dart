@@ -7,7 +7,6 @@ import 'package:bottom_navigation_and_drawer/screens/live/live.dart';
 import 'package:bottom_navigation_and_drawer/screens/notifications/notification.dart';
 import 'package:bottom_navigation_and_drawer/screens/programs/programs.dart';
 import 'package:bottom_navigation_and_drawer/screens/quiz/quiz.dart';
-import 'package:bottom_navigation_and_drawer/screens/search/search.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speakers_list.dart';
 import 'package:bottom_navigation_and_drawer/util/routes.dart';
 import 'package:flutter/material.dart';
@@ -59,21 +58,23 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
         : currentIndex == 1
             ? MyNewAgenda()
             : currentIndex == 2
-                ? MyNotifications()
+                ? MyNotifications(
+                    notificationsData: null,
+                  )
                 : MyLive();
 
     return Scaffold(
       body: PageStorage(child: currentScreen, bucket: bucket),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.search_rounded,
-          color: Colors.white,
-        ),
-        backgroundColor: Color.fromARGB(255, 135, 205, 240),
-        onPressed: () => {
-          Navigator.pushNamed(context, MyRoutes.search),
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(
+      //     Icons.search_rounded,
+      //     color: Colors.white,
+      //   ),
+      //   backgroundColor: Color.fromARGB(255, 135, 205, 240),
+      //   onPressed: () => {
+      //     Navigator.pushNamed(context, MyRoutes.search),
+      //   },
+      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
