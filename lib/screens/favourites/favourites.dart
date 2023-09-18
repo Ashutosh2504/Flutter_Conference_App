@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:bottom_navigation_and_drawer/screens/agenda/agenda_info.dart';
 import 'package:bottom_navigation_and_drawer/screens/agenda/agenda_model.dart';
+import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agenda_info.dart';
+import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agenda_model.dart';
 import 'package:bottom_navigation_and_drawer/screens/agenda/post_favourite.dart';
 import 'package:bottom_navigation_and_drawer/screens/drawers/sidemenu.dart';
 import 'package:bottom_navigation_and_drawer/screens/favourites/favourite_model.dart';
@@ -23,6 +25,16 @@ class MyFavourites extends StatefulWidget {
 }
 
 class _MyFavouritesState extends State<MyFavourites> {
+  NewAgendaModel agendaModel = NewAgendaModel(
+      Topic: "",
+      agenda_id: "",
+      hall: "",
+      agenda_info: "",
+      agenda_rating: "",
+      from_time: "",
+      to_time: "",
+      speakers: []);
+  bool loading = true;
   List<SpeakerModel> speakersList = [];
   List<SpeakerModel> agendaSpeakersList = [];
   List<FavouritesModel> favouritesList = [];
@@ -36,7 +48,12 @@ class _MyFavouritesState extends State<MyFavourites> {
   @override
   void initState() {
     super.initState();
-    getFavourites();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getFavourites();
+
+      setState(() {});
+    });
   }
 
   // void getPreferences() async {
@@ -112,6 +129,39 @@ class _MyFavouritesState extends State<MyFavourites> {
     }
   }
 
+  getFavouriteAgenda(String agendaId) async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      var user_id = prefs.getString("user_id");
+      userId = user_id != null ? user_id : "";
+      final response = await dio.get(
+          'https://globalhealth-forum.com/event_app/api/get_agenda_rating.php?agenda_id=${agendaId}&user_id=${userId}');
+
+      if (response.statusCode == 200) {
+        var jsonData = response.data;
+        // List<dynamic> speak = jsonData[0]['speakers'];
+        agendaModel = NewAgendaModel(
+            Topic: jsonData[0]['Topic'],
+            agenda_id: jsonData[0]['agenda_id'],
+            hall: jsonData[0]['hall'],
+            agenda_info: jsonData[0]['agenda_info'],
+            agenda_rating: jsonData[0]['agenda_rating'],
+            from_time: jsonData[0]['from_time'],
+            to_time: jsonData[0]['to_time'],
+            speakers: List<SpeakerModel>.from(
+                jsonData[0]['speakers'].map((x) => SpeakerModel.fromJson(x))));
+
+        loading = false;
+        setState(() {});
+      } else {
+        throw Error.safeToString("Invalid status call");
+      }
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
+
   void showAlert() {
     QuickAlert.show(
         confirmBtnColor: color,
@@ -135,92 +185,110 @@ class _MyFavouritesState extends State<MyFavourites> {
             child: ListView.builder(
                 itemCount: favouritesList.length,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Card(
-                      elevation: 2,
-                      child: Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
+                  return InkWell(
+                    onTap: () async {
+                      await getFavouriteAgenda(favouritesList[index].agendaId);
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return NewAgendaInfo(
+                              agendaModel: agendaModel,
+                              // speakerList: _foundAgendas[index].speakers,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Card(
+                        elevation: 2,
+                        child: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Text(
+                                    textAlign: TextAlign.center,
+                                    favouritesList[index].date,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 20),
+                                  )),
+                              Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  favouritesList[index].date,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
-                                )),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Container(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.blueGrey),
-                                          text: favouritesList[index].fromTime +
-                                              " - " +
-                                              favouritesList[index].toTime,
+                                child: Container(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.blueGrey),
+                                            text: favouritesList[index]
+                                                    .fromTime +
+                                                " - " +
+                                                favouritesList[index].toTime,
+                                          ),
                                         ),
                                       ),
+                                      Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: IconButton(
+                                            onPressed: () async {
+                                              await unFavourite(
+                                                  favouritesList[index]
+                                                      .agendaId,
+                                                  index);
+                                            },
+                                            icon: Icon(
+                                                size: 30,
+                                                favouritesList[index].favourite
+                                                    ? Icons.favorite
+                                                    : Icons
+                                                        .favorite_border_outlined,
+                                                color: Colors.redAccent),
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.place,
+                                      color: Colors.blueAccent,
                                     ),
-                                    Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: IconButton(
-                                          onPressed: () async {
-                                            await unFavourite(
-                                                favouritesList[index].agendaId,
-                                                index);
-                                          },
-                                          icon: Icon(
-                                              size: 30,
-                                              favouritesList[index].favourite
-                                                  ? Icons.favorite
-                                                  : Icons
-                                                      .favorite_border_outlined,
-                                              color: Colors.redAccent),
-                                        )),
+                                    Text(
+                                      favouritesList[index].hall,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.blueGrey),
+                                    ),
                                   ],
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.place,
-                                    color: Colors.blueAccent,
-                                  ),
-                                  Text(
-                                    favouritesList[index].hall,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.blueGrey),
-                                  ),
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "Topic: ${favouritesList[index].topic} ",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: titleColor),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                "Topic: ${favouritesList[index].topic} ",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: titleColor),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

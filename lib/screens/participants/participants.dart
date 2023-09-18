@@ -50,6 +50,23 @@ class _MyParticipantsState extends State<MyParticipants> {
       ),
       body: Column(
         children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                Icons.info_outline,
+                color: titleColor,
+              ),
+              Text(
+                "Please click on the mail icon to send connect mail to other participant",
+                style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.normal,
+                    color: titleColor),
+              ),
+            ],
+          ),
           TextField(
             onChanged: (value) => _runFilter(value.trim()),
             decoration: InputDecoration(
@@ -193,7 +210,7 @@ class _MyParticipantsState extends State<MyParticipants> {
 
     setState(() {
       _foundParticipants = _results;
-      _foundParticipants.sort();
+      //_foundParticipants.sort();
     });
   }
 

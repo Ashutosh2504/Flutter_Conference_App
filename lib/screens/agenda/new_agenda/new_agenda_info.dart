@@ -91,7 +91,7 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                     children: [
                       Center(
                         child: RichText(
-                          textAlign: TextAlign.left,
+                          textAlign: TextAlign.center,
                           softWrap: true,
                           text: TextSpan(
                             style: TextStyle(
@@ -145,10 +145,10 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                                   width: 5,
                                 ),
                                 Text(
-                                  textAlign: TextAlign.left,
+                                  textAlign: TextAlign.justify,
                                   "Info:",
                                   style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black),
                                 ),
@@ -156,7 +156,7 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                             ),
                             Text(
                               widget.agendaModel.agenda_info,
-                              textAlign: TextAlign.left,
+                              textAlign: TextAlign.justify,
                               softWrap: true,
                               //overflow: TextOverflow.ellipsis,
                               style: TextStyle(

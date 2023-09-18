@@ -281,11 +281,11 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                               ),
                               Text(
                                 speakerModel.information,
-                                textAlign: TextAlign.start,
+                                textAlign: TextAlign.justify,
                                 softWrap: true,
                                 //overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.normal,
                                     color: Colors.black),
                               ),

@@ -15,6 +15,8 @@ class MyNotifications extends StatefulWidget {
 
 class _MyNotificationsState extends State<MyNotifications> {
   final dio = Dio();
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+
   List<NotoficationsModel> notificationsList = [];
   Future getNotifications() async {
     try {
@@ -48,147 +50,203 @@ class _MyNotificationsState extends State<MyNotifications> {
           "Notifications",
         ),
       ),
-      body: Column(
-        children: [
-          Text(widget.notificationsData != null
-              ? widget.notificationsData!.title.toString()
-              : ""),
-          Text(widget.notificationsData?.body.toString() ?? ""),
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Divider(
-                color: Colors.blueGrey,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RichText(
+                textAlign: TextAlign.left,
+                text: TextSpan(
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                      color: titleColor),
+                  text: "New Notifications: ",
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: FutureBuilder(
-              future: getNotifications(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return ListView.builder(
-                      itemCount: notificationsList.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Card(
-                            elevation: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  RichText(
-                                    textAlign: TextAlign.left,
-                                    text: TextSpan(
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.black),
-                                      text: notificationsList[index].notiTopic,
+            widget.notificationsData != null
+                ? Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                              text: widget.notificationsData != null
+                                  ? widget.notificationsData!.title.toString()
+                                  : "",
+                            ),
+                          ),
+                          RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.blueGrey),
+                              text: widget.notificationsData?.body.toString() ??
+                                  "",
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("No new Notifications"),
+                  ),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Divider(
+                  color: Colors.blueGrey,
+                ),
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder(
+                future: getNotifications(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return ListView.builder(
+                        itemCount: notificationsList.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Card(
+                              elevation: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    RichText(
+                                      textAlign: TextAlign.left,
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.black),
+                                        text:
+                                            notificationsList[index].notiTopic,
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        // RichText(
-                                        //   textAlign: TextAlign.center,
-                                        //   text: TextSpan(
-                                        //     style: TextStyle(
-                                        //         fontSize: 15,
-                                        //         fontWeight: FontWeight.bold,
-                                        //         color: Colors.black),
-                                        //     text: "Date:",
-                                        //   ),
-                                        // ),
-                                        RichText(
-                                          textAlign: TextAlign.left,
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.blueGrey),
-                                            text: notificationsList[index].date,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        // RichText(
-                                        //   textAlign: TextAlign.center,
-                                        //   text: TextSpan(
-                                        //     style: TextStyle(
-                                        //         fontSize: 15,
-                                        //         fontWeight: FontWeight.bold,
-                                        //         color: Colors.black),
-                                        //     text: "Msg:",
-                                        //   ),
-                                        // ),
-                                        Expanded(
-                                          child: RichText(
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          // RichText(
+                                          //   textAlign: TextAlign.center,
+                                          //   text: TextSpan(
+                                          //     style: TextStyle(
+                                          //         fontSize: 15,
+                                          //         fontWeight: FontWeight.bold,
+                                          //         color: Colors.black),
+                                          //     text: "Date:",
+                                          //   ),
+                                          // ),
+                                          RichText(
                                             textAlign: TextAlign.left,
                                             text: TextSpan(
                                               style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
                                                   color: Colors.blueGrey),
                                               text:
-                                                  notificationsList[index].msg,
+                                                  notificationsList[index].date,
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          // RichText(
+                                          //   textAlign: TextAlign.center,
+                                          //   text: TextSpan(
+                                          //     style: TextStyle(
+                                          //         fontSize: 15,
+                                          //         fontWeight: FontWeight.bold,
+                                          //         color: Colors.black),
+                                          //     text: "Msg:",
+                                          //   ),
+                                          // ),
+                                          Expanded(
+                                            child: RichText(
+                                              textAlign: TextAlign.left,
+                                              text: TextSpan(
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    color: Colors.blueGrey),
+                                                text: notificationsList[index]
+                                                    .msg,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      });
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-            // child: ListView.builder(
-            //     itemCount: notificationsList.length,
-            //     itemBuilder: (context, index) {
-            //       return Card(
-            //         child: Column(
-            //           children: [
-            //             RichText(
-            //               text: TextSpan(
-            //                 style: TextStyle(
-            //                     fontSize: 18,
-            //                     fontWeight: FontWeight.bold,
-            //                     color: Colors.blueGrey),
-            //                 text: notificationsList[index].notiTopic,
-            //               ),
-            //             ),
-            //             RichText(
-            //               text: TextSpan(
-            //                 style: TextStyle(
-            //                     fontSize: 16,
-            //                     fontWeight: FontWeight.normal,
-            //                     color: Colors.black),
-            //                 text: notificationsList[index].msg,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       );
-            //     }),
-          )
-        ],
+                          );
+                        });
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+              // child: ListView.builder(
+              //     itemCount: notificationsList.length,
+              //     itemBuilder: (context, index) {
+              //       return Card(
+              //         child: Column(
+              //           children: [
+              //             RichText(
+              //               text: TextSpan(
+              //                 style: TextStyle(
+              //                     fontSize: 18,
+              //                     fontWeight: FontWeight.bold,
+              //                     color: Colors.blueGrey),
+              //                 text: notificationsList[index].notiTopic,
+              //               ),
+              //             ),
+              //             RichText(
+              //               text: TextSpan(
+              //                 style: TextStyle(
+              //                     fontSize: 16,
+              //                     fontWeight: FontWeight.normal,
+              //                     color: Colors.black),
+              //                 text: notificationsList[index].msg,
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       );
+              //     }),
+            )
+          ],
+        ),
       ),
     );
   }
