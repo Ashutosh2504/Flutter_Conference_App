@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bottom_navigation_and_drawer/util/routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 
 class MessagingService {
@@ -122,13 +124,36 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 Future<void> sendToken(String token) async {
-  final response = await http.post(
-    Uri.parse('https://globalhealth-forum.com/event_app/api/post_token.php'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      "token_id": token,
-    }),
+  try {
+    final response = await http.post(
+      Uri.parse('https://globalhealth-forum.com/event_app/api/post_token.php'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "token_id": token,
+      }),
+    );
+  } catch (e) {
+    print(e.toString());
+  }
+}
+
+///---------
+
+Future<void> scheduleNotificationWithBadge(
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    'GHF2023',
+    'GLOBAL HEALTH FORUM',
+    importance: Importance.max,
+    playSound: true,
+    priority: Priority.high,
   );
+  const DarwinNotificationDetails iosPlatformChannelSpecifics =
+      DarwinNotificationDetails(badgeNumber: 1);
+  const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics);
 }

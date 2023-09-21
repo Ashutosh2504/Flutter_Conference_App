@@ -75,6 +75,7 @@ class _MyNewAgendaState extends State<MyNewAgenda> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+          drawer: SideMenu(),
           appBar: AppBar(
             title: Text(
               "Agenda",

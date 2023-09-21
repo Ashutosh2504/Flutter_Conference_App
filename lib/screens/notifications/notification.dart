@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:bottom_navigation_and_drawer/screens/drawers/sidemenu.dart';
 import 'package:bottom_navigation_and_drawer/screens/notifications/notifications_model.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -45,6 +46,7 @@ class _MyNotificationsState extends State<MyNotifications> {
     //var message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
 
     return Scaffold(
+      drawer: SideMenu(),
       appBar: AppBar(
         title: Text(
           "Notifications",
@@ -53,7 +55,7 @@ class _MyNotificationsState extends State<MyNotifications> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
@@ -70,37 +72,40 @@ class _MyNotificationsState extends State<MyNotifications> {
               ),
             ),
             widget.notificationsData != null
-                ? Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RichText(
-                            textAlign: TextAlign.left,
-                            text: TextSpan(
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black),
-                              text: widget.notificationsData != null
-                                  ? widget.notificationsData!.title.toString()
-                                  : "",
+                ? Expanded(
+                    child: Card(
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              textAlign: TextAlign.left,
+                              text: TextSpan(
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black),
+                                text: widget.notificationsData != null
+                                    ? widget.notificationsData!.title.toString()
+                                    : "",
+                              ),
                             ),
-                          ),
-                          RichText(
-                            textAlign: TextAlign.left,
-                            text: TextSpan(
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.blueGrey),
-                              text: widget.notificationsData?.body.toString() ??
-                                  "",
+                            RichText(
+                              textAlign: TextAlign.left,
+                              text: TextSpan(
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.blueGrey),
+                                text:
+                                    widget.notificationsData?.body.toString() ??
+                                        "",
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   )
@@ -132,79 +137,52 @@ class _MyNotificationsState extends State<MyNotifications> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    RichText(
-                                      textAlign: TextAlign.left,
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.black),
-                                        text:
-                                            notificationsList[index].notiTopic,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: RichText(
+                                        textAlign: TextAlign.left,
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blueGrey),
+                                          text: notificationsList[index].date,
+                                        ),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Row(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          // RichText(
-                                          //   textAlign: TextAlign.center,
-                                          //   text: TextSpan(
-                                          //     style: TextStyle(
-                                          //         fontSize: 15,
-                                          //         fontWeight: FontWeight.bold,
-                                          //         color: Colors.black),
-                                          //     text: "Date:",
-                                          //   ),
-                                          // ),
                                           RichText(
                                             textAlign: TextAlign.left,
                                             text: TextSpan(
                                               style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.blueGrey),
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black),
+                                              text: notificationsList[index]
+                                                  .notiTopic,
+                                            ),
+                                          ),
+                                          RichText(
+                                            textAlign: TextAlign.left,
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: titleColor),
                                               text:
-                                                  notificationsList[index].date,
+                                                  notificationsList[index].msg,
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          // RichText(
-                                          //   textAlign: TextAlign.center,
-                                          //   text: TextSpan(
-                                          //     style: TextStyle(
-                                          //         fontSize: 15,
-                                          //         fontWeight: FontWeight.bold,
-                                          //         color: Colors.black),
-                                          //     text: "Msg:",
-                                          //   ),
-                                          // ),
-                                          Expanded(
-                                            child: RichText(
-                                              textAlign: TextAlign.left,
-                                              text: TextSpan(
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    color: Colors.blueGrey),
-                                                text: notificationsList[index]
-                                                    .msg,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),

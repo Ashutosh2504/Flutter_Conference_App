@@ -144,8 +144,12 @@ class _SideMenuState extends State<SideMenu> {
                   title: Text("Logout"),
                   onTap: () async {
                     await logOut();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => MyHome()));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyBottomNavigationBar(
+                                  selectedIndex: 0,
+                                )));
                   },
                 )
               : ListTile(

@@ -1,6 +1,7 @@
 import 'package:bottom_navigation_and_drawer/screens/agenda/agenda.dart';
 import 'package:bottom_navigation_and_drawer/screens/agenda/new_agenda/new_agenda.dart';
 import 'package:bottom_navigation_and_drawer/screens/downloads/downlads.dart';
+import 'package:bottom_navigation_and_drawer/screens/drawers/sidemenu.dart';
 import 'package:bottom_navigation_and_drawer/screens/favourites/favourites.dart';
 import 'package:bottom_navigation_and_drawer/screens/home/home.dart';
 import 'package:bottom_navigation_and_drawer/screens/live/live.dart';
@@ -64,6 +65,7 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
                 : MyLive();
 
     return Scaffold(
+      drawer: SideMenu(),
       body: PageStorage(child: currentScreen, bucket: bucket),
       // floatingActionButton: FloatingActionButton(
       //   child: Icon(

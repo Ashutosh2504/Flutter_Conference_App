@@ -1,3 +1,4 @@
+import 'package:bottom_navigation_and_drawer/screens/drawers/sidemenu.dart';
 import 'package:bottom_navigation_and_drawer/screens/live/live_model.dart';
 import 'package:bottom_navigation_and_drawer/util/webview.dart';
 import 'package:dio/dio.dart';
@@ -11,6 +12,8 @@ class MyLive extends StatefulWidget {
 }
 
 class _MyLiveState extends State<MyLive> {
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+
   List<LiveModel> liveList = [];
 
   @override
@@ -23,6 +26,7 @@ class _MyLiveState extends State<MyLive> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SideMenu(),
       appBar: AppBar(
         title: Text("Live"),
       ),
@@ -30,85 +34,261 @@ class _MyLiveState extends State<MyLive> {
         child: Column(
           children: [
             Divider(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    height: 100,
-                    width: 120,
-                    child: Image.asset("assets/images/portugal.png"),
-                  ),
-                  Container(
-                    height: 100,
-                    width: 120,
-                    child: Image.asset("assets/images/united-kingdom.png"),
-                  )
-                ],
+
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                    16.0), // Adjust the corner radius as needed
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    Text(
+                      "Language spoken at the session: PORTUGUESE",
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      style: TextStyle(
+                          color: titleColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset("assets/images/portugal.png"),
+                            ),
+                            Text("Portuguese"),
+                          ],
+                        ),
+                        Icon(Icons.arrow_forward_rounded),
+                        Column(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (ctxt) => WebviewComponent(
+                                        title: "Portugese",
+                                        webviewUrl: liveList[0].url),
+                                  ),
+                                );
+                              },
+                              child: Text("Portuguese"),
+                            ),
+                            Text("For deaf people"),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset(
+                                  "assets/images/united-kingdom.png"),
+                            ),
+                            Text("English"),
+                          ],
+                        ),
+                        Icon(Icons.arrow_forward_rounded),
+                        Column(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (ctxt) => WebviewComponent(
+                                        title: "English",
+                                        webviewUrl: liveList[1].url),
+                                  ),
+                                );
+                              },
+                              child: Text("English"),
+                            ),
+                            Text("Translation to English"),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Container(
-                        child: ElevatedButton(
+
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                    16.0), // Adjust the corner radius as needed
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    Text(
+                      "Language spoken at the session: ENGLISH",
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      style: TextStyle(
+                          color: titleColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 50,
+                                child: Image.asset(
+                                    "assets/images/united-kingdom.png"),
+                              ),
+                              Text("English"),
+                            ],
+                          ),
+                          Icon(Icons.arrow_forward_rounded),
+                          Column(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (ctxt) => WebviewComponent(
+                                          title: "English",
+                                          webviewUrl: liveList[2].url),
+                                    ),
+                                  );
+                                },
+                                child: Text("English"),
+                              ),
+                              Text("For deaf people"),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 50,
+                                child:
+                                    Image.asset("assets/images/portugal.png"),
+                              ),
+                              Text("Portuguese"),
+                            ],
+                          ),
+                          Icon(Icons.arrow_forward_rounded),
+                          Column(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (ctxt) => WebviewComponent(
+                                          title: "Portuguese",
+                                          webviewUrl: liveList[3].url),
+                                    ),
+                                  );
+                                },
+                                child: Text("Portuguese"),
+                              ),
+                              Text("Translation to Portuguese"),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                    16.0), // Adjust the corner radius as needed
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      "IN-PERSON ATTENDEE",
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "(I'm in Auditorium)",
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
                       onPressed: () async {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (ctxt) => WebviewComponent(
-                                title: "Portugese",
-                                webviewUrl: liveList[0].url),
+                                title: "LIVE", webviewUrl: liveList[4].url),
                           ),
                         );
                       },
-                      child: Text("Portuguese"),
-                    )),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      child: ElevatedButton(
-                    onPressed: () async {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (ctxt) => WebviewComponent(
-                              title: "English", webviewUrl: liveList[1].url),
-                        ),
-                      );
-                    },
-                    child: Text("English"),
-                  )),
-                ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.info_outline),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      child: Text(
-                        "To view the LIVE event happening at Main Hall, kindly choose the desired language.",
-                        textAlign: TextAlign.left,
-                        softWrap: true,
-                      ),
+                      child: Text("LIVE LINK"),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             )
+
+            //////////////////////
           ],
         ),
       ),

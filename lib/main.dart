@@ -19,6 +19,7 @@ import 'package:bottom_navigation_and_drawer/screens/quiz/quiz.dart';
 import 'package:bottom_navigation_and_drawer/screens/speaker/speakers_list.dart';
 import 'package:bottom_navigation_and_drawer/screens/sponser/sponser.dart';
 import 'package:bottom_navigation_and_drawer/screens/venue/venue.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'screens/gallery/gallery.dart';
 import 'screens/login/compare_otp.dart';
@@ -33,6 +34,22 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   //await FirebaseApi().initNotifications();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  // Initialize settings for each platform (Android and iOS)
+  final AndroidInitializationSettings androidInitializationSettings =
+      AndroidInitializationSettings('launcher_icon');
+  final DarwinInitializationSettings iosInitializationSettings =
+      DarwinInitializationSettings();
+
+  // Initialize settings for overall notification
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: androidInitializationSettings,
+    iOS: iosInitializationSettings,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

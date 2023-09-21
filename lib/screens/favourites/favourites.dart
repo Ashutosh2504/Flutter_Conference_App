@@ -129,13 +129,13 @@ class _MyFavouritesState extends State<MyFavourites> {
     }
   }
 
-  getFavouriteAgenda(String agendaId) async {
+  getFavouriteAgenda(String agendaTopic) async {
     try {
       var prefs = await SharedPreferences.getInstance();
       var user_id = prefs.getString("user_id");
       userId = user_id != null ? user_id : "";
       final response = await dio.get(
-          'https://globalhealth-forum.com/event_app/api/get_agenda_rating.php?agenda_id=${agendaId}&user_id=${userId}');
+          'https://globalhealth-forum.com/event_app/api/get_agenda_rating_3.php?topic=${agendaTopic}');
 
       if (response.statusCode == 200) {
         var jsonData = response.data;
@@ -187,7 +187,7 @@ class _MyFavouritesState extends State<MyFavourites> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () async {
-                      await getFavouriteAgenda(favouritesList[index].agendaId);
+                      await getFavouriteAgenda(favouritesList[index].topic);
                       await Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bottom_navigation_and_drawer/screens/bottom_navigation/bottom_navigationbar.dart';
 import 'package:bottom_navigation_and_drawer/screens/login/compare_otp_model.dart';
 import 'package:bottom_navigation_and_drawer/screens/participants/participants_model.dart';
 import 'package:bottom_navigation_and_drawer/util/routes.dart';
@@ -46,7 +47,13 @@ class _MyCompareOTPState extends State<MyCompareOTP> {
         setState(() {
           changeBtn = false;
         });
-        Navigator.pushNamed(context, MyRoutes.homeRoute);
+        // Navigator.pushNamed(context, MyRoutes.homeRoute);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyBottomNavigationBar(
+                      selectedIndex: 0,
+                    )));
       }
     } else {
       showAlert();
@@ -121,7 +128,7 @@ class _MyCompareOTPState extends State<MyCompareOTP> {
                 child: InkWell(
                   onTap: () {
                     getOtp(_otp);
-                    setState(() {});
+                    //setState(() {});
                   },
                   child: AnimatedContainer(
                     duration: Duration(seconds: 1),
