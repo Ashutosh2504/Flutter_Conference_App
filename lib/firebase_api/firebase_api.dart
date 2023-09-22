@@ -11,8 +11,6 @@ import 'package:http/http.dart' as http;
 class FirebaseApi {
   //we need instance of FirebaseMessaging
   final _firebaseMessaging = FirebaseMessaging.instance;
-  
-  
 
   // function to initialize notifications
   Future<void> initNotifications() async {
