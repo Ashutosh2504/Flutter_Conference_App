@@ -45,6 +45,48 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
     MyFavourites(),
   ];
 
+  // Future<bool> _onBackPressed() async {
+  //   if (currentIndex != 0) {
+  //     // If not on the first tab, navigate to the first tab
+  //     setState(() {
+  //       currentIndex = 0;
+  //     });
+  //     return false; // Do not exit the app
+  //   }
+  //   return true; // Exit the app if already on the first tab
+  // }
+
+  Future<bool> _onBackPressed() async {
+    if (currentIndex == 0) {
+      // If on the home tab, show an exit confirmation dialog
+      return await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Exit the app?'),
+              content: Text('Are you sure you want to exit?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () =>
+                      Navigator.of(context).pop(false), // Stay in the app
+                  child: Text('No'),
+                ),
+                TextButton(
+                  onPressed: () =>
+                      Navigator.of(context).pop(true), // Exit the app
+                  child: Text('Yes'),
+                ),
+              ],
+            ),
+          ) ??
+          false; // Return false if the dialog is dismissed
+    }
+    // If not on the home tab, navigate to the home tab
+    setState(() {
+      currentIndex = 0;
+    });
+    return false; // Do not exit the app
+  }
+
   final PageStorageBucket bucket = PageStorageBucket();
   @override
   Widget build(BuildContext context) {
@@ -64,183 +106,186 @@ class My_BottomNavigationBarState extends State<MyBottomNavigationBar> {
                   )
                 : MyLive();
 
-    return Scaffold(
-      drawer: SideMenu(),
-      body: PageStorage(child: currentScreen, bucket: bucket),
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(
-      //     Icons.search_rounded,
-      //     color: Colors.white,
-      //   ),
-      //   backgroundColor: Color.fromARGB(255, 135, 205, 240),
-      //   onPressed: () => {
-      //     Navigator.pushNamed(context, MyRoutes.search),
-      //   },
-      // ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: Color.fromARGB(255, 38, 156, 179),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.view_agenda),
-            label: 'Agenda',
-            backgroundColor: Color.fromARGB(255, 38, 156, 179),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-            backgroundColor: Color.fromARGB(255, 38, 156, 179),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.live_tv),
-            label: 'Live',
-            backgroundColor: Color.fromARGB(255, 38, 156, 179),
-          ),
-        ],
-        currentIndex: currentIndex,
-        selectedItemColor: Colors.white,
-        onTap: _onItemTapped,
-      ),
-      /*  BottomAppBar(
-        color: color,
-        shape: CircularNotchedRectangle(),
-        shadowColor: Colors.white,
-        notchMargin: 10,
-        child: Container(
-          height: 40,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MaterialButton(
-                    minWidth: 50,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = MyHome();
-                        currentIndex = 0;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.home,
-                          color: currentIndex == 0
-                              ? Colors.lightGreenAccent
-                              : Colors.white,
-                        ),
-                        Text(
-                          "Home",
-                          style: TextStyle(
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        drawer: SideMenu(),
+        body: PageStorage(child: currentScreen, bucket: bucket),
+        // floatingActionButton: FloatingActionButton(
+        //   child: Icon(
+        //     Icons.search_rounded,
+        //     color: Colors.white,
+        //   ),
+        //   backgroundColor: Color.fromARGB(255, 135, 205, 240),
+        //   onPressed: () => {
+        //     Navigator.pushNamed(context, MyRoutes.search),
+        //   },
+        // ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+              backgroundColor: Color.fromARGB(255, 38, 156, 179),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.view_agenda),
+              label: 'Agenda',
+              backgroundColor: Color.fromARGB(255, 38, 156, 179),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications),
+              label: 'Notifications',
+              backgroundColor: Color.fromARGB(255, 38, 156, 179),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.live_tv),
+              label: 'Live',
+              backgroundColor: Color.fromARGB(255, 38, 156, 179),
+            ),
+          ],
+          currentIndex: currentIndex,
+          selectedItemColor: Colors.white,
+          onTap: _onItemTapped,
+        ),
+        /*  BottomAppBar(
+          color: color,
+          shape: CircularNotchedRectangle(),
+          shadowColor: Colors.white,
+          notchMargin: 10,
+          child: Container(
+            height: 40,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MaterialButton(
+                      minWidth: 50,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen = MyHome();
+                          currentIndex = 0;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.home,
                             color: currentIndex == 0
                                 ? Colors.lightGreenAccent
                                 : Colors.white,
                           ),
-                        )
-                      ],
+                          Text(
+                            "Home",
+                            style: TextStyle(
+                              color: currentIndex == 0
+                                  ? Colors.lightGreenAccent
+                                  : Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  MaterialButton(
-                    minWidth: 50,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = MyPrograms();
-                        currentIndex = 1;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.festival,
-                          color: currentIndex == 1
-                              ? Colors.lightGreenAccent
-                              : Colors.white,
-                        ),
-                        Text(
-                          "Programs",
-                          style: TextStyle(
+                    MaterialButton(
+                      minWidth: 50,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen = MyPrograms();
+                          currentIndex = 1;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.festival,
                             color: currentIndex == 1
                                 ? Colors.lightGreenAccent
                                 : Colors.white,
                           ),
-                        )
-                      ],
+                          Text(
+                            "Programs",
+                            style: TextStyle(
+                              color: currentIndex == 1
+                                  ? Colors.lightGreenAccent
+                                  : Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MaterialButton(
-                    minWidth: 50,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = MyDownloads();
-                        currentIndex = 2;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.download,
-                          color: currentIndex == 2
-                              ? Colors.lightGreenAccent
-                              : Colors.white,
-                        ),
-                        Text(
-                          "Downloads",
-                          style: TextStyle(
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MaterialButton(
+                      minWidth: 50,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen = MyDownloads();
+                          currentIndex = 2;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.download,
                             color: currentIndex == 2
                                 ? Colors.lightGreenAccent
                                 : Colors.white,
                           ),
-                        )
-                      ],
+                          Text(
+                            "Downloads",
+                            style: TextStyle(
+                              color: currentIndex == 2
+                                  ? Colors.lightGreenAccent
+                                  : Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  MaterialButton(
-                    minWidth: 50,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = MyFavourites();
-                        currentIndex = 3;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.favorite_outline,
-                          color: currentIndex == 3
-                              ? Colors.lightGreenAccent
-                              : Colors.white,
-                        ),
-                        Text(
-                          " Favourites",
-                          style: TextStyle(
+                    MaterialButton(
+                      minWidth: 50,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen = MyFavourites();
+                          currentIndex = 3;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.favorite_outline,
                             color: currentIndex == 3
                                 ? Colors.lightGreenAccent
                                 : Colors.white,
                           ),
-                        )
-                      ],
+                          Text(
+                            " Favourites",
+                            style: TextStyle(
+                              color: currentIndex == 3
+                                  ? Colors.lightGreenAccent
+                                  : Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-      ), */
+        ), */
+      ),
     );
   }
 }

@@ -72,40 +72,38 @@ class _MyNotificationsState extends State<MyNotifications> {
               ),
             ),
             widget.notificationsData != null
-                ? Expanded(
-                    child: Card(
-                      elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            RichText(
-                              textAlign: TextAlign.left,
-                              text: TextSpan(
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black),
-                                text: widget.notificationsData != null
-                                    ? widget.notificationsData!.title.toString()
-                                    : "",
-                              ),
+                ? Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                              text: widget.notificationsData != null
+                                  ? widget.notificationsData!.title.toString()
+                                  : "",
                             ),
-                            RichText(
-                              textAlign: TextAlign.left,
-                              text: TextSpan(
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.blueGrey),
-                                text:
-                                    widget.notificationsData?.body.toString() ??
-                                        "",
-                              ),
+                          ),
+                          RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.blueGrey),
+                              text: widget.notificationsData?.body.toString() ??
+                                  "",
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   )
@@ -194,38 +192,38 @@ class _MyNotificationsState extends State<MyNotifications> {
                   }
                 },
               ),
-              // child: ListView.builder(
-              //     itemCount: notificationsList.length,
-              //     itemBuilder: (context, index) {
-              //       return Card(
-              //         child: Column(
-              //           children: [
-              //             RichText(
-              //               text: TextSpan(
-              //                 style: TextStyle(
-              //                     fontSize: 18,
-              //                     fontWeight: FontWeight.bold,
-              //                     color: Colors.blueGrey),
-              //                 text: notificationsList[index].notiTopic,
-              //               ),
-              //             ),
-              //             RichText(
-              //               text: TextSpan(
-              //                 style: TextStyle(
-              //                     fontSize: 16,
-              //                     fontWeight: FontWeight.normal,
-              //                     color: Colors.black),
-              //                 text: notificationsList[index].msg,
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       );
-              //     }),
-            )
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<bool> _onWillPop() async {
+    // Add your custom logic here.
+    // Return true to allow navigation back, or false to prevent it.
+    // You can show a confirmation dialog or perform other actions as needed.
+
+    // Example: Show a confirmation dialog
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Exit the app?'),
+            content: Text('Are you sure you want to exit?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context)
+                    .pop(false), // Stay on the current screen
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context).pop(true), // Allow navigation back
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false; // Return false if the dialog is dismissed
   }
 }
