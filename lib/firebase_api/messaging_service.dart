@@ -58,33 +58,35 @@ class MessagingService {
           //final screen = notificationData['screen'];
 
           // Showing an alert dialog when a notification is received (Foreground state)
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return WillPopScope(
-                onWillPop: () async => false,
-                child: AlertDialog(
-                  title: Text(message.notification!.title!),
-                  content: Text(message.notification!.body!),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.of(context).pushNamed(MyRoutes.notification,
-                            arguments: notificationData);
-                      },
-                      child: const Text('Open Notifications'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Dismiss'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
+          try {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return WillPopScope(
+                  onWillPop: () async => false,
+                  child: AlertDialog(
+                    title: Text(message.notification!.title!),
+                    content: Text(message.notification!.body!),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.of(context).pushNamed(MyRoutes.notification,
+                              arguments: notificationData);
+                        },
+                        child: const Text('Open Notifications'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Dismiss'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          } catch (e) {}
         }
       }
     });
@@ -134,6 +136,8 @@ Future<void> sendToken(String token) async {
         "token_id": token,
       }),
     );
+
+    print(response);
   } catch (e) {
     print(e.toString());
   }
