@@ -1,6 +1,5 @@
-import 'package:date_count_down/countdown.dart';
-import 'package:date_count_down/date_count_down.dart';
 import 'package:flutter/material.dart';
+import 'timer/date_count_down.dart';
 
 void main() {
   runApp(NewCounter());
@@ -55,7 +54,9 @@ class NewCounter extends StatelessWidget {
                     daysTextLong: " : ",
                     hoursTextLong: " : ",
                     minutesTextLong: " : ",
-                    secondsTextLong: "",
+                    secondsTextLong: " ",
+                    daysTextShort: " :  ",
+                    collapsing: false,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 25,

@@ -36,14 +36,13 @@ class _MySplashScreenState extends State<MySplashScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Center(
-        child: Image.asset(
-          "assets/images/logo2.jpg",
-          fit: BoxFit.cover,
-          height: screenHeight,
-          width: screenWidth,
-          //alignment: Alignment.center,
-        ),
+      body: Image.asset(
+        "assets/images/logo2.jpg",
+        fit: screenWidth > 800 ? BoxFit.fill : BoxFit.cover,
+        height: screenHeight,
+        width: screenWidth,
+        // scale: 1.6,
+        //alignment: Alignment.center,
       ),
     );
   }
