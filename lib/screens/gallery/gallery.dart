@@ -13,6 +13,8 @@ class MyGallery extends StatefulWidget {
 }
 
 class _MyGalleryState extends State<MyGallery> {
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+
   List<GalleryModel> galleryList = [];
 
   @override
@@ -30,6 +32,14 @@ class _MyGalleryState extends State<MyGallery> {
           children: [
             Divider(
               color: Colors.black,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Event Pictures and memorable photo wall !",
+                softWrap: true,
+                style: TextStyle(fontSize: 18, color: titleColor),
+              ),
             ),
             Expanded(
               child: FutureBuilder(

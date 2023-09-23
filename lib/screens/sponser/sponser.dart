@@ -116,7 +116,7 @@ class _MySponsersState extends State<MySponsers> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Sponsers"),
+          title: Text("Partners"),
         ),
         body: FutureBuilder(
           future: getSponsers(),
@@ -170,10 +170,12 @@ class _MySponsersState extends State<MySponsers> {
                                       )));
                         },
                         child: Card(
+                          elevation: 2,
                           color: Colors.white,
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Container(
+                              color: Colors.white,
                               child: highList[0].logo.isNotEmpty
                                   ? Image.network(highList[0].logo,
                                       fit: BoxFit.contain)
@@ -210,7 +212,7 @@ class _MySponsersState extends State<MySponsers> {
                       child: Container(
                         child: Text(
                           textAlign: TextAlign.center,
-                          "GLOBAL HEALTH FORUM PATRONAGES",
+                          "GLOBAL HEALTH FORUM PARTNERS",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -226,7 +228,7 @@ class _MySponsersState extends State<MySponsers> {
                       child: Container(
                         child: Text(
                           textAlign: TextAlign.center,
-                          "FORUM SAUDE XXI PATRONAGES",
+                          "FORUM SAUDE XXI PARTNERS",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -269,7 +271,7 @@ class _MySponsersState extends State<MySponsers> {
                     )));
       },
       child: Card(
-        // color: Colors.white,
+        color: Colors.white,
         child: Column(
           children: [
             Expanded(
@@ -277,6 +279,7 @@ class _MySponsersState extends State<MySponsers> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
+                  color: Colors.white,
                   child: sponserModel.logo.isNotEmpty
                       ? Image.network(sponserModel.logo, fit: BoxFit.contain)
                       : Image.asset("assets/images/sponser.png"),

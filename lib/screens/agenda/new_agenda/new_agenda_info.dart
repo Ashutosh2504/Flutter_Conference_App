@@ -57,6 +57,57 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
     });
   }
 
+  TextEditingController _textEditingController = TextEditingController();
+  String _enteredText = '';
+
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is removed from the tree
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  void _sendMessage() {
+    setState(() {
+      _enteredText = _textEditingController.text;
+      print(_enteredText);
+    });
+  }
+
+  Future<void> sendQuestion() async {
+    if (loggedIn) {
+      try {
+        _sendMessage();
+        final response = await http.post(
+          Uri.parse(
+              'https://globalhealth-forum.com/event_app/api/post_ask_question.php'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            "hall": widget.agendaModel.hall,
+            "user_id": userId.toString(),
+            "topic": widget.agendaModel.Topic,
+            "question": _enteredText
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          Alerts.showAlert(true, context, "Question sent");
+          setState(() {
+            _textEditingController.text = "";
+          });
+        } else {
+          Alerts.showAlert(false, context, "Something went wrong");
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      Alerts.showAlert(false, context, "Login first to ask questions");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
@@ -171,17 +222,38 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                   ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: TextField(
-                  onChanged: (value) => {}, //_runFilter(value.trim()),
-                  decoration: InputDecoration(
-                    labelText: "Ask a ",
-                    suffixIcon: Icon(Icons.question_mark),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: _textEditingController,
+                          //onChanged: (value) => {}, //_runFilter(value.trim()),
+                          decoration: InputDecoration(
+                              labelText: "Ask a question",
+                              hintText: "Type some question here",
+                              hintStyle: TextStyle(
+                                  fontSize: 10, fontStyle: FontStyle.italic)
+
+                              //suffixIcon: Icon(Icons.send),
+                              ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await sendQuestion();
+                        },
+                        child: Text('Ask Question'),
+                      ),
+                    ],
                   ),
                 ),
               ),
