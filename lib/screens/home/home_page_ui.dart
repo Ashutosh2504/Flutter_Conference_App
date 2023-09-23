@@ -192,7 +192,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                               text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
-                                  text: "Sponsers"),
+                                  text: "Partners"),
                             ),
                           ),
                         ],

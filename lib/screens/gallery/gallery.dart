@@ -13,6 +13,8 @@ class MyGallery extends StatefulWidget {
 }
 
 class _MyGalleryState extends State<MyGallery> {
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+
   List<GalleryModel> galleryList = [];
 
   @override
@@ -28,49 +30,16 @@ class _MyGalleryState extends State<MyGallery> {
         ),
         body: Column(
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "A petting zoo",
-                  style: TextStyle(fontSize: 20),
-                ),
-                Spacer(),
-                // TextButton(
-                //   child: Text(
-                //     "by Likes",
-                //     style: TextStyle(fontSize: 15),
-                //   ),
-                //   onPressed: () async {
-                //     // const String _url = "https://www.geeksforgeeks.org";
-                //     // if (await canLaunch(_url)) {
-                //     //   launch(_url);
-                //     // } else {
-                //     //   throw "Could not launch $_url";
-                //     // }
-                //   },
-                // ),
-                // SizedBox(
-                //   width: 1,
-                // ),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: Icon(Icons.add_a_photo_outlined),
-                // )
-              ],
-            ),
             Divider(
               color: Colors.black,
             ),
-            Text(
-              "Our little brothers have helped us through this difficult year. Shoulder to shoulder, paw to paw. Send in photos of your favourite pets, regardless of biological type or species. Even if they are cacti 🙂",
-              textAlign: TextAlign.left,
-              softWrap: true,
-              //overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Event Pictures and memorable photo wall !",
+                softWrap: true,
+                style: TextStyle(fontSize: 18, color: titleColor),
+              ),
             ),
             Expanded(
               child: FutureBuilder(

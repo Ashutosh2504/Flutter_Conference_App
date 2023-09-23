@@ -14,6 +14,8 @@ class MySplashScreen extends StatefulWidget {
 }
 
 class _MySplashScreenState extends State<MySplashScreen> {
+  final Color titleColor = Color.fromARGB(255, 1, 144, 159);
+
   @override
   void initState() {
     super.initState();
@@ -31,14 +33,16 @@ class _MySplashScreenState extends State<MySplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Container(
+      body: Center(
         child: Image.asset(
-          "assets/images/splash.jpg",
-          fit: BoxFit.fill,
-          height: double.infinity,
-          width: double.infinity,
-          alignment: Alignment.center,
+          "assets/images/logo2.jpg",
+          fit: BoxFit.cover,
+          height: screenHeight,
+          width: screenWidth,
+          //alignment: Alignment.center,
         ),
       ),
     );
