@@ -209,14 +209,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  date_count_down:
-    dependency: "direct main"
-    description:
-      name: date_count_down
-      sha256: "89b87807a8307c03e0ee25e60175fe86667c9e8e1231032b4d4e76389fb95c80"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   dbus:
     dependency: transitive
     description:
