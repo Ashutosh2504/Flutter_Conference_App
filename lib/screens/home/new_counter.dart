@@ -1,6 +1,5 @@
-import 'package:date_count_down/countdown.dart';
-import 'package:date_count_down/date_count_down.dart';
 import 'package:flutter/material.dart';
+import 'timer/date_count_down.dart';
 
 void main() {
   runApp(NewCounter());
@@ -48,14 +47,16 @@ class NewCounter extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   CountDownText(
-                    due: DateTime.parse("2023-09-29 00:00:00"),
+                    due: DateTime.parse("2023-09-30 00:30:00"),
                     finishedText: "Done",
                     showLabel: true,
                     longDateName: true,
                     daysTextLong: " : ",
                     hoursTextLong: " : ",
                     minutesTextLong: " : ",
-                    secondsTextLong: "",
+                    secondsTextLong: " ",
+                    daysTextShort: " :  ",
+                    collapsing: false,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 25,
