@@ -165,7 +165,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                 TextField(
                   onChanged: (value) => _runFilter(value.trim()),
                   decoration: InputDecoration(
-                    labelText: "Search Agendas",
+                    labelText: "Search Agendas by Topic",
                     suffixIcon: Icon(Icons.search),
                   ),
                 ),
@@ -218,18 +218,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                         ),
                                       ),
                                     ),
-                                    // RichText(
-                                    //   text: TextSpan(
-                                    //     style: TextStyle(
-                                    //         fontSize: 18,
-                                    //         fontWeight:
-                                    //             FontWeight.bold,
-                                    //         color:
-                                    //             Colors.blueGrey),
-                                    //     text:
-                                    //         "Places:${_foundAgendas[index].time}",
-                                    //   ),
-                                    // ),
+                                    
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () async {
@@ -303,7 +292,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                 ],
                               ),
                               Text(
-                                "Topic: ${_foundAgendas[index].Topic} ",
+                                _foundAgendas[index].Topic,
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,

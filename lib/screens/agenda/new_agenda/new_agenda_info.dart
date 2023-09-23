@@ -172,6 +172,20 @@ class _NewAgendaInfoState extends State<NewAgendaInfo> {
                 ),
               ),
               Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextField(
+                  onChanged: (value) => {}, //_runFilter(value.trim()),
+                  decoration: InputDecoration(
+                    labelText: "Ask a ",
+                    suffixIcon: Icon(Icons.question_mark),
+                  ),
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.all(8.0),
                 //height: MediaQuery.of(context).size.height / 6,
                 width: double.infinity,
