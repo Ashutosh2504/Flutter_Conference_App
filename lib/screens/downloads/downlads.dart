@@ -48,27 +48,8 @@ class _MyDownloadsState extends State<MyDownloads> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text("Downloads "),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(20),
-              child: Column(
-                children: [
-                  Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.info_outline),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Downloaded files are available in Downloads/GHF2023 folder",
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )),
+          title: Text("Downloads "),
+        ),
         body: FutureBuilder(
           future: getDownloads(),
           builder: (context, snapshot) {
