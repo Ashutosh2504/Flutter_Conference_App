@@ -239,7 +239,7 @@ class _MySpeakerInfoState extends State<MySpeakerInfo> {
                                   }
                                 : (rating) async {
                                     await Alerts.showAlert(loggedIn, context,
-                                        "Not Logged In. Please Login");
+                                        "You are not logged in. Please use the same email you used for GHF registration");
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(

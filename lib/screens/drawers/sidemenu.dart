@@ -104,8 +104,8 @@ class _SideMenuState extends State<SideMenu> {
                     );
                   }
                 : () async {
-                    await Alerts.showAlert(
-                        loggedIn, context, "Not Logged In. Please Login");
+                    await Alerts.showAlert(loggedIn, context,
+                        "You are not logged in. Please use the same email you used for GHF registration");
                     // Navigator.pushReplacement(context,
                     //     MaterialPageRoute(builder: (context) => LoginPage()));
                   },

@@ -47,7 +47,7 @@ class NewCounter extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   CountDownText(
-                    due: DateTime.parse("2023-09-29 00:00:00"),
+                    due: DateTime.fromMillisecondsSinceEpoch(1695974400000),
                     finishedText: "Done",
                     showLabel: true,
                     longDateName: true,

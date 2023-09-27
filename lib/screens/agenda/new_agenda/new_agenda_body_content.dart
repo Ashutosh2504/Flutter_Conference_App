@@ -165,7 +165,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                 TextField(
                   onChanged: (value) => _runFilter(value.trim()),
                   decoration: InputDecoration(
-                    labelText: "Search Agendas by Topic",
+                    labelText: "Search Agenda by Topic",
                     suffixIcon: Icon(Icons.search),
                   ),
                 ),
@@ -218,7 +218,6 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                         ),
                                       ),
                                     ),
-                                    
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () async {
@@ -229,7 +228,7 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                             await Alerts.showAlert(
                                                 loggedIn,
                                                 context,
-                                                "Not Logged In. Please Login");
+                                                "You are not logged in. Please use the same email you used for GHF registration");
                                           }
                                           // loggedIn
                                           //     ? await checkFavourite(
@@ -240,14 +239,14 @@ class _NewAgendaBodyContentState extends State<NewAgendaBodyContent> {
                                           //     : await Alerts.showAlert(
                                           //         loggedIn,
                                           //         context,
-                                          //         "Not Logged In. Please Login");
+                                          //         "You are not logged in. Please use the same email you used for GHF registration");
                                           // loggedIn
                                           //     ? addToFavourites(
                                           //         _foundAgendas[index], index)
                                           //     : await Alerts.showAlert(
                                           //         loggedIn,
                                           //         context,
-                                          //         "Not Logged In. Please Login");
+                                          //         "You are not logged in. Please use the same email you used for GHF registration");
                                           //                 Navigator.pushReplacement(
                                           // context,
                                           // MaterialPageRoute(
