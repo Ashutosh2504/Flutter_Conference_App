@@ -17,7 +17,7 @@ class _MyHomeState extends State<MyHome> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _messaginService.init(context);
+    _messaginService.init();
   }
 
   final Color color = Color.fromARGB(255, 170, 232, 238);

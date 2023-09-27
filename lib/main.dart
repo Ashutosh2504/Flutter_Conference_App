@@ -20,6 +20,7 @@ import 'package:bottom_navigation_and_drawer/screens/speaker/speakers_list.dart'
 import 'package:bottom_navigation_and_drawer/screens/sponser/sponser.dart';
 import 'package:bottom_navigation_and_drawer/screens/venue/venue.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/route_manager.dart';
 
 import 'screens/gallery/gallery.dart';
 import 'screens/login/compare_otp.dart';
@@ -63,7 +64,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Portugal Health Forum',
       theme: ThemeData(
