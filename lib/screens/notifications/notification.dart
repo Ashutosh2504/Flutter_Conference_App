@@ -46,7 +46,6 @@ class _MyNotificationsState extends State<MyNotifications> {
     //var message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
 
     return Scaffold(
-      drawer: SideMenu(),
       appBar: AppBar(
         title: Text(
           "Notifications",

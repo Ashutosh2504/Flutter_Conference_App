@@ -245,7 +245,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                           }
                         : () async {
                             await Alerts.showAlert(loggedIn, context,
-                                "Not Logged In. Please Login");
+                                "You are not logged in. Please use the same email you used for GHF registration");
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -291,7 +291,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                           }
                         : () async {
                             await Alerts.showAlert(loggedIn, context,
-                                "Not Logged In. Please Login");
+                                "You are not logged in. Please use the same email you used for GHF registration");
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -417,7 +417,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                           }
                         : () async {
                             await Alerts.showAlert(loggedIn, context,
-                                "Not Logged In. Please Login");
+                                "You are not logged in. Please use the same email you used for GHF registration");
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -470,7 +470,7 @@ class _MyHomePageUiState extends State<MyHomePageUi> {
                           }
                         : () async {
                             await Alerts.showAlert(loggedIn, context,
-                                "Not Logged In. Please Login");
+                                "You are not logged in. Please use the same email you used for GHF registration");
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(

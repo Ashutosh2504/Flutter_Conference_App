@@ -15,7 +15,6 @@ class _MyFaqState extends State<MyFaq> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SideMenu(),
       appBar: AppBar(
         title: Text("FAQ"),
       ),

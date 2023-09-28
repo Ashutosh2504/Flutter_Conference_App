@@ -6,6 +6,8 @@ import 'package:bottom_navigation_and_drawer/util/routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/instance_manager.dart';
+import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
 
 class MessagingService {
@@ -19,7 +21,7 @@ class MessagingService {
 
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
-  Future<void> init(BuildContext context) async {
+  Future<void> init() async {
     // Requesting permission for notifications
     NotificationSettings settings = await _fcm.requestPermission(
       alert: true,
@@ -60,7 +62,7 @@ class MessagingService {
           // Showing an alert dialog when a notification is received (Foreground state)
           try {
             showDialog(
-              context: context,
+              context: Get.context!,
               barrierDismissible: false,
               builder: (BuildContext context) {
                 return WillPopScope(
@@ -96,7 +98,7 @@ class MessagingService {
     // It gets the data to which screen to open
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        _handleNotificationClick(context, message);
+        _handleNotificationClick(Get.context!, message);
       }
     });
 
@@ -104,7 +106,7 @@ class MessagingService {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       debugPrint(
           'onMessageOpenedApp: ${message.notification!.title.toString()}');
-      _handleNotificationClick(context, message);
+      _handleNotificationClick(Get.context!, message);
     });
   }
 
